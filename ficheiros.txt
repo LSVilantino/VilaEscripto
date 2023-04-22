@@ -1,0 +1,7 @@
+caminho > ..\..\..\escripto\acólito\caminho.txt
+construc > ..\..\..\escripto\acólito\ficheiro-construcção.txt
+liga > ..\..\..\escripto\acólito\ficheiro-ligação.txt
+reposit > ..\..\..\escripto\acólito\ligação.txt
+receitua > ..\..\..\escripto\acólito\receituário.txt
+sinal > ..\..\..\escripto\acólito\sinal.txt
+subir > ..\..\..\escripto\acólito\subir.txt
