@@ -6,38 +6,38 @@
 
 char** ficheiro_lêr(char* ficheiroNome) {
     char** linhas = malloc(sizeof(char*));
-    char* porção = malloc(sizeof(char*));
-    char charactére = '\0';
+    char* linhaActualDoFicheiro = malloc(sizeof(char*));
+    char charactéreActualDoFicheiro = '\0';
     FILE* ficheiroLido = fopen(ficheiroNome, "r");
 
     int n = 0;
     int nl = 0;
-    for (int i = 0; charactére != EOF; i++) {
-        charactére = fgetc(ficheiroLido);
+    for (int i = 0; charactéreActualDoFicheiro != EOF; i++) {
+        charactéreActualDoFicheiro = fgetc(ficheiroLido);
 
-        porção[n] = charactére;
-        porção = realloc(porção, (n + 1 * sizeof(porção)) * sizeof(char*));
-        porção[n + 1] = '\0';
+        linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
+        linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
+        linhaActualDoFicheiro[n + 1] = '\0';
 
-        if (charactére == '\n') {
+        if (charactéreActualDoFicheiro == '\n') {
             linhas[nl] = malloc(sizeof(char*));
-            linhas[nl] = strdup(porção);
+            linhas[nl] = strdup(linhaActualDoFicheiro);
 
             linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
 
-            porção = malloc(sizeof(char*));
+            linhaActualDoFicheiro = malloc(sizeof(char*));
 
             n = 0;
             nl = nl + 1;
             continue;
         }
 
-        printf("\n%c - %s", charactére, porção);
+        printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
 
         n = n + 1;
     }
 
-    free(porção);
+    free(linhaActualDoFicheiro);
     fclose(ficheiroLido);
 
     return linhas;
@@ -129,10 +129,71 @@ char* linha_aparar(char* linha) {
     return linhaTratada;
 }
 
+
+typedef struct Mapa {
+    void* passe;
+    void* valôr;
+    int i; //Índex
+} Mapa;
+
+typedef enum Tipo {
+    tipo_int,
+    tipo_char,
+} Tipo;
+
+struct Mapa* mapa_construir() {
+    Mapa* mapa = malloc(sizeof(Mapa*));
+    mapa[0].passe = "A";
+    mapa[0].valôr = "A";
+    mapa[0].i = 0;
+
+    printf("%s", (char*) mapa[0].passe);
+
+    return mapa;
+}
+
+void mapa_introduzir(Mapa** mapa, Mapa valôr) {
+    int i = 0;
+
+    printf("%s", (char*) (*mapa)[i].passe);
+
+    for (i = 0; (*mapa)[i].passe != NULL; i++) {
+        printf("%s", (*mapa)[i].passe);
+    }
+}
+
+Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa** mapa) {
+    switch (tipo)
+    {
+        case tipo_char: 
+            for (int i = 0; mapa[i] != NULL; i++) {
+                if (*(char*)procura == *(char*)mapa[i]->passe) {
+                    return mapa[i];
+                }
+            }
+            break;
+        default:
+            break;
+    }
+
+    return NULL;
+}
+
+
 int main() {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
-    char* caminho_relativo = "ficheiros.txt";
+    printf("");
+
+    Mapa* mapa = mapa_construir();
+    //printf("%s", (char*) mapa[0].passe);
+//    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "A - Chave", mapa);
+
+    mapa_introduzir(&mapa, (Mapa) { "A - Chave", "A - Valôr" });
+
+    //printf("%s %s\n", (char*) mapaEncontrado->passe, (char*) mapaEncontrado->valôr);
+
+    /*char* caminho_relativo = "ficheiros.txt";
     char** ficheiroCaminhoConteúdo = ficheiro_lêr(caminho_relativo);
 
     printf("\n\n");
@@ -141,7 +202,7 @@ int main() {
     while (ficheiroCaminhoConteúdo) {
         ficheiro_lêr(linha_aparar(linha_separar('>', ficheiroCaminhoConteúdo[n])[1]));
         n = n + 1;
-    }
+    }*/
 
 	return 0;
 }
