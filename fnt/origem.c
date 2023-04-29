@@ -143,11 +143,8 @@ typedef enum Tipo {
 
 struct Mapa* mapa_construir() {
     Mapa* mapa = malloc(sizeof(Mapa*));
-    mapa[0].passe = "A";
-    mapa[0].valôr = "A";
-    mapa[0].i = 0;
 
-    printf("%s", (char*) mapa[0].passe);
+    //printf("%s", (char*) mapa[0].passe);
 
     return mapa;
 }
@@ -155,11 +152,17 @@ struct Mapa* mapa_construir() {
 void mapa_introduzir(Mapa** mapa, Mapa valôr) {
     int i = 0;
 
-    printf("%s", (char*) (*mapa)[i].passe);
+    Mapa* mappa = (*mapa);
 
-    for (i = 0; (*mapa)[i].passe != NULL; i++) {
-        printf("%s", (*mapa)[i].passe);
+    while (mappa[i].i == i) {
+        i = i + 1;
     }
+
+    if (valôr.i != i) {
+        valôr.i = i;
+    }
+
+    mappa[i] = valôr;
 }
 
 Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa** mapa) {
@@ -180,7 +183,7 @@ Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa** mapa) {
 }
 
 
-int main() {
+int main(int** a, char** b) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
     printf("");
@@ -190,6 +193,13 @@ int main() {
 //    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "A - Chave", mapa);
 
     mapa_introduzir(&mapa, (Mapa) { "A - Chave", "A - Valôr" });
+    printf("%s\n", (char*)mapa[0].passe);
+
+    mapa_introduzir(&mapa, (Mapa) { "B - Chave", "B - Valôr" });
+    printf("%s\n", (char*)mapa[1].passe);
+
+    mapa_introduzir(&mapa, (Mapa) { "C - Chave", "C - Valôr" });
+    printf("%s\n", (char*)mapa[2].passe);
 
     //printf("%s %s\n", (char*) mapaEncontrado->passe, (char*) mapaEncontrado->valôr);
 
