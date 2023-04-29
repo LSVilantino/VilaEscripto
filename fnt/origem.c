@@ -162,17 +162,23 @@ void mapa_introduzir(Mapa** mapa, Mapa valôr) {
         valôr.i = i;
     }
 
+    // Incrementar espaço à matrix
+
     mappa[i] = valôr;
 }
 
-Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa** mapa) {
+Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa) {
+    int i = 0;
+
     switch (tipo)
     {
         case tipo_char: 
-            for (int i = 0; mapa[i] != NULL; i++) {
-                if (*(char*)procura == *(char*)mapa[i]->passe) {
-                    return mapa[i];
+            while (mapa[i].i == i) {
+                if (strcmp((char*)mapa[i].passe, (char*)procura) == 0) {
+                    return &mapa[i];
                 }
+
+                i = i + 1;
             }
             break;
         default:
@@ -189,17 +195,18 @@ int main(int** a, char** b) {
     printf("");
 
     Mapa* mapa = mapa_construir();
-    //printf("%s", (char*) mapa[0].passe);
-//    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "A - Chave", mapa);
 
-    mapa_introduzir(&mapa, (Mapa) { "A - Chave", "A - Valôr" });
-    printf("%s\n", (char*)mapa[0].passe);
+    mapa_introduzir(&mapa, (Mapa) { "A - Chave", "A - Valôr", 0 });
+    printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
 
-    mapa_introduzir(&mapa, (Mapa) { "B - Chave", "B - Valôr" });
-    printf("%s\n", (char*)mapa[1].passe);
+    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "A - Chave", mapa);
+    printf("%s %s %d\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
 
-    mapa_introduzir(&mapa, (Mapa) { "C - Chave", "C - Valôr" });
-    printf("%s\n", (char*)mapa[2].passe);
+    mapa_introduzir(&mapa, (Mapa) { "B - Chave", "B - Valôr", 1 });
+    printf("%s %s %d\n", (char*)mapa[1].passe, (char*)mapa[1].valôr, mapa[1].i);
+
+    mapa_introduzir(&mapa, (Mapa) { "C - Chave", "C - Valôr", 3 });
+    printf("%s %s %d\n", (char*)mapa[2].passe, (char*)mapa[2].valôr, mapa[2].i);
 
     //printf("%s %s\n", (char*) mapaEncontrado->passe, (char*) mapaEncontrado->valôr);
 
