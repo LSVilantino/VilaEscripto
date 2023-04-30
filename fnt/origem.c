@@ -64,32 +64,33 @@ int linha_contar_separador(char separador, char* linha) {
 }
 
 char** linha_separar(char separador, char* linha) {
+    int i = 0;
     int n = 0;
-    int n2 = 0;
     int n3 = 0;
 
     char** matrizTratada = malloc(sizeof(char*) * linha_contar_separador(separador, linha));
     char* linhaTratada = "";
 
-    for (int i = 0; linha[i] != '\0'; i++) {
+    while(linha[i] != '\0') {
         //printf("\n%c _ %s", linha[i], linha);
-
-        strncpy(&linhaTratada[n3], &linha[i], sizeof(linha[i] - 1));
-        linhaTratada[n3 + 1] = '\0';
-        matrizTratada[n] = strdup(linhaTratada);
 
         if (linha[i] == '>') {
             linhaTratada = "";
 
             n3 = 0;
-            n2 = n2 + 1;
 
             n = n + 1;
+            i = i + 1;
             continue;
         }
 
-        n2 = n2 + 1;
+        strncpy(&linhaTratada[n3], &linha[i], sizeof(linha[i] - 1));
+        linhaTratada[n3 + 1] = '\0';
+        matrizTratada[n] = strdup(linhaTratada);
+
         n3 = n3 + 1;
+
+        i = i + 1;
     }
 
     //printf("\n0~%s\n1~%s", matrizTratada[0], matrizTratada[1]);
@@ -103,10 +104,10 @@ char* linha_aparar(char* linha) {
 
     while(linha[n] == ' ') { n = n + 1; }
 
-    char* linhaTratada = "";
+    char* linhaTratada = malloc(sizeof(char));
     int i = 0;
     while(linha[n] != '\0') {
-        strncpy(&linhaTratada[i], &linha[n], sizeof(linha[n] - 1));
+        strncpy(&linhaTratada[i], &linha[n], sizeof(char));
 
         linhaTratada[i + 1] = '\0';
 
@@ -165,6 +166,8 @@ void mapa_introduzir(Mapa** mapa, Mapa valôr) {
     // Incrementar espaço à matrix
 
     mappa[i] = valôr;
+
+    printf("%s %s %d\n", (char*)mappa[0].passe, (char*)mappa[0].valôr, mappa[0].i);
 }
 
 Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa) {
@@ -194,32 +197,46 @@ int main(int** a, char** b) {
 
     printf("");
 
-    Mapa* mapa = mapa_construir();
-
-    mapa_introduzir(&mapa, (Mapa) { "A - Chave", "A - Valôr", 0 });
-    printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
-
-    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "A - Chave", mapa);
-    printf("%s %s %d\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
-
-    mapa_introduzir(&mapa, (Mapa) { "B - Chave", "B - Valôr", 1 });
-    printf("%s %s %d\n", (char*)mapa[1].passe, (char*)mapa[1].valôr, mapa[1].i);
-
-    mapa_introduzir(&mapa, (Mapa) { "C - Chave", "C - Valôr", 3 });
-    printf("%s %s %d\n", (char*)mapa[2].passe, (char*)mapa[2].valôr, mapa[2].i);
-
     //printf("%s %s\n", (char*) mapaEncontrado->passe, (char*) mapaEncontrado->valôr);
 
-    /*char* caminho_relativo = "ficheiros.txt";
+    char* caminho_relativo = "ficheiros.txt";
     char** ficheiroCaminhoConteúdo = ficheiro_lêr(caminho_relativo);
 
-    printf("\n\n");
+    Mapa* mapa = mapa_construir();
 
     int n = 0;
     while (ficheiroCaminhoConteúdo) {
-        ficheiro_lêr(linha_aparar(linha_separar('>', ficheiroCaminhoConteúdo[n])[1]));
+        Mapa conteúdo;
+
+        char** linhaSeparada = linha_separar('>', ficheiroCaminhoConteúdo[n]);
+        char* linha = linha_aparar(linhaSeparada[0]);
+
+        conteúdo.passe = linha;
+
+        printf("%s ", linha);
+        free(linha);
+
+        linha = linha_aparar(linhaSeparada[1]);
+
+        conteúdo.valôr = linha;
+
+        printf("%s ", linha);
+        free(linha);
+
+        conteúdo.i = n;
+
+        printf("%d\n", n);
+
+        mapa_introduzir(&mapa, conteúdo);
+
+        Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "caminho", mapa);
+        printf("%s %s %d\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
+
         n = n + 1;
-    }*/
+    }
+
+    printf("S"); // Não tá a chegar aqui
+    //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
 
 	return 0;
 }
