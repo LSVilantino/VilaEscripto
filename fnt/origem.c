@@ -94,7 +94,7 @@ char** linha_separar(char separador, char* linha) {
     }
 
     //printf("\n0~%s\n1~%s", matrizTratada[0], matrizTratada[1]);
-    printf("\nlinha - %s", linhaTratada);
+    //printf("\nlinha - %s", linhaTratada);
 
     return matrizTratada;
 }
@@ -107,7 +107,7 @@ char* linha_aparar(char* linha) {
     char* linhaTratada = "";
     int i = 0;
     while(linha[n] != '\0') {
-        strncpy(&linhaTratada[i], &linha[n], sizeof(char));
+        strncpy(&linhaTratada[i], &linha[n], sizeof(linha[n] - 1));
 
         linhaTratada[i + 1] = '\0';
 
@@ -127,7 +127,7 @@ char* linha_aparar(char* linha) {
         índexReal = índexReal - 1;
     }
 
-    return linhaTratada;
+    return strdup(linhaTratada);
 }
 
 
@@ -142,28 +142,27 @@ typedef enum Tipo {
     tipo_char,
 } Tipo;
 
-struct Mapa* mapa_construir() {
-    Mapa* mapa;
+Mapa* mapa_construir() {
+    Mapa* mapa = malloc(sizeof(Mapa*));
+
+    mapa[0].passe = "";
+    mapa[0].valôr = "";
+    mapa[0].i = 0;
 
     //printf("%s", (char*) mapa[0].passe);
 
     return mapa;
 }
 
-void mapa_introduzir(Mapa** mapa, Mapa valôr) {
+void mapa_introduzir(Mapa* mapa[], Mapa valôr) {
     Mapa* mappa = (*mapa);
-
     int i = 0;
 
     while (mappa[i].i == i) { i = i + 1; }
-
-    size_t quantidadeDeElementos = sizeof(mappa) / sizeof(mappa[0]);
-    printf("%d %d %d\n", quantidadeDeElementos, sizeof(mappa), sizeof(mappa[0]));
-
     if (valôr.i != i) { valôr.i = i; }
 
     mappa[i] = valôr;
-    //mappa = realloc(mappa, (i + 1 * sizeof(mappa)) * sizeof(Mapa**)); 
+    //mapa = realloc(mapa, (i + 1 * sizeof(mapa)) * sizeof(Mapa*));
 
     printf("%s %s %d\n", (char*)mappa[i].passe, (char*)mappa[i].valôr, mappa[i].i);
 }
@@ -215,14 +214,15 @@ int main(int** a, char** b) {
 
     int n = 0;
     while (ficheiroCaminhoConteúdo) {
-
         char** linhaSeparada = linha_separar('>', ficheiroCaminhoConteúdo[n]);
 
         conteúdo.passe = linha_aparar(linhaSeparada[0]);
         conteúdo.valôr = linha_aparar(linhaSeparada[1]);
         conteúdo.i = n;
 
-        //mapa_introduzir(&mapa, conteúdo);
+        mapa_introduzir(&mapa, conteúdo);
+
+        printf("%s %s %d\n", (char*)mapa[1].passe, (char*)mapa[1].valôr, mapa[1].i);
 
         //system("cls");
         //// Try some Set Graphics Rendition (SGR) terminal escape sequences
