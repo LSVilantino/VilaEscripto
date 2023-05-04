@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <Windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 char** ficheiro_lêr(char* ficheiroNome) {
     char** linhas = malloc(sizeof(char*));
@@ -32,7 +33,7 @@ char** ficheiro_lêr(char* ficheiroNome) {
             continue;
         }
 
-        printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
+        //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
 
         n = n + 1;
     }
@@ -64,23 +65,23 @@ int linha_contar_separador(char separador, char* linha) {
 }
 
 char** linha_separar(char separador, char* linha) {
-    int i = 0;
     int n = 0;
+    int n2 = 0;
     int n3 = 0;
 
     char** matrizTratada = malloc(sizeof(char*) * linha_contar_separador(separador, linha));
     char* linhaTratada = "";
 
-    while(linha[i] != '\0') {
+    for (int i = 0; linha[i] != '\0'; i++) {
         //printf("\n%c _ %s", linha[i], linha);
 
         if (linha[i] == '>') {
             linhaTratada = "";
 
             n3 = 0;
+            n2 = n2 + 1;
 
             n = n + 1;
-            i = i + 1;
             continue;
         }
 
@@ -88,13 +89,12 @@ char** linha_separar(char separador, char* linha) {
         linhaTratada[n3 + 1] = '\0';
         matrizTratada[n] = strdup(linhaTratada);
 
+        n2 = n2 + 1;
         n3 = n3 + 1;
-
-        i = i + 1;
     }
 
     //printf("\n0~%s\n1~%s", matrizTratada[0], matrizTratada[1]);
-    //printf("\nlinha - %s", linhaTratada);
+    printf("\nlinha - %s", linhaTratada);
 
     return matrizTratada;
 }
@@ -104,7 +104,7 @@ char* linha_aparar(char* linha) {
 
     while(linha[n] == ' ') { n = n + 1; }
 
-    char* linhaTratada = malloc(sizeof(char));
+    char* linhaTratada = "";
     int i = 0;
     while(linha[n] != '\0') {
         strncpy(&linhaTratada[i], &linha[n], sizeof(char));
@@ -143,7 +143,7 @@ typedef enum Tipo {
 } Tipo;
 
 struct Mapa* mapa_construir() {
-    Mapa* mapa = malloc(sizeof(Mapa*));
+    Mapa* mapa;
 
     //printf("%s", (char*) mapa[0].passe);
 
@@ -151,27 +151,21 @@ struct Mapa* mapa_construir() {
 }
 
 void mapa_introduzir(Mapa** mapa, Mapa valôr) {
-    int i = 0;
-
     Mapa* mappa = (*mapa);
 
-    // sizeof / sizeof para pegar a quantidade de elementos
+    int i = 0;
 
-    size_t elementosQuantidade = sizeof(mappa) / sizeof(mappa[0]);
+    while (mappa[i].i == i) { i = i + 1; }
 
-    while (mappa[i].i == i) {
-        i = i + 1;
-    }
+    size_t quantidadeDeElementos = sizeof(mappa) / sizeof(mappa[0]);
+    printf("%d %d %d\n", quantidadeDeElementos, sizeof(mappa), sizeof(mappa[0]));
 
-    if (valôr.i != i) {
-        valôr.i = i;
-    }
-
-    // Incrementar espaço à matrix
+    if (valôr.i != i) { valôr.i = i; }
 
     mappa[i] = valôr;
+    //mappa = realloc(mappa, (i + 1 * sizeof(mappa)) * sizeof(Mapa**)); 
 
-    printf("%s %s %d\n", (char*)mappa[0].passe, (char*)mappa[0].valôr, mappa[0].i);
+    printf("%s %s %d\n", (char*)mappa[i].passe, (char*)mappa[i].valôr, mappa[i].i);
 }
 
 Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa) {
@@ -195,10 +189,6 @@ Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa) {
     return NULL;
 }
 
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 int main(int** a, char** b) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
@@ -221,55 +211,37 @@ int main(int** a, char** b) {
 
     Mapa* mapa = mapa_construir();
 
+    Mapa conteúdo;
+
     int n = 0;
     while (ficheiroCaminhoConteúdo) {
-        Mapa conteúdo;
 
         char** linhaSeparada = linha_separar('>', ficheiroCaminhoConteúdo[n]);
-        char* linha = linha_aparar(linhaSeparada[0]);
 
-        conteúdo.passe = linha;
-
-        printf("%s ", linha);
-        free(linha);
-
-        linha = linha_aparar(linhaSeparada[1]);
-
-        conteúdo.valôr = linha;
-
-        printf("%s ", linha);
-        free(linha);
-
+        conteúdo.passe = linha_aparar(linhaSeparada[0]);
+        conteúdo.valôr = linha_aparar(linhaSeparada[1]);
         conteúdo.i = n;
 
-        printf("%d\n", n);
+        //mapa_introduzir(&mapa, conteúdo);
 
-        mapa_introduzir(&mapa, conteúdo);
+        //system("cls");
+        //// Try some Set Graphics Rendition (SGR) terminal escape sequences
+        //wprintf(L"\x1b[31mThis text has a red foreground using SGR.31.\r\n");
+        //wprintf(L"\x1b[1mThis text has a bright (bold) red foreground using SGR.1 to affect the previous color setting.\r\n");
+        //wprintf(L"\x1b[mThis text has returned to default colors using SGR.0 implicitly.\r\n");
+        //wprintf(L"\x1b[34;46mThis text shows the foreground and background change at the same time.\r\n");
+        //wprintf(L"\x1b[0mThis text has returned to default colors using SGR.0 explicitly.\r\n");
+        //wprintf(L"\x1b[31;32;33;34;35;36;101;102;103;104;105;106;107mThis text attempts to apply many colors in the same command. Note the colors are applied from left to right so only the right-most option of foreground cyan (SGR.36) and background bright white (SGR.107) is effective.\r\n");
+        //wprintf(L"\x1b[39mThis text has restored the foreground color only.\r\n");
+        //wprintf(L"\x1b[49mThis text has restored the background color only.\r\n");
+        
+        //Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, linha, mapa);
 
-
-        system("cls");
-        // Try some Set Graphics Rendition (SGR) terminal escape sequences
-        wprintf(L"\x1b[31mThis text has a red foreground using SGR.31.\r\n");
-        wprintf(L"\x1b[1mThis text has a bright (bold) red foreground using SGR.1 to affect the previous color setting.\r\n");
-        wprintf(L"\x1b[mThis text has returned to default colors using SGR.0 implicitly.\r\n");
-        wprintf(L"\x1b[34;46mThis text shows the foreground and background change at the same time.\r\n");
-        wprintf(L"\x1b[0mThis text has returned to default colors using SGR.0 explicitly.\r\n");
-        wprintf(L"\x1b[31;32;33;34;35;36;101;102;103;104;105;106;107mThis text attempts to apply many colors in the same command. Note the colors are applied from left to right so only the right-most option of foreground cyan (SGR.36) and background bright white (SGR.107) is effective.\r\n");
-        wprintf(L"\x1b[39mThis text has restored the foreground color only.\r\n");
-        wprintf(L"\x1b[49mThis text has restored the background color only.\r\n");
-
-        Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "caminho", mapa);
-
-        wprintf(L"\x1b[34;46m%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
-
-        while (1) {
-
-        }
+        //wprintf(L"\x1b[34;46m%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
 
         n = n + 1;
     }
 
-    printf("S"); // Não tá a chegar aqui
     //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
 
 	return 0;
