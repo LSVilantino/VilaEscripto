@@ -145,12 +145,12 @@ typedef enum Tipo {
 Mapa* mapa_construir() {
     Mapa* mapa = malloc(sizeof(Mapa*));
 
-    mapa[0].passe = "";
-    mapa[0].valôr = "";
-    mapa[0].i = 0;
+    mapa[0].passe = NULL;
+    mapa[0].valôr = NULL;
+    mapa[0].i = 1;
 
     //printf("%s", (char*) mapa[0].passe);
-
+    printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
     return mapa;
 }
 
@@ -159,9 +159,11 @@ void mapa_introduzir(Mapa* mapa[], Mapa valôr) {
     int i = 0;
 
     while (mappa[i].i == i) { i = i + 1; }
-    if (valôr.i != i) { valôr.i = i; }
+    if (valôr.i != i) valôr.i = i;
 
     mappa[i] = valôr;
+
+    printf("%d %d\n", mappa[i].i, i);
     //mapa = realloc(mapa, (i + 1 * sizeof(mapa)) * sizeof(Mapa*));
 
     printf("%s %s %d\n", (char*)mappa[i].passe, (char*)mappa[i].valôr, mappa[i].i);
@@ -222,7 +224,7 @@ int main(int** a, char** b) {
 
         mapa_introduzir(&mapa, conteúdo);
 
-        printf("%s %s %d\n", (char*)mapa[1].passe, (char*)mapa[1].valôr, mapa[1].i);
+        //printf("%s %s %d\n", (char*)mapa[1].passe, (char*)mapa[1].valôr, mapa[1].i);
 
         //system("cls");
         //// Try some Set Graphics Rendition (SGR) terminal escape sequences
