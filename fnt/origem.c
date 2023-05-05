@@ -31,12 +31,14 @@ char** ficheiro_lêr(char* ficheiroNome) {
             n = 0;
             nl = nl + 1;
             continue;
-        }
+        } else if (charactéreActualDoFicheiro == EOF) break;
 
         //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
 
         n = n + 1;
     }
+
+    printf("\n");
 
     free(linhaActualDoFicheiro);
     fclose(ficheiroLido);
@@ -149,8 +151,7 @@ Mapa* mapa_construir() {
     mapa[0].valôr = NULL;
     mapa[0].i = 1;
 
-    //printf("%s", (char*) mapa[0].passe);
-    printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
+    //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
     return mapa;
 }
 
@@ -162,11 +163,6 @@ void mapa_introduzir(Mapa* mapa[], Mapa valôr) {
     if (valôr.i != i) valôr.i = i;
 
     mappa[i] = valôr;
-
-    printf("%d %d\n", mappa[i].i, i);
-    //mapa = realloc(mapa, (i + 1 * sizeof(mapa)) * sizeof(Mapa*));
-
-    printf("%s %s %d\n", (char*)mappa[i].passe, (char*)mappa[i].valôr, mappa[i].i);
 }
 
 Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa) {
@@ -212,37 +208,30 @@ int main(int** a, char** b) {
 
     Mapa* mapa = mapa_construir();
 
-    Mapa conteúdo;
-
     int n = 0;
     while (ficheiroCaminhoConteúdo) {
-        char** linhaSeparada = linha_separar('>', ficheiroCaminhoConteúdo[n]);
+        if (ficheiroCaminhoConteúdo[n] != NULL) {
+            char** linhaSeparada = linha_separar('>', ficheiroCaminhoConteúdo[n]);
+            mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
+            printf("%s %s %d\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
 
-        conteúdo.passe = linha_aparar(linhaSeparada[0]);
-        conteúdo.valôr = linha_aparar(linhaSeparada[1]);
-        conteúdo.i = n;
-
-        mapa_introduzir(&mapa, conteúdo);
-
-        //printf("%s %s %d\n", (char*)mapa[1].passe, (char*)mapa[1].valôr, mapa[1].i);
-
-        //system("cls");
-        //// Try some Set Graphics Rendition (SGR) terminal escape sequences
-        //wprintf(L"\x1b[31mThis text has a red foreground using SGR.31.\r\n");
-        //wprintf(L"\x1b[1mThis text has a bright (bold) red foreground using SGR.1 to affect the previous color setting.\r\n");
-        //wprintf(L"\x1b[mThis text has returned to default colors using SGR.0 implicitly.\r\n");
-        //wprintf(L"\x1b[34;46mThis text shows the foreground and background change at the same time.\r\n");
-        //wprintf(L"\x1b[0mThis text has returned to default colors using SGR.0 explicitly.\r\n");
-        //wprintf(L"\x1b[31;32;33;34;35;36;101;102;103;104;105;106;107mThis text attempts to apply many colors in the same command. Note the colors are applied from left to right so only the right-most option of foreground cyan (SGR.36) and background bright white (SGR.107) is effective.\r\n");
-        //wprintf(L"\x1b[39mThis text has restored the foreground color only.\r\n");
-        //wprintf(L"\x1b[49mThis text has restored the background color only.\r\n");
-        
-        //Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, linha, mapa);
-
-        //wprintf(L"\x1b[34;46m%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
-
-        n = n + 1;
+            //system("cls");
+            //// Try some Set Graphics Rendition (SGR) terminal escape sequences
+            //wprintf(L"\x1b[31mThis text has a red foreground using SGR.31.\r\n");
+            //wprintf(L"\x1b[1mThis text has a bright (bold) red foreground using SGR.1 to affect the previous color setting.\r\n");
+            //wprintf(L"\x1b[mThis text has returned to default colors using SGR.0 implicitly.\r\n");
+            //wprintf(L"\x1b[34;46mThis text shows the foreground and background change at the same time.\r\n");
+            //wprintf(L"\x1b[0mThis text has returned to default colors using SGR.0 explicitly.\r\n");
+            //wprintf(L"\x1b[31;32;33;34;35;36;101;102;103;104;105;106;107mThis text attempts to apply many colors in the same command. Note the colors are applied from left to right so only the right-most option of foreground cyan (SGR.36) and background bright white (SGR.107) is effective.\r\n");
+            //wprintf(L"\x1b[39mThis text has restored the foreground color only.\r\n");
+            //wprintf(L"\x1b[49mThis text has restored the background color only.\r\n");
+            n = n + 1;
+        }
+        else break;
     }
+
+    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "subir", mapa);
+    wprintf(L"\x1b[34;46m%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
 
     //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
 
