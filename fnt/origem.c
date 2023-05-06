@@ -31,7 +31,8 @@ char** ficheiro_lêr(char* ficheiroNome) {
         }
         else {
             linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
-            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
+            //linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
+            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n + 1 * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
             linhaActualDoFicheiro[n + 1] = '\0';
             n = n + 1;
             i = i + 1;
@@ -40,7 +41,7 @@ char** ficheiro_lêr(char* ficheiroNome) {
         //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
     }
 
-    printf("\n");
+    //printf("\n");
 
     free(linhaActualDoFicheiro);
     fclose(ficheiroLido);
@@ -191,15 +192,15 @@ Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa) {
 int main(int** a, char** b) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
-    // Set output mode to handle virtual terminal sequences
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hOut == INVALID_HANDLE_VALUE) { return GetLastError(); }
+    // Define saída para usar sequências de consola virtual
+    HANDLE lindanteDeSaída = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (lindanteDeSaída == INVALID_HANDLE_VALUE) { return GetLastError(); }
 
-    DWORD dwMode = 0;
-    if (!GetConsoleMode(hOut, &dwMode)) { return GetLastError(); }
+    DWORD modoConsola = 0;
+    if (!GetConsoleMode(lindanteDeSaída, &modoConsola)) { return GetLastError(); }
 
-    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-    if (!SetConsoleMode(hOut, dwMode)) { return GetLastError(); }
+    modoConsola |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
     char* caminho_relativo = "../../ficheiros.txt";
     char** ficheiroCaminhoConteúdo = ficheiro_lêr(caminho_relativo);
@@ -228,11 +229,24 @@ int main(int** a, char** b) {
         else break;
     }
 
+    n = 0;
+
     system("cls");
 
-    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "subir", mapa);
-    wprintf(L"\x1b[34;46m\n%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
+    Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "construc", mapa);
 
+    wprintf(L"\x1b[34;46m\n%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
+    wprintf(L"\x1b[39m");
+    wprintf(L"\x1b[49m");
+
+    char** ficheiroConteúdoConstrucção = ficheiro_lêr(mapaEncontrado[0].valôr);
+    while (ficheiroConteúdoConstrucção)
+    {
+        wprintf(L"\x1b[34;46m%S\r\n", linha_aparar(linha_separar('>', ficheiroConteúdoConstrucção[n])[0]));
+        wprintf(L"\x1b[39m");
+        wprintf(L"\x1b[49m");
+        n = n + 1;
+    }
     //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
 
 	return 0;
