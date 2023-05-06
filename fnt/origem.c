@@ -13,14 +13,11 @@ char** ficheiro_lêr(char* ficheiroNome) {
 
     int n = 0;
     int nl = 0;
-    for (int i = 0; charactéreActualDoFicheiro != EOF; i++) {
+    int i = 0;
+    while (charactéreActualDoFicheiro != EOF) {
         charactéreActualDoFicheiro = fgetc(ficheiroLido);
 
-        linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
-        linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
-        linhaActualDoFicheiro[n + 1] = '\0';
-
-        if (charactéreActualDoFicheiro == '\n') {
+        if (charactéreActualDoFicheiro == '\n' || charactéreActualDoFicheiro == EOF) {
             linhas[nl] = malloc(sizeof(char*));
             linhas[nl] = strdup(linhaActualDoFicheiro);
 
@@ -31,11 +28,16 @@ char** ficheiro_lêr(char* ficheiroNome) {
             n = 0;
             nl = nl + 1;
             continue;
-        } else if (charactéreActualDoFicheiro == EOF) break;
+        }
+        else {
+            linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
+            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
+            linhaActualDoFicheiro[n + 1] = '\0';
+            n = n + 1;
+            i = i + 1;
+        }
 
         //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
-
-        n = n + 1;
     }
 
     printf("\n");
@@ -71,13 +73,13 @@ char** linha_separar(char separador, char* linha) {
     int n2 = 0;
     int n3 = 0;
 
-    char** matrizTratada = malloc(sizeof(char*) * linha_contar_separador(separador, linha));
+    char** matrizTratada = malloc(sizeof(char*));
     char* linhaTratada = "";
 
     for (int i = 0; linha[i] != '\0'; i++) {
         //printf("\n%c _ %s", linha[i], linha);
 
-        if (linha[i] == '>') {
+        if (linha[i] == separador) {
             linhaTratada = "";
 
             n3 = 0;
@@ -199,11 +201,7 @@ int main(int** a, char** b) {
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(hOut, dwMode)) { return GetLastError(); }
 
-    printf("");
-
-    //printf("%s %s\n", (char*) mapaEncontrado->passe, (char*) mapaEncontrado->valôr);
-
-    char* caminho_relativo = "ficheiros.txt";
+    char* caminho_relativo = "../../ficheiros.txt";
     char** ficheiroCaminhoConteúdo = ficheiro_lêr(caminho_relativo);
 
     Mapa* mapa = mapa_construir();
@@ -230,8 +228,10 @@ int main(int** a, char** b) {
         else break;
     }
 
+    system("cls");
+
     Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "subir", mapa);
-    wprintf(L"\x1b[34;46m%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
+    wprintf(L"\x1b[34;46m\n%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
 
     //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
 
