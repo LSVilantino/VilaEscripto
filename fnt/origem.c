@@ -10,7 +10,50 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-int main(int** a, char** b) {
+char signal_de_maior = '>';
+
+void 
+consola_limpar()
+{
+    HANDLE lidanteSaída = GetStdHandle(STD_OUTPUT_HANDLE);
+    fflush(NULL); // Limpa carga de entrada.
+
+    CONSOLE_SCREEN_BUFFER_INFO consolaInfo;
+    COORD início = { 0, 0 };
+
+    // Pega o tamanho do quadro da consola
+    if (!GetConsoleScreenBufferInfo(lidanteSaída, &consolaInfo)) { abort(); }
+
+    DWORD tamanho = consolaInfo.dwSize.X * consolaInfo.dwSize.Y;
+    DWORD escripto;
+
+    FillConsoleOutputCharacter(lidanteSaída, TEXT(' '), tamanho, início, &escripto); // Preênche consola com vazios.
+    FillConsoleOutputAttribute(lidanteSaída, consolaInfo.wAttributes, tamanho, início, &escripto); // Limpa atributos (coloração) da consola.
+
+    SetConsoleCursorPosition(lidanteSaída, início);
+}
+
+void 
+opção_mostrar(int opçãoSeleccionada, char** opções) {
+    consola_limpar();
+
+    int n = 0;
+    while (opções[n] != '\0')
+    {
+        if (n == opçãoSeleccionada) {
+            wprintf(L"\x1b[34;46m%S\r\n", linha_aparar(linha_separar(signal_de_maior, opções[n])[0]));
+            wprintf(L"\x1b[39m");
+            wprintf(L"\x1b[49m");
+        }
+        else {
+            printf("%s\r\n", linha_aparar(linha_separar(signal_de_maior, opções[n])[0]));
+        }
+        n = n + 1;
+    }
+}
+
+int 
+main(int** a, char** b) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
     // Define saída para usar sequências de consola virtual
@@ -31,7 +74,7 @@ int main(int** a, char** b) {
     int n = 0;
     while (ficheiroCaminhoConteúdo) {
         if (ficheiroCaminhoConteúdo[n] != NULL) {
-            char** linhaSeparada = linha_separar('>', ficheiroCaminhoConteúdo[n]);
+            char** linhaSeparada = linha_separar(signal_de_maior, ficheiroCaminhoConteúdo[n]);
             mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
             printf("%s %s %d\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
 
@@ -52,27 +95,34 @@ int main(int** a, char** b) {
 
     n = 0;
 
-    system("cls");
-
     Mapa* mapaEncontrado = mapa_procurar__s(tipo_char, "construc", mapa);
-
     //wprintf(L"\x1b[34;46m\n%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
-    wprintf(L"\x1b[39m");
-    wprintf(L"\x1b[49m");
 
     char** ficheiroConteúdoConstrucção = ficheiro_lêr(mapaEncontrado[0].valôr);
-    while (ficheiroConteúdoConstrucção)
-    {
-        if (n == 2) {
-            wprintf(L"\x1b[34;46m%S\r\n", linha_aparar(linha_separar('>', ficheiroConteúdoConstrucção[n])[0]));
-            wprintf(L"\x1b[39m");
-            wprintf(L"\x1b[49m");
+
+    int opção = 0;
+    opção_mostrar(opção, ficheiroConteúdoConstrucção);
+
+    char* opçãoSeleccionada;
+    char c = -1;
+    while (c != 27) {
+        c = getch();
+
+        switch (c) {
+        case 72: { printf("CIMA"); opção = opção - 1; opção_mostrar(opção, ficheiroConteúdoConstrucção); break; }
+        case 80: { printf("BAIXO"); opção = opção + 1; opção_mostrar(opção, ficheiroConteúdoConstrucção); break; }
+        case 75: { printf("ESQUERDA"); opção = opção - 1; opção_mostrar(opção, ficheiroConteúdoConstrucção); break; }
+        case 77: { printf("DIREITA"); opção = opção + 1; opção_mostrar(opção, ficheiroConteúdoConstrucção); break; }
+        case 13: { 
+            opção_mostrar(opção, ficheiroConteúdoConstrucção); 
+            opçãoSeleccionada = ficheiroConteúdoConstrucção[opção];
+            printf("ENTRA - %s", opçãoSeleccionada);
+            break; 
         }
-        else {
-            printf("%s\r\n", linha_aparar(linha_separar('>', ficheiroConteúdoConstrucção[n])[0]));
+        default: { break; }
         }
-        n = n + 1;
     }
+
     //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
 
 	return 0;
