@@ -6,4 +6,9 @@ typedef enum Tipo {
     tipo_char,
 } Tipo;
 
+typedef struct ConteúdoFicheiro {
+    char** conteúdo;
+    int quantidade_conteúdo;
+} ConteúdoFicheiro;
+
 #endif // _CABEÇALHO_TIPO

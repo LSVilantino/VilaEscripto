@@ -33,29 +33,33 @@ linha_separar(char separador, char* linha) {
     int n3 = 0;
 
     char** matrizTratada = malloc(sizeof(char*));
+    if (matrizTratada == NULL) return matrizTratada;
+
     char* linhaTratada = "";
 
-    for (int i = 0; linha[i] != '\0'; i++) {
+    while (linha[n2]) {
         //printf("\n%c _ %s", linha[i], linha);
+        if (linha[n2] != '\0') {
+            if (linha[n2] == separador) {
+                linhaTratada = "";
 
-        if (linha[i] == separador) {
-            linhaTratada = "";
+                n3 = 0;
+                n2 = n2 + 1;
 
-            n3 = 0;
-            n2 = n2 + 1;
+                n = n + 1;
+                continue;
+            }
 
-            n = n + 1;
-            continue;
+            strncpy(&linhaTratada[n3], &linha[n2], sizeof(linha[n2]));
+            linhaTratada[n3 + 1] = '\0';
+            matrizTratada[n] = strdup(linhaTratada);
+
+            if (matrizTratada[n] != NULL) {
+                n2 = n2 + 1;
+                n3 = n3 + 1;
+            }
         }
-
-        strncpy(&linhaTratada[n3], &linha[i], sizeof(linha[i] - 1));
-        linhaTratada[n3 + 1] = '\0';
-        matrizTratada[n] = strdup(linhaTratada);
-
-        n2 = n2 + 1;
-        n3 = n3 + 1;
     }
-
     //printf("\n0~%s\n1~%s", matrizTratada[0], matrizTratada[1]);
     //printf("\nlinha - %s", linhaTratada);
 

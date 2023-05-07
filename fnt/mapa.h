@@ -11,6 +11,6 @@ typedef struct Mapa {
 
 Mapa* mapa_construir();
 void mapa_introduzir(Mapa* mapa[], Mapa valôr);
-Mapa* mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa);
+Mapa* mapa_procurar(Tipo tipo, void* procura, Mapa* mapa);
 
 #endif // _CABEÇALHO_MAPA

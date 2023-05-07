@@ -19,16 +19,17 @@ mapa_construir() {
 void 
 mapa_introduzir(Mapa* mapa[], Mapa valôr) {
     Mapa* mappa = (*mapa);
-    int i = 0;
 
+    int i = 0;
     while (mappa[i].i == i) { i = i + 1; }
     if (valôr.i != i) valôr.i = i;
 
     mappa[i] = valôr;
+    //mappa = realloc(mappa, i + 1 * (sizeof(*mappa) * sizeof(valôr))); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
 }
 
 Mapa* 
-mapa_procurar__s(Tipo tipo, void* procura, Mapa* mapa) {
+mapa_procurar(Tipo tipo, void* procura, Mapa* mapa) {
     int i = 0;
 
     switch (tipo)
