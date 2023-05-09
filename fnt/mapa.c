@@ -17,15 +17,17 @@ mapa_construir() {
 }
 
 void 
-mapa_introduzir(Mapa* mapa[], Mapa valôr) {
-    Mapa* mappa = (*mapa);
-
+mapa_introduzir(Mapa** mapa, Mapa valôr) {
     int i = 0;
-    while (mappa[i].i == i) { i = i + 1; }
+    while ((*mapa)[i].i == i) { i = i + 1; }
     if (valôr.i != i) valôr.i = i;
 
-    mappa[i] = valôr;
-    //mappa = realloc(mappa, i + 1 * (sizeof(*mappa) * sizeof(valôr))); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
+    (*mapa)[i].passe = NULL;
+    (*mapa)[i].valôr = NULL;
+    (*mapa)[i].i = 1;
+
+    (*mapa)[i] = valôr;
+    *mapa = realloc((*mapa), (i + 1 * sizeof(*mapa)) * sizeof(valôr)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
 }
 
 Mapa* 

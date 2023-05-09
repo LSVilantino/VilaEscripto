@@ -30,7 +30,6 @@ ficheiro_lêr(char* ficheiroNome) {
         }
 
         if (charactéreActualDoFicheiro == '\n') {
-            linhas[nl] = malloc(sizeof(char*));
             linhas[nl] = strdup(linhaActualDoFicheiro);
 
             linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
@@ -91,7 +90,6 @@ ficheiro_lêr(char* ficheiroNome) {
 
 Mapa* ficheiro_conteúdo_mapear(char separador, char* ficheiroCaminho) {
     ConteúdoFicheiro ficheiroConteúdo = ficheiro_lêr(ficheiroCaminho);
-
     Mapa* mapa = mapa_construir();
 
     printf("\n\n %s - %d \n\n", ficheiroCaminho, ficheiroConteúdo.quantidade_conteúdo);

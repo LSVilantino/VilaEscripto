@@ -34,13 +34,11 @@ consola_opção_mostrar(int opçãoSeleccionada, char** opções) {
     int n = 0;
     while (opções[n] != '\0')
     {
-        if (n == opçãoSeleccionada) {
+        if (n != opçãoSeleccionada) { printf("%s\r\n", opções[n]); }
+        else {
             wprintf(L"\x1b[34;46m%S\r\n", opções[n]);
             wprintf(L"\x1b[39m");
             wprintf(L"\x1b[49m");
-        }
-        else {
-            printf("%s\r\n", opções[n]);
         }
         n = n + 1;
     }

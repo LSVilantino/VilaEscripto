@@ -52,7 +52,7 @@ main(int** a, char** b) {
         wprintf(L"\x1b[39m");
         wprintf(L"\x1b[49m");
 
-        mapaFicheiro = realloc(mapaFicheiro, (n + 1) * sizeof *mapaFicheiro);
+        mapaFicheiro = realloc(mapaFicheiro, (n + 1 * sizeof *mapaFicheiro) * sizeof(Mapa**));
         n = n + 1;
     }
 
