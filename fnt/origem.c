@@ -31,6 +31,7 @@ main(int** a, char** b) {
     if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
     char* ficheiroIndicador_CaminhoRelativo = "../../ficheiros.txt";
+
     Mapa* mapaIndicador = ficheiro_conteúdo_mapear(signal_de_maior, ficheiroIndicador_CaminhoRelativo);
 
     Mapa* mapaEncontrado = mapa_procurar(tipo_char, "construc", mapaIndicador);

@@ -22,12 +22,8 @@ mapa_introduzir(Mapa** mapa, Mapa valôr) {
     while ((*mapa)[i].i == i) { i = i + 1; }
     if (valôr.i != i) valôr.i = i;
 
-    (*mapa)[i].passe = NULL;
-    (*mapa)[i].valôr = NULL;
-    (*mapa)[i].i = 1;
-
-    (*mapa)[i] = valôr;
     *mapa = realloc((*mapa), (i + 1 * sizeof(*mapa)) * sizeof(valôr)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
+    (*mapa)[i] = valôr;
 }
 
 Mapa* 
@@ -45,8 +41,7 @@ mapa_procurar(Tipo tipo, void* procura, Mapa* mapa) {
             i = i + 1;
         }
         break;
-    default:
-        break;
+    default: break;
     }
 
     return NULL;
