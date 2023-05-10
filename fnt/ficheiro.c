@@ -9,18 +9,42 @@
 
 ConteúdoFicheiro
 ficheiro_lêr(char* ficheiroNome) {
+    FILE* ficheiroLido = fopen(ficheiroNome, "r");
+
     char** linhas = malloc(sizeof(char*));
     char* linhaActualDoFicheiro = malloc(sizeof(char));
-    char charactéreActualDoFicheiro = '\0';
-    FILE* ficheiroLido = fopen(ficheiroNome, "r");
+    char charactéreActualDoFicheiro = fgetc(ficheiroLido);
+    char charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
 
     if (linhas == NULL) return (ConteúdoFicheiro) { 0 };
 
     int n = 0;
     int nl = 0;
-    while ((charactéreActualDoFicheiro = fgetc(ficheiroLido)) != EOF) {
-        if (charactéreActualDoFicheiro == '$') break;
-        if (charactéreActualDoFicheiro == '#') {
+    while (charactéreActualDoFicheiro = fgetc(ficheiroLido)) {
+        printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
+
+        if (charactéreAnteriôrDoFicheiro == '$' || charactéreActualDoFicheiro == EOF) {
+            linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
+
+            n = n + 1;
+
+            linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
+
+            n = n + 1;
+
+            linhaActualDoFicheiro[n] = '\0';
+            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
+
+            linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
+            linhas[nl] = strdup(linhaActualDoFicheiro);
+
+            n = 0;
+            nl = nl + 1;
+
+            break;
+        }
+
+        if (charactéreAnteriôrDoFicheiro == '#') {
             char comentário;
             while (comentário = fgetc(ficheiroLido))
             {
@@ -29,51 +53,35 @@ ficheiro_lêr(char* ficheiroNome) {
             continue;
         }
 
-        if (charactéreActualDoFicheiro == '\n') {
-            linhas[nl] = strdup(linhaActualDoFicheiro);
+        if (charactéreAnteriôrDoFicheiro == '\n') {
+            linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
+
+            n = n + 1;
+
+            linhaActualDoFicheiro[n] = '\0';
+            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
 
             linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
-
+            linhas[nl] = strdup(linhaActualDoFicheiro);
             linhaActualDoFicheiro = malloc(sizeof(char*));
 
             n = 0;
             nl = nl + 1;
+
+            charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
+
             continue;
         }
-        linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
+
+        linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
 
         n = n + 1;
 
+        linhaActualDoFicheiro[n] = '\0';
         //linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
-        linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n + 1 * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
-        linhaActualDoFicheiro[n + 1] = '\0';
-
-        //if (charactéreActualDoFicheiro == '\n') {
-        //    char** tempor = realloc(linhas, (nl + 1 * 2) * sizeof *linhas);
-        //    if (tempor != NULL) {
-        //        linhas = tempor;
-        //        linhas[nl] = strdup(linhaActualDoFicheiro);
-
-        //        free(linhaActualDoFicheiro);
-        //        linhaActualDoFicheiro = malloc(sizeof(char));
-
-        //        n = 0;
-        //        nl = nl + 1;
-        //        continue;
-        //    }
-        //}
-
-        //char* tempor = realloc(linhaActualDoFicheiro, (n + 1 * 2) * sizeof *linhaActualDoFicheiro); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
-        //if (tempor != NULL) {
-        //    linhaActualDoFicheiro = tempor;
-
-        //    linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
-        //    //linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
-        //    n = n + 1;
-
-        //    linhaActualDoFicheiro[n] = '\0';
-        //}
-        //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
+        linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
+        
+        charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
     }
 
     ConteúdoFicheiro cf;

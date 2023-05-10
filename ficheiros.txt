@@ -5,4 +5,3 @@ reposit > ..\..\..\escripto\acólito\ligação.txt
 receitu > ..\..\..\escripto\acólito\receituário.txt
 sinal > ..\..\..\escripto\acólito\sinal.txt
 subir > ..\..\..\escripto\acólito\subir.txt
-$
