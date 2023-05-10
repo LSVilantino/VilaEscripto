@@ -21,14 +21,8 @@ ficheiro_lêr(char* ficheiroNome) {
     int n = 0;
     int nl = 0;
     while (charactéreActualDoFicheiro = fgetc(ficheiroLido)) {
-        printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
-
-        if (charactéreAnteriôrDoFicheiro == '$' || charactéreActualDoFicheiro == EOF) {
+        if (charactéreActualDoFicheiro == '$' || charactéreActualDoFicheiro == EOF) {
             linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
-
-            n = n + 1;
-
-            linhaActualDoFicheiro[n] = charactéreActualDoFicheiro;
 
             n = n + 1;
 
@@ -45,11 +39,16 @@ ficheiro_lêr(char* ficheiroNome) {
         }
 
         if (charactéreAnteriôrDoFicheiro == '#') {
-            char comentário;
-            while (comentário = fgetc(ficheiroLido))
+            while (charactéreAnteriôrDoFicheiro = fgetc(ficheiroLido))
             {
-                if (comentário == '\n') break;
+                if (charactéreAnteriôrDoFicheiro == '\n') break;
             }
+
+            charactéreActualDoFicheiro = fgetc(ficheiroLido);
+            charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
+            //charactéreActualDoFicheiro = fgetc(ficheiroLido);
+
+            n = 0;
             continue;
         }
 
@@ -82,6 +81,7 @@ ficheiro_lêr(char* ficheiroNome) {
         linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
         
         charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
+        //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
     }
 
     ConteúdoFicheiro cf;
@@ -100,14 +100,15 @@ Mapa* ficheiro_conteúdo_mapear(char separador, char* ficheiroCaminho) {
     ConteúdoFicheiro ficheiroConteúdo = ficheiro_lêr(ficheiroCaminho);
     Mapa* mapa = mapa_construir();
 
-    printf("\n\n %s - %d \n\n", ficheiroCaminho, ficheiroConteúdo.quantidade_conteúdo);
+    printf("\n\n%s - %d \n\n", ficheiroCaminho, ficheiroConteúdo.quantidade_conteúdo);
 
     int n = 0;
     while (ficheiroConteúdo.conteúdo) {
         if (n != ficheiroConteúdo.quantidade_conteúdo) {
             char** linhaSeparada = linha_separar(separador, ficheiroConteúdo.conteúdo[n]);
             mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
-            printf("%s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
+
+            printf("%s- %s- %d\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
 
             //system("cls");
             //// Try some Set Graphics Rendition (SGR) terminal escape sequences

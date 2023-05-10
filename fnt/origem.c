@@ -33,6 +33,7 @@ main(int** a, char** b) {
     char* ficheiroIndicador_CaminhoRelativo = "../../ficheiros.txt";
 
     Mapa* mapaIndicador = ficheiro_conteúdo_mapear(signal_de_maior, ficheiroIndicador_CaminhoRelativo);
+
     Mapa* mapaEncontrado = mapa_procurar(tipo_char, "construc", mapaIndicador);
     printf("-%sa-", (char*) mapaEncontrado[0].valôr);
     //wprintf(L"\x1b[34;46m\n%S %S %d\r\n", (char*)mapaEncontrado[0].passe, (char*)mapaEncontrado[0].valôr, mapaEncontrado[0].i);
@@ -49,9 +50,11 @@ main(int** a, char** b) {
         Mapa* mapaConstrucção = mapa_procurar(tipo_char, opçãoSeleccionada, mapaFicheiro[n]);
         mapaIndicador[n].valôr = mapaConstrucção[0].valôr;
 
-        wprintf(L"\x1b[34;46m\n%S %S %d\r\n", (char*)mapaIndicador[n].passe, (char*)mapaIndicador[n].valôr, mapaIndicador[n].i);
+        printf("\n");
+        wprintf(L"\x1b[34;46m%S %S %d", (char*)mapaIndicador[n].passe, (char*)mapaIndicador[n].valôr, mapaIndicador[n].i);
         wprintf(L"\x1b[39m");
         wprintf(L"\x1b[49m");
+        printf("\n");
 
         mapaFicheiro = realloc(mapaFicheiro, (n + 1 * sizeof *mapaFicheiro) * sizeof(Mapa**));
         n = n + 1;

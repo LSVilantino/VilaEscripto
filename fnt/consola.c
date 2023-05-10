@@ -54,11 +54,27 @@ consola_construir_menu(char** opções) {
     while (c != 27) {
         c = getch();
 
+        /* 
+        * Utiliza - se a tabela de códigos ASCII para a detecção da clave.
+        * 72 = ACIMA
+        * 80 = ABAIXO
+        * 75 = ESQUERDA
+        * 77 = DIREITA
+        * 
+        * 13 = ENTRA
+        */
+
         switch (c) {
         case 72: { printf("CIMA"); opção = opção - 1; consola_opção_mostrar(opção, opções); break; }
         case 80: { printf("BAIXO"); opção = opção + 1; consola_opção_mostrar(opção, opções); break; }
         case 75: { printf("ESQUERDA"); opção = opção - 1; consola_opção_mostrar(opção, opções); break; }
-        case 77: { printf("DIREITA"); opção = opção + 1; consola_opção_mostrar(opção, opções); break; }
+        //case 77: { printf("DIREITA"); opção = opção + 1; consola_opção_mostrar(opção, opções); break; }
+        case 77: {
+            consola_opção_mostrar(opção, opções);
+            opçãoSeleccionada = opções[opção];
+            printf("ENTRA - %s\n", opçãoSeleccionada);
+            goto ciclo_quebrar;
+        }
         case 13: {
             consola_opção_mostrar(opção, opções);
             opçãoSeleccionada = opções[opção];
