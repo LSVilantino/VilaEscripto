@@ -108,7 +108,7 @@ Mapa* ficheiro_conteúdo_mapear(char separador, char* ficheiroCaminho) {
             char** linhaSeparada = linha_separar(separador, ficheiroConteúdo.conteúdo[n]);
             mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
 
-            printf("%s- %s- %d\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
+            printf("%s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
 
             //system("cls");
             //// Try some Set Graphics Rendition (SGR) terminal escape sequences

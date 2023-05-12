@@ -34,10 +34,8 @@ mapa_procurar(Tipo tipo, void* procura, Mapa* mapa) {
     {
     case tipo_char:
         while (mapa[i].i == i) {
-            if (strcmp((char*)mapa[i].passe, (char*)procura) == 0) {
-                return &mapa[i];
-            }
-
+            //printf("%s %s", (char*)mapa[i].passe, (char*)procura);
+            if (strcmp((char*)mapa[i].passe, (char*)procura) == 0) return &mapa[i];
             i = i + 1;
         }
         break;
