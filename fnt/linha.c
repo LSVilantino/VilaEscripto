@@ -26,6 +26,31 @@ linha_contar_separador(char separador, char* linha) {
     return n;
 }
 
+bool linha_contém(char* comparador, char* linha) {
+    int tamanho_comparador = 0;
+    while (comparador[tamanho_comparador] != '\0') {
+        tamanho_comparador++;
+    }
+
+    tamanho_comparador--;
+
+    int n = 0;
+    int n_comparador = 0;
+    while (linha[n] != '\0') {
+        if (linha[n] == comparador[n_comparador]) {
+            printf(" (%d %c/%d %c - %d) ", n, linha[n], n_comparador, comparador[n_comparador], tamanho_comparador);
+            if (n_comparador == tamanho_comparador) return 1;
+            n_comparador++;
+        }
+        else {
+            n_comparador = 0;
+        }
+        n++;
+    }
+
+    return 0;
+}
+
 char** 
 linha_separar(char separador, char* linha) {
     int n = 0;

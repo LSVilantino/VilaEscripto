@@ -96,6 +96,13 @@ ficheiro_lêr(char* ficheiroNome) {
     return cf;
 }
 
+
+
+char* ficheiro_linha_tratar(char* linha) {
+    
+    return linha;
+}
+
 Mapa* ficheiro_conteúdo_mapear(char separador, char* ficheiroCaminho) {
     ConteúdoFicheiro ficheiroConteúdo = ficheiro_lêr(ficheiroCaminho);
     Mapa* mapa = mapa_construir();

@@ -5,3 +5,5 @@ construc > ..\..\..\escripto\acólito\ficheiro-construcção.txt
 liga > ..\..\..\escripto\acólito\ficheiro-ligação.txt
 reposit > ..\..\..\escripto\acólito\ligação.txt
 subir > ..\..\..\escripto\acólito\subir.txt
+construir >>> ..\..\..\escripto\acólito\construir.txt
+repositório >>> ..\..\..\escripto\acólito\repositório.txt

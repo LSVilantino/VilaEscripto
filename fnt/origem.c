@@ -30,6 +30,18 @@ main(int** a, char** b) {
     modoConsola |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
+
+
+
+
+    if (linha_contém("cachorra", "O cachorro pulou sobre o tronco caído.") == 1) {
+        printf("Contém");
+    }
+    else printf("Não contém");
+
+
+    return 0;
+
     char* ficheiroPropriedade_caminhoRelativo = "../../propriedade.txt";
     Mapa* mapa_propriedade = ficheiro_conteúdo_mapear(signal_de_maior, ficheiroPropriedade_caminhoRelativo);
 
@@ -39,27 +51,6 @@ main(int** a, char** b) {
 
     // ---------------------------------------------------------------------------------------------------
 
-    char* ficheiroCommando_caminhoRelativo = "../../commando.txt";
-    Mapa* mapa_commando = ficheiro_conteúdo_mapear(signal_de_maior, ficheiroCommando_caminhoRelativo);
-    char** opções_commando = malloc(sizeof(char**));
-
-    int n_commando = 0;
-    while (mapa_commando) {
-        if (n_commando == mapa_commando[n_commando].i) {
-            opções_commando = realloc(opções_commando, (n_commando + 1 * sizeof *opções_commando) * sizeof(char*));
-            opções_commando[n_commando] = strdup(mapa_commando[n_commando].passe);
-            n_commando++;
-        }
-        else break;
-    }
-
-    char* opçãoSeleccionada_commando = consola_construir_menu(opções_commando);
-    Mapa* mapaOpção_commando = mapa_procurar(tipo_char, opçãoSeleccionada_commando, mapa_commando);
-
-    ConteúdoFicheiro ficheiro_commando = ficheiro_lêr(mapaOpção_commando->valôr);
-    char* opçãoSeleccionada_commando_detalhe = consola_construir_menu(ficha_tratar(signal_de_maior, ficheiro_commando.conteúdo));
-
-
     int n_propriedade = 0;
     Mapa** mapaFicheiro_construcção = malloc(sizeof(Mapa**));
     while (mapa_propriedade)
@@ -68,6 +59,8 @@ main(int** a, char** b) {
             printf("%d %d", n_propriedade, mapa_propriedade[n_propriedade].i);
             mapaFicheiro_construcção = realloc(mapaFicheiro_construcção, (n_propriedade + 1 * sizeof * mapaFicheiro_construcção) * sizeof(Mapa**));
             mapaFicheiro_construcção[n_propriedade] = ficheiro_conteúdo_mapear(signal_de_maior, mapa_propriedade[n_propriedade].valôr);
+            //ficheiro_linha_tratar(mapa_propriedade[n_propriedade].valôr);
+            //ficheiro_conteúdo_mapear(signal_de_maior, mapa_propriedade[n_propriedade].valôr);
 
             Mapa* mapa_tempor = mapa_procurar(tipo_char, opçãoSeleccionada_construcção, mapaFicheiro_construcção[n_propriedade]);
 
@@ -87,7 +80,7 @@ main(int** a, char** b) {
 
     printf("\n");
     wprintf(L"\x1b[34;46m%S %S %S %S %S %S %S %S", 
-        (char*)mapa_procurar(tipo_char, "construir", mapa_commando)->valôr,
+        (char*)mapa_procurar(tipo_char, "construir", mapa_propriedade)->valôr,
         (char*)mapa_procurar(tipo_char, "caminho", mapa_propriedade)->valôr,
         (char*)mapa_procurar(tipo_char, "construc", mapa_propriedade)->valôr,
         (char*)mapa_procurar(tipo_char, "liga", mapa_propriedade)->valôr,

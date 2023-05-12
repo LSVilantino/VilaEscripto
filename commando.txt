@@ -1,2 +1,0 @@
-construir > ..\..\..\escripto\acólito\construir.txt
-repositório > ..\..\..\escripto\acólito\repositório.txt
