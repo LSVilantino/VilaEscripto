@@ -1,6 +1,7 @@
-﻿#include "tipo.h"
+﻿#ifndef _CABEÇALHO_MAPA
 
-#ifndef _CABEÇALHO_MAPA
+#include "tipo.h"
+
 #define _CABEÇALHO_MAPA
 
 typedef struct Mapa {

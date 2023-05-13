@@ -14,8 +14,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-char signal_de_maior = '>';
-
 int 
 main(int** a, char** b) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
@@ -30,24 +28,23 @@ main(int** a, char** b) {
     modoConsola |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
+    ficheiro_linha_tratar("teste >>> ..\\..\\..\\escripto\\acólito\\teste.txt");
 
 
-
-
-    if (linha_contém("cachorra", "O cachorro pulou sobre o tronco caído.") == 1) {
+    /*if (linha_contém(">>>", "repositório >>> ..\\..\\..\\escripto\\acólito\\repositório.txt") == 1) {
         printf("Contém");
     }
-    else printf("Não contém");
+    else printf("Não contém");*/
 
 
     return 0;
 
     char* ficheiroPropriedade_caminhoRelativo = "../../propriedade.txt";
-    Mapa* mapa_propriedade = ficheiro_conteúdo_mapear(signal_de_maior, ficheiroPropriedade_caminhoRelativo);
+    Mapa* mapa_propriedade = ficheiro_conteúdo_mapear(ficheiroPropriedade_caminhoRelativo);
 
     Mapa* mapa_construcção = mapa_procurar(tipo_char, "construc", mapa_propriedade);
     ConteúdoFicheiro ficheiro_construcção = ficheiro_lêr(mapa_construcção[0].valôr);
-    char* opçãoSeleccionada_construcção = consola_construir_menu(ficha_tratar(signal_de_maior, ficheiro_construcção.conteúdo));
+    char* opçãoSeleccionada_construcção = consola_construir_menu(ficha_tratar(ficheiro_construcção.conteúdo));
 
     // ---------------------------------------------------------------------------------------------------
 
@@ -58,7 +55,7 @@ main(int** a, char** b) {
         if (n_propriedade == mapa_propriedade[n_propriedade].i) {
             printf("%d %d", n_propriedade, mapa_propriedade[n_propriedade].i);
             mapaFicheiro_construcção = realloc(mapaFicheiro_construcção, (n_propriedade + 1 * sizeof * mapaFicheiro_construcção) * sizeof(Mapa**));
-            mapaFicheiro_construcção[n_propriedade] = ficheiro_conteúdo_mapear(signal_de_maior, mapa_propriedade[n_propriedade].valôr);
+            mapaFicheiro_construcção[n_propriedade] = ficheiro_conteúdo_mapear(mapa_propriedade[n_propriedade].valôr);
             //ficheiro_linha_tratar(mapa_propriedade[n_propriedade].valôr);
             //ficheiro_conteúdo_mapear(signal_de_maior, mapa_propriedade[n_propriedade].valôr);
 

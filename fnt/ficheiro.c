@@ -1,6 +1,8 @@
 ﻿#include "ficheiro.h"
 #include "mapa.h"
 #include "linha.h"
+#include "consola.h"
+#include "lsve.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -96,14 +98,53 @@ ficheiro_lêr(char* ficheiroNome) {
     return cf;
 }
 
+char* 
+ficheiro_linha_tratar(char* linha) {
+    char* linhaValôr = "";
+    char* separadôr = "";
 
+    printf("\n\n~");
+    printf(linha);
+    printf("~\n\n");
+    if (linha_contém(clave_lêr_e_escolher, linha)) {
+        separadôr = linha_separador_procurar(linha);
+        linhaValôr = linha_aparar(linha_separar(separadôr, linha)[1]);
+        ConteúdoFicheiro cf = ficheiro_lêr(linhaValôr);
+        Mapa* mapa_propriedade = linha_matriz_mapear(cf.conteúdo); printf("S");
 
-char* ficheiro_linha_tratar(char* linha) {
-    
+        char** mapa_propriedade_matriz = malloc(sizeof(char**));
+
+        int n = 0;
+        while (mapa_propriedade[n].i == n) {
+            mapa_propriedade_matriz = realloc(mapa_propriedade_matriz, (n + 1 * sizeof *mapa_propriedade_matriz) * sizeof(char*));
+            mapa_propriedade_matriz[n] = mapa_propriedade[n].passe;
+            printf(mapa_propriedade_matriz[n]);
+            n++;
+        }
+
+        char* opçãoSeleccionada_construcção = consola_construir_menu(mapa_propriedade_matriz);
+
+        Mapa* mapa_seleccionado = mapa_procurar(tipo_char, opçãoSeleccionada_construcção, mapa_propriedade);
+        char* linhaTratada = malloc(sizeof(char*));
+        linhaTratada = cf.conteúdo[mapa_seleccionado[0].i];
+
+        printf(linhaTratada);
+
+        ficheiro_linha_tratar(linhaTratada);
+    }
+    if (linha_contém(clave_lêr_e_avançar, linha)) {
+        linhaValôr = linha_separar(clave_lêr_e_avançar, linha)[1];
+    }
+    if (linha_contém(clave_lêr, linha)) {
+        separadôr = linha_separador_procurar(linha);
+        linhaValôr = linha_separar(separadôr, linha)[1]; printf(linhaValôr);
+        return linhaValôr;
+    }
+
     return linha;
 }
 
-Mapa* ficheiro_conteúdo_mapear(char separador, char* ficheiroCaminho) {
+Mapa* ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
     ConteúdoFicheiro ficheiroConteúdo = ficheiro_lêr(ficheiroCaminho);
     Mapa* mapa = mapa_construir();
 
@@ -112,7 +153,9 @@ Mapa* ficheiro_conteúdo_mapear(char separador, char* ficheiroCaminho) {
     int n = 0;
     while (ficheiroConteúdo.conteúdo) {
         if (n != ficheiroConteúdo.quantidade_conteúdo) {
-            char** linhaSeparada = linha_separar(separador, ficheiroConteúdo.conteúdo[n]);
+            //printf(ficheiroConteúdo.conteúdo[n]);
+            char** linhaSeparada = linha_separar(linha_separador_procurar(ficheiroConteúdo.conteúdo[n]), ficheiroConteúdo.conteúdo[n]);
+
             mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
 
             printf("%s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
