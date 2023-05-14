@@ -28,8 +28,9 @@ main(int** a, char** b) {
     modoConsola |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
-    lsve_ficheiro_linha_tratar("teste >>> ..\\..\\..\\escripto\\acólito\\teste.txt");
+    char* k = lsve_ficheiro_linha_tratar("teste >>> ..\\..\\..\\escripto\\acólito\\teste.txt");
 
+    printf("%s %s", "AAAAAAAA", k);
     return 0;
 
     char* ficheiroPropriedade_caminhoRelativo = "../../propriedade.txt";

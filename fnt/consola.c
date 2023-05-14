@@ -51,7 +51,7 @@ consola_construir_menu(char** opções) {
 
     char* opçãoSeleccionada = "";
     char c = -1;
-    while (c != 27) {
+    while (c) {
         c = getch();
 
         /* 
@@ -65,6 +65,7 @@ consola_construir_menu(char** opções) {
         */
 
         switch (c) {
+        case 27: { printf("ESCAPE"); return NULL; }
         case 72: { printf("CIMA"); opção = opção - 1; consola_opção_mostrar(opção, opções); break; }
         case 80: { printf("BAIXO"); opção = opção + 1; consola_opção_mostrar(opção, opções); break; }
         case 75: { printf("ESQUERDA"); opção = opção - 1; consola_opção_mostrar(opção, opções); break; }

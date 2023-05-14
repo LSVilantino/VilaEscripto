@@ -26,7 +26,6 @@ lsve_linha_separar(char* separadôr, char* linha) {
             charactéreActual[1] = '\0';
 
             if (linha_contém(separadôr, linhaTratada)) {
-                linhaTratada[n3 - linha_charactéres_contar(separadôr) - 1] = '\0';
                 matrizTratada[n] = strdup(linhaTratada);
 
                 linhaTratada[0] = '\0';
@@ -79,11 +78,13 @@ lsve_ficheiro_linha_tratar(char* linha) {
     printf("\n\n~");
     printf(linha);
     printf("~\n\n");
-    if (linha_contém(clave_lêr_e_escolher, linha)) {
-        separadôr = linha_separador_procurar(linha);
+
+    separadôr = linha_separador_procurar(linha);
+
+    if (separadôr == clave_lêr_e_escolher) {
         linhaValôr = linha_aparar(linha_separar(separadôr, linha)[1]);
         ConteúdoFicheiro cf = ficheiro_lêr(linhaValôr);
-        Mapa* mapa_propriedade = linha_matriz_mapear(cf.conteúdo); printf("S");
+        Mapa* mapa_propriedade = linha_matriz_mapear(cf.conteúdo);
 
         char** mapa_propriedade_matriz = malloc(sizeof(char**));
 
@@ -97,24 +98,21 @@ lsve_ficheiro_linha_tratar(char* linha) {
 
         char* opçãoSeleccionada_construcção = consola_construir_menu(mapa_propriedade_matriz);
 
+        if (opçãoSeleccionada_construcção == NULL) return opçãoSeleccionada_construcção;
         Mapa* mapa_seleccionado = mapa_procurar(tipo_char, opçãoSeleccionada_construcção, mapa_propriedade);
         char* linhaTratada = malloc(sizeof(char*));
         linhaTratada = cf.conteúdo[mapa_seleccionado[0].i];
 
-        printf(linhaTratada);
-
-        lsve_ficheiro_linha_tratar(linhaTratada);
+        return lsve_ficheiro_linha_tratar(linhaTratada);
     }
-    if (linha_contém(clave_lêr_e_avançar, linha)) {
-        linhaValôr = linha_separar(clave_lêr_e_avançar, linha)[1];
+    if (separadôr == clave_lêr_e_avançar) {
+        linhaValôr = linha_separar(separadôr, linha)[1];
     }
-    if (linha_contém(clave_lêr, linha)) {
-        separadôr = linha_separador_procurar(linha);
-        linhaValôr = linha_separar(separadôr, linha)[1]; printf(linhaValôr);
-        return linhaValôr;
+    if (separadôr == clave_lêr) {
+        linhaValôr = linha_separar(separadôr, linha)[1];
     }
 
-    return linha;
+    return linhaValôr;
 }
 
 char**
