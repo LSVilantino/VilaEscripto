@@ -28,13 +28,13 @@ main(int** a, char** b) {
     modoConsola |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
-    char* k = lsve_ficheiro_linha_tratar("teste >>> ..\\..\\..\\escripto\\acólito\\teste.txt");
+    //char* k = lsve_ficheiro_linha_tratar("teste >>> ..\\..\\..\\escripto\\acólito\\teste.txt");
 
-    printf("%s %s", "AAAAAAAA", k);
-    return 0;
+    //printf("\n%s", k);
+    //return 0;
 
     char* ficheiroPropriedade_caminhoRelativo = "../../propriedade.txt";
-    Mapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(ficheiroPropriedade_caminhoRelativo);
+    LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(ficheiroPropriedade_caminhoRelativo);
 
     // ---------------------------------------------------------------------------------------------------
 
@@ -42,8 +42,8 @@ main(int** a, char** b) {
     while (mapa_propriedade)
     {
         if (n_propriedade == mapa_propriedade[n_propriedade].i) {
-            printf("%d %d", n_propriedade, mapa_propriedade[n_propriedade].i);
-            mapa_propriedade[n_propriedade].valôr = lsve_ficheiro_linha_tratar(mapa_propriedade[n_propriedade].valôr);
+            printf("%d %d %s", n_propriedade, mapa_propriedade[n_propriedade].i, (char*)mapa_propriedade[n_propriedade].valôr);
+            mapa_propriedade[n_propriedade].valôr = lsve_ficheiro_linha_tratar(mapa_propriedade[n_propriedade]);
 
             printf("\n");
             wprintf(L"\x1b[34;46m%S %S %d", (char*)mapa_propriedade[n_propriedade].passe, (char*)mapa_propriedade[n_propriedade].valôr, mapa_propriedade[n_propriedade].i);
@@ -57,15 +57,16 @@ main(int** a, char** b) {
     }
 
     printf("\n");
-    wprintf(L"\x1b[34;46m%S %S %S %S %S %S %S %S", 
-        (char*)mapa_procurar(tipo_char, "construir", mapa_propriedade)->valôr,
-        (char*)mapa_procurar(tipo_char, "caminho", mapa_propriedade)->valôr,
-        (char*)mapa_procurar(tipo_char, "construc", mapa_propriedade)->valôr,
-        (char*)mapa_procurar(tipo_char, "liga", mapa_propriedade)->valôr,
-        (char*)mapa_procurar(tipo_char, "reposit", mapa_propriedade)->valôr,
-        (char*)mapa_procurar(tipo_char, "receitu", mapa_propriedade)->valôr,
-        (char*)mapa_procurar(tipo_char, "sinal", mapa_propriedade)->valôr,
-        (char*)mapa_procurar(tipo_char, "subir", mapa_propriedade)->valôr
+    wprintf(L"\x1b[34;46m%S %S %S %S %S %S %S %S %S", 
+        (char*)lsve_mapa_procurar(tipo_char, "caminho", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "sinal", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "receitu", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "construc", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "liga", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "reposit", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "subir", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "construir", mapa_propriedade)->valôr,
+        (char*)lsve_mapa_procurar(tipo_char, "repositório", mapa_propriedade)->valôr
     );
     wprintf(L"\x1b[39m");
     wprintf(L"\x1b[49m");
