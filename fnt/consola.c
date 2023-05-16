@@ -66,9 +66,9 @@ consola_construir_menu(char** opções) {
 
         switch (c) {
         case 27: { printf("ESCAPE"); return NULL; }
-        case 72: { printf("CIMA"); opção = opção - 1; consola_opção_mostrar(opção, opções); break; }
-        case 80: { printf("BAIXO"); opção = opção + 1; consola_opção_mostrar(opção, opções); break; }
-        case 75: { printf("ESQUERDA"); opção = opção - 1; consola_opção_mostrar(opção, opções); break; }
+        case 72: { printf("CIMA"); opção = opção - 1; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
+        case 80: { printf("BAIXO"); opção = opção + 1; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
+        case 75: { printf("ESQUERDA"); opção = opção - 1; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
         //case 77: { printf("DIREITA"); opção = opção + 1; consola_opção_mostrar(opção, opções); break; }
         case 77: {
             consola_opção_mostrar(opção, opções);

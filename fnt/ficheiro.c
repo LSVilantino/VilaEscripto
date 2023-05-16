@@ -28,7 +28,6 @@ ficheiro_lêr(char* ficheiroNome) {
             n = n + 1;
 
             linhaActualDoFicheiro[n] = '\0';
-            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
 
             linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
             linhas[nl] = strdup(linhaActualDoFicheiro);

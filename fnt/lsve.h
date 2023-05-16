@@ -23,6 +23,7 @@ char** lsve_ficha_tratar(char** linhas);
 char* lsve_ficheiro_linha_tratar(LSVEMapa linha);
 LSVEMapa* lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho);
 
+LSVEMapa* lsve_mapa_construir();
 LSVEMapa* lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa);
 void lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr);
 char** lsve_mapa_a_matriz_char(LSVEMapa* linhas);

@@ -9,7 +9,7 @@ O LSVE trabalha inteiramente com definição e arranjo de valôres. O utilizador
 
 Há modos diferentes de se introduzir valôres ao LSVE via ficheiro de texto, mas todos funcionam através do método de passe/clave e valôr, separados por um sinal.
 	
-	passe (separador) valôr
+	passe (separador/sinal) valôr
 
 Eis como se parecem em uma aplicação mais fidedigna:
 

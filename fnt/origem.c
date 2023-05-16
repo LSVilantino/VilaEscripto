@@ -15,7 +15,7 @@
 #include <windows.h>
 
 int 
-main(int** a, char** b) {
+main(int** _, char** argumentos) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
     // Define saída para usar sequências de consola virtual
@@ -28,13 +28,8 @@ main(int** a, char** b) {
     modoConsola |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
-    //char* k = lsve_ficheiro_linha_tratar("teste >>> ..\\..\\..\\escripto\\acólito\\teste.txt");
-
-    //printf("\n%s", k);
-    //return 0;
-
-    char* ficheiroPropriedade_caminhoRelativo = "../../propriedade.txt";
-    LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(ficheiroPropriedade_caminhoRelativo);
+    char* ficheiroPropriedade_caminho = strdup(argumentos[0]);
+    LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(ficheiroPropriedade_caminho);
 
     // ---------------------------------------------------------------------------------------------------
 

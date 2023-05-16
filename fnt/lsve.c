@@ -86,9 +86,6 @@ lsve_ficheiro_linha_tratar(LSVEMapa linha) {
     printf("\n\n~");
     printf(linha.valôr);
     printf("~\n\n");
-    printf("\n\n~");
-    printf(linha.separadôr);
-    printf("~\n\n");
 
     separadôr = linha_separador_procurar(linha.separadôr);
 
@@ -102,24 +99,40 @@ lsve_ficheiro_linha_tratar(LSVEMapa linha) {
         while (mapa_propriedade[n].i == n) {
             mapa_propriedade_matriz = realloc(mapa_propriedade_matriz, (n + 1 * sizeof * mapa_propriedade_matriz) * sizeof(char*));
             mapa_propriedade_matriz[n] = mapa_propriedade[n].passe;
-            printf(mapa_propriedade_matriz[n]);
+            printf("%s ", mapa_propriedade_matriz[n]);
             n++;
         }
 
         char* opçãoSeleccionada_construcção = consola_construir_menu(mapa_propriedade_matriz);
         if (opçãoSeleccionada_construcção == NULL) return opçãoSeleccionada_construcção;
 
-        LSVEMapa* mapa_seleccionado = (LSVEMapa*) mapa_procurar(tipo_char, opçãoSeleccionada_construcção, mapa_propriedade);
+        LSVEMapa* mapa_seleccionado;
+        Mapa* mapa_seleccionado_val = mapa_procurar(tipo_char, opçãoSeleccionada_construcção, mapa_propriedade);
+        mapa_seleccionado = &(LSVEMapa) { mapa_seleccionado_val->passe, mapa_seleccionado_val->valôr, mapa_seleccionado_val->i, "NIL"};
+
         return lsve_ficheiro_linha_tratar(*mapa_seleccionado);
-    }
-    if (separadôr == clave_lêr_e_avançar) {
-    }
-    if (separadôr == clave_lêr) {
+    } 
+    else if (separadôr == clave_lêr_e_avançar) {
+    } 
+    else if (separadôr == clave_lêr) {
         printf(linha.passe);
         return strdup(linha.valôr);
     }
 
     return linha.valôr;
+}
+
+LSVEMapa*
+lsve_mapa_construir() {
+    LSVEMapa* mapa = malloc(sizeof(LSVEMapa*));
+
+    mapa[0].passe = "NIL";
+    mapa[0].separadôr = "NIL";
+    mapa[0].valôr = "NIL";
+    mapa[0].i = 1; // Deve ser mantido a zero, por conta das comparações do método de introducção.
+
+    //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
+    return mapa;
 }
 
 LSVEMapa*
