@@ -3,9 +3,9 @@
 /*
 * Usa a função 'system' para corrêr um commando atribuído à clave.
 * 
-* ex.: IR_CAMINHO_PROJECTO >* cd $(Caminho do Projecto)
+* ex.: IR_CAMINHO_PROJECTO * cd $(Caminho do Projecto)
 */ 
-char* clave_corrêr = ">*";
+char* clave_corrêr = "*";
 /*
 * Permite a selecção de algum valôr em outro ficheiro.
 * 

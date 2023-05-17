@@ -28,7 +28,7 @@ main(int** _, char** argumentos) {
     modoConsola |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
     if (!SetConsoleMode(lindanteDeSaída, modoConsola)) { return GetLastError(); }
 
-    char* ficheiroPropriedade_caminho = strdup(argumentos[0]);
+    char* ficheiroPropriedade_caminho = strdup(argumentos[1]);
     LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(ficheiroPropriedade_caminho);
 
     // ---------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ main(int** _, char** argumentos) {
     {
         if (n_propriedade == mapa_propriedade[n_propriedade].i) {
             printf("%d %d %s", n_propriedade, mapa_propriedade[n_propriedade].i, (char*)mapa_propriedade[n_propriedade].valôr);
-            mapa_propriedade[n_propriedade].valôr = lsve_ficheiro_linha_tratar(mapa_propriedade[n_propriedade]);
+            mapa_propriedade[n_propriedade].valôr = lsve_ficheiro_valôr_tratar(tipo_char, mapa_propriedade[n_propriedade].passe, mapa_propriedade);
 
             printf("\n");
             wprintf(L"\x1b[34;46m%S %S %d", (char*)mapa_propriedade[n_propriedade].passe, (char*)mapa_propriedade[n_propriedade].valôr, mapa_propriedade[n_propriedade].i);
@@ -67,7 +67,5 @@ main(int** _, char** argumentos) {
     wprintf(L"\x1b[49m");
     printf("\n");
 
-    //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
-
-	return 0;
+	return EXIT_SUCCESS;
 }

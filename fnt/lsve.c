@@ -80,17 +80,43 @@ lsve_ficha_tratar(char** linhas) {
 }
 
 char*
-lsve_ficheiro_linha_tratar(LSVEMapa linha) {
+lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades) {
     char* separadôr = "";
 
     printf("\n\n~");
-    printf(linha.valôr);
+    printf((char*) clave);
     printf("~\n\n");
 
-    separadôr = linha_separador_procurar(linha.separadôr);
+    LSVEMapa mapa = lsve_mapa_procurar(clave_tipo, clave, propriedades)[0];
+    separadôr = linha_separador_procurar(mapa.separadôr);
 
-    if (separadôr == clave_lêr_e_escolher) {
-        ConteúdoFicheiro cf = ficheiro_lêr(linha.valôr);
+    if (separadôr == clave_corrêr) {
+        int n = 0;
+
+        bool seAbre = 0;
+        bool seFechou = 0;
+
+        char* valôr = mapa.valôr;
+        while (valôr)
+        {
+            if (valôr[n] == '$' && valôr[n++] == '(') {
+                seAbre = 1;
+
+                n++;
+                while (valôr[n]) {
+                    if (valôr[n] == ')') {
+                        seFechou = 1;
+                        break;
+                    }
+                    n++;
+                }
+            }
+
+            n++;
+        }
+    }
+    else if (separadôr == clave_lêr_e_escolher) {
+        ConteúdoFicheiro cf = ficheiro_lêr(mapa.valôr);
         Mapa* mapa_propriedade = linha_matriz_mapear(cf.conteúdo);
 
         char** mapa_propriedade_matriz = malloc(sizeof(char**));
@@ -110,16 +136,16 @@ lsve_ficheiro_linha_tratar(LSVEMapa linha) {
         Mapa* mapa_seleccionado_val = mapa_procurar(tipo_char, opçãoSeleccionada_construcção, mapa_propriedade);
         mapa_seleccionado = &(LSVEMapa) { mapa_seleccionado_val->passe, mapa_seleccionado_val->valôr, mapa_seleccionado_val->i, "NIL"};
 
-        return lsve_ficheiro_linha_tratar(*mapa_seleccionado);
+        return lsve_ficheiro_valôr_tratar(clave_tipo, clave, mapa_seleccionado);
     } 
     else if (separadôr == clave_lêr_e_avançar) {
-    } 
+    }
     else if (separadôr == clave_lêr) {
-        printf(linha.passe);
-        return strdup(linha.valôr);
+        printf(mapa.passe);
+        return strdup(mapa.valôr);
     }
 
-    return linha.valôr;
+    return mapa.valôr;
 }
 
 LSVEMapa*
