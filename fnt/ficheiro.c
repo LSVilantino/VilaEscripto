@@ -22,23 +22,7 @@ ficheiro_lêr(char* ficheiroNome) {
     int n = 0;
     int nl = 0;
     while (charactéreActualDoFicheiro = fgetc(ficheiroLido)) {
-        if (charactéreActualDoFicheiro == '$' || charactéreActualDoFicheiro == EOF) {
-            linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
-
-            n = n + 1;
-
-            linhaActualDoFicheiro[n] = '\0';
-
-            linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
-            linhas[nl] = strdup(linhaActualDoFicheiro);
-
-            n = 0;
-            nl = nl + 1;
-
-            break;
-        }
-
-        if (charactéreAnteriôrDoFicheiro == '#') {
+        if (charactéreAnteriôrDoFicheiro == clave_ficheiro_comentário) {
             while (charactéreAnteriôrDoFicheiro = fgetc(ficheiroLido))
             {
                 if (charactéreAnteriôrDoFicheiro == '\n') break;
@@ -72,6 +56,22 @@ ficheiro_lêr(char* ficheiroNome) {
             continue;
         }
 
+        if (charactéreActualDoFicheiro == clave_ficheiro_forçar_encerro || charactéreActualDoFicheiro == clave_ficheiro_encerro) {
+            linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
+
+            n = n + 1;
+
+            linhaActualDoFicheiro[n] = '\0';
+
+            linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
+            linhas[nl] = strdup(linhaActualDoFicheiro);
+
+            n = 0;
+            nl = nl + 1;
+
+            break;
+        }
+
         linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
 
         n = n + 1;
@@ -81,12 +81,17 @@ ficheiro_lêr(char* ficheiroNome) {
         linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
         
         charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
-        //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
+        printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
     }
 
     ConteúdoFicheiro cf;
     cf.quantidade_conteúdo = nl;
     cf.conteúdo = linhas;
+
+    int i = 0;
+    while (cf.quantidade_conteúdo == i) {
+        printf(cf.conteúdo[i]);
+    }
 
     //printf("\n");
 
@@ -107,7 +112,7 @@ ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
     while (ficheiroConteúdo.conteúdo) {
         if (n != ficheiroConteúdo.quantidade_conteúdo) {
             //printf(ficheiroConteúdo.conteúdo[n]);
-            char** linhaSeparada = linha_separar(linha_separador_procurar(ficheiroConteúdo.conteúdo[n]), ficheiroConteúdo.conteúdo[n]);
+            char** linhaSeparada = linha_separar(lsve_linha_separador_procurar(ficheiroConteúdo.conteúdo[n]), ficheiroConteúdo.conteúdo[n]);
 
             mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
 

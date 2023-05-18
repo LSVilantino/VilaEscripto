@@ -1,24 +1,26 @@
 ﻿#include "linha.h"
+#include "lsve.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 bool 
-linha_contém(char* comparador, char* linha) {
-    int tamanho_comparador = 0;
-    while (comparador[tamanho_comparador] != '\0') {
-        tamanho_comparador++;
+linha_contém(char* comparadôr, char* linha) {
+    int tamanho_comparadôr = 0;
+    while (comparadôr[tamanho_comparadôr] != '\0') {
+        tamanho_comparadôr++;
     }
 
-    tamanho_comparador--;
+    tamanho_comparadôr--;
 
     int n = 0;
     int n_comparador = 0;
     while (linha[n] != '\0') {
-        if (linha[n] == comparador[n_comparador]) {
-            //printf(" (%d %c/%d %c - %d) ", n, linha[n], n_comparador, comparador[n_comparador], tamanho_comparador);
-            if (n_comparador == tamanho_comparador) return 1;
+        //printf("(%c//%c) ", linha[n], comparador[n_comparador]);
+        if (linha[n] == comparadôr[n_comparador]) {
+            //printf("(%d %c/%d %c - %d) ", n, linha[n], n_comparador, comparador[n_comparador], tamanho_comparador);
+            if (n_comparador == tamanho_comparadôr) return 1;
             n_comparador++;
         }
         else {
@@ -50,15 +52,6 @@ linha_separador_contar(char separador, char* linha) {
     }
 
     return n;
-}
-
-char*
-linha_separador_procurar(char* linha) {
-    if (linha_contém(clave_lêr_e_escolher, linha)) return clave_lêr_e_escolher;
-    if (linha_contém(clave_lêr_e_avançar, linha)) return clave_lêr_e_avançar;
-    if (linha_contém(clave_lêr, linha)) return clave_lêr;
-
-    return NULL;
 }
 
 char** 
@@ -140,12 +133,59 @@ linha_aparar(char* linha) {
     return strdup(linhaTratada);
 }
 
-Mapa* linha_matriz_mapear(char** linhas) {
+char* 
+linha_repôr(char* reposição, char* alvo, char* linha) {
+    int n = 0;
+    int n_lc = 0;
+    int n_a = 0;
+
+    int tamanho_alvo = 0;
+    while (alvo[tamanho_alvo] != '\0') {
+        tamanho_alvo++;
+    }
+
+    tamanho_alvo--;
+
+    printf("\n\n");
+    while (linha[n] != '\0') {
+        if (linha[n] == alvo[n_a]) {
+            if (n_a == tamanho_alvo) {
+                int n_pós_alvo = n + linha_charactéres_contar(alvo) - 1;
+                int n_pré_alvo = n - linha_charactéres_contar(alvo);
+                int n_pa = 0;
+                int n_linha = n_pós_alvo + n_pa;
+                char* linha_cópia = malloc(sizeof(char*));
+
+                while (linha[n_linha] != '\0') {
+                    linha_cópia = realloc(linha_cópia, (n_pa + 1 * sizeof(char*)));
+                    linha_cópia[n_pa] = linha[n_linha];
+                    n_pa++;
+                    n_linha++;
+                }
+
+                linha[n_pré_alvo] = '\0';
+
+                strcat(linha, reposição);
+                strcat(linha, linha_cópia);
+            }
+            n_a++;
+        }
+        else {
+            n_a = 0;
+        }
+        n++;
+    }
+
+    return linha;
+}
+
+Mapa* 
+linha_matriz_mapear(char** linhas) {
     Mapa* mapa = malloc(sizeof(Mapa*));
 
     int n = 0;
     while (linhas[n] != '\0') {
-        char** linhaSeparada = linha_separar(linha_separador_procurar(linhas[n]), linhas[n]);
+        char** linhaSeparada = linha_separar(lsve_linha_separador_procurar(linhas[n]), linhas[n]);
         mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
 
         printf("%s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);

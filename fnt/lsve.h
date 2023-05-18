@@ -18,6 +18,7 @@ typedef struct LSVEMapa {
 } LSVEMapa;
 
 char** lsve_linha_separar(char* separadôr, char* linha);
+char* lsve_linha_separador_procurar(char* linha);
 char** lsve_ficha_tratar(char** linhas);
 
 char* lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* mapa);
@@ -25,6 +26,7 @@ LSVEMapa* lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho);
 
 LSVEMapa* lsve_mapa_construir();
 LSVEMapa* lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa);
+LSVEMapa* lsve_linha_matriz_mapear(char** linhas);
 void lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr);
 char** lsve_mapa_a_matriz_char(LSVEMapa* linhas);
 #endif // _CABEÇALHO_LSVE
