@@ -148,6 +148,7 @@ linha_repôr(char* reposição, char* alvo, char* linha) {
 
     printf("\n\n");
     while (linha[n] != '\0') {
+        printf(" %c-%c ", linha[n], alvo[n_a]);
         if (linha[n] == alvo[n_a]) {
             if (n_a == tamanho_alvo) {
                 int n_pós_alvo = n + linha_charactéres_contar(alvo) - 1;
@@ -167,6 +168,11 @@ linha_repôr(char* reposição, char* alvo, char* linha) {
 
                 strcat(linha, reposição);
                 strcat(linha, linha_cópia);
+
+                free(linha_cópia);
+
+                n = n_pós_alvo;
+                n++;
             }
             n_a++;
         }

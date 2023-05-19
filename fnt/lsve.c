@@ -108,42 +108,54 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
 
     if (separadôr == clave_corrêr) {
         int n = 0;
+        int n_reposição = 0;
 
         char* commando = (char*) mapa.valôr;
         char* clave_commando = malloc(sizeof(char*));
+        char* clave_reposição = malloc(sizeof(char*));
 
-        while (linha_contém("$(", commando))
+    ciclo_volta:
+
+        while (linha_contém("$(", mapa.valôr) || commando[n] != '\0')
         {
             if (commando[n] == '$' && commando[n + 1] == '(') {
                 seAbre = 1;
-                n = n + 2;
+
+                clave_reposição = realloc(clave_reposição, (n_reposição + 1 * sizeof(char)));
+                clave_reposição[n_reposição] = commando[n]; n_reposição++; n++;
+                clave_reposição = realloc(clave_reposição, (n_reposição + 1 * sizeof(char)));
+                clave_reposição[n_reposição] = commando[n]; n_reposição++; n++;
+
+
 
                 int n_clave = 0;
                 while (commando[n]) {
                     if (commando[n] == ')') {
                         seFecha = 1;
-                        goto ciclo_quebrar;
+                        clave_reposição = realloc(clave_reposição, (n_reposição + 1 * sizeof(char)));
+                        clave_reposição[n_reposição] = commando[n];
+
+                        LSVEMapa mapa_corrida = *lsve_mapa_procurar(clave_tipo, clave_commando, propriedades);
+                        mapa.valôr = linha_repôr(mapa_corrida.valôr, clave_reposição, mapa.valôr);
+
+                        n_reposição = 0;
+                        clave_reposição[n_reposição] = '\0';
+                        goto ciclo_volta;
                     }
+
+                    clave_reposição = realloc(clave_reposição, (n_reposição + 1 * sizeof(char)));
+                    clave_reposição[n_reposição] = commando[n];
 
                     clave_commando = realloc(clave_commando, (n_clave + 1 * sizeof(char)));
                     clave_commando[n_clave] = commando[n];
 
+                    n_reposição++;
                     n_clave++;
                     n++;
                 }
             }
             n++;
         }
-
-    ciclo_quebrar:
-
-        LSVEMapa mapa_corrida = *lsve_mapa_procurar(clave_tipo, clave_commando, propriedades);
-
-        char* clave_reposição = "$(";
-
-        strcat(clave_reposição, clave_commando);
-
-        mapa.valôr = linha_repôr(mapa_corrida.valôr, clave_reposição, mapa.valôr);
 
         printf("AAAAAAAAAAA%s", (char*)mapa.valôr);
         //system(commando);
