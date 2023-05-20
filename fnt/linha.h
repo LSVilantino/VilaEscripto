@@ -11,6 +11,7 @@ bool linha_contém(char* comparador, char* linha);
 
 char** linha_separar(char* separador, char* linha);
 char* linha_aparar(char* linha);
+char* linha_cortar(int de, int até, char*);
 
 char* linha_repôr(char* reposição, char* alvo, char* linha);
 

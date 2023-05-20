@@ -46,7 +46,7 @@ main(int** _, char** argumentos) {
             wprintf(L"\x1b[49m");
             printf("\n");
 
-            n_propriedade = n_propriedade + 1;
+            n_propriedade++;
         }
         else break;
     }

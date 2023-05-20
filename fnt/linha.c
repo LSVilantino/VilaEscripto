@@ -35,8 +35,7 @@ linha_contém(char* comparadôr, char* linha) {
 int
 linha_charactéres_contar(char* linha) {
     int n = 0;
-
-    for (int i = 0; linha[i] != '\0'; i++) { n = i; }
+    while(linha[n] != '\0') n++;
 
     return n;
 }
@@ -52,6 +51,33 @@ linha_separador_contar(char separador, char* linha) {
     }
 
     return n;
+}
+
+char* linha_complementar(char* complemento, char* linha) {
+    if (complemento == '\0') return linha;
+
+    int linha_t = linha_charactéres_contar(linha);
+    int complemento_t = linha_charactéres_contar(complemento);
+    int total_t = linha_t + complemento_t;
+
+    char* resultado = malloc(total_t * sizeof(char));
+
+    int linha_n = 0;
+    while (linha_n != linha_t) {
+        resultado[linha_n] = linha[linha_n];
+        resultado[linha_n + 1] = '\0';
+        linha_n++;
+    }
+
+    int complemento_n = 0;
+    while (complemento_n != complemento_t) {
+        resultado[linha_n] = complemento[complemento_n];
+        resultado[linha_n + 1] = '\0';
+        linha_n++;
+        complemento_n++;
+    }
+
+    return resultado;
 }
 
 char** 
@@ -134,45 +160,63 @@ linha_aparar(char* linha) {
 }
 
 char* 
+linha_cortar(int de, int até, char* linha) {
+    if (de > até || de == até) return '\0';
+    char* resultado = malloc(sizeof(char));
+
+    int n = 0;
+    while (linha) {
+        if ((de + n) != até) {
+            resultado = realloc(resultado, (n + 1 * sizeof(char)));
+            resultado[n] = linha[de + n];
+            resultado[n + 1] = '\0';
+            n++;
+        }
+        else break;
+    }
+
+    return resultado;
+}
+
+char* 
 linha_repôr(char* reposição, char* alvo, char* linha) {
     int n = 0;
     int n_lc = 0;
     int n_a = 0;
-
-    int tamanho_alvo = 0;
-    while (alvo[tamanho_alvo] != '\0') {
-        tamanho_alvo++;
-    }
-
-    tamanho_alvo--;
+    int alvo_t = linha_charactéres_contar(alvo) - 1;
+    int linha_t_i = linha_charactéres_contar(linha);
 
     printf("\n\n");
     while (linha[n] != '\0') {
-        printf(" %c-%c ", linha[n], alvo[n_a]);
         if (linha[n] == alvo[n_a]) {
-            if (n_a == tamanho_alvo) {
-                int n_pós_alvo = n + linha_charactéres_contar(alvo) - 1;
-                int n_pré_alvo = n - linha_charactéres_contar(alvo);
-                int n_pa = 0;
-                int n_linha = n_pós_alvo + n_pa;
-                char* linha_cópia = malloc(sizeof(char*));
+            //printf(" %c-%c ", linha[n], alvo[n_a]);
+            if (n_a == alvo_t) {
+                int n_pós_alvo = n + 1;
+                int n_pré_alvo = n - alvo_t;
 
-                while (linha[n_linha] != '\0') {
-                    linha_cópia = realloc(linha_cópia, (n_pa + 1 * sizeof(char*)));
-                    linha_cópia[n_pa] = linha[n_linha];
-                    n_pa++;
-                    n_linha++;
-                }
+                printf(" %d-%d ", n_pós_alvo, linha_t_i);
+
+                char* linha_cópia = linha_cortar(n_pós_alvo, linha_t_i, linha);
+
+                printf("\n\n");
+                printf("YYYYYYYY%s", linha_cópia);
 
                 linha[n_pré_alvo] = '\0';
 
-                strcat(linha, reposição);
-                strcat(linha, linha_cópia);
+                linha = linha_complementar(reposição, linha);
+                linha = linha_complementar(linha_cópia, linha);
+
+                linha_t_i = linha_charactéres_contar(linha);
+
+                linha[linha_t_i] = '\0';
+
+                printf("\n\n");
+                printf(linha);
 
                 free(linha_cópia);
 
-                n = n_pós_alvo;
-                n++;
+                n_a = 0;
+                continue;
             }
             n_a++;
         }

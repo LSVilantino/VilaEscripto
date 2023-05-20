@@ -1,6 +1,5 @@
 caminhoteste > ..\..\..\escripto\acólito\teste
-correr >@> rmdir $(caminhoteste)
-a > b%
+correr >@> rmdir $(caminhoteste) $(caminhoteste)%
 projecto >>> ..\..\..\escripto\acólito\ficheiro-construcção.txt
 caminho >$(projecto)> ..\..\..\escripto\acólito\caminho.txt
 sinal >$(projecto)> ..\..\..\escripto\acólito\sinal.txt
