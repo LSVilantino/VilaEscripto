@@ -5,9 +5,12 @@
 #include "mapa.h"
 
 int linha_charactéres_contar(char* linha);
-int linha_separador_contar(char separador, char* linha);
+int linha_separadôr_contar(char* separador, char* linha);
 
 bool linha_contém(char* comparador, char* linha);
+bool linha_compara(char* comparadôr, char* linha);
+
+char* linha_complementar(char* complemento, char* linha);
 
 char** linha_separar(char* separador, char* linha);
 char* linha_aparar(char* linha);

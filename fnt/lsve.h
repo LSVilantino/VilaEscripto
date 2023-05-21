@@ -22,6 +22,7 @@ char* lsve_linha_separador_procurar(char* linha);
 char** lsve_ficha_tratar(char** linhas);
 
 char* lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* mapa);
+LSVEMapa lsve_ficheiro_valôr_tratar_variável(Tipo clave_tipo, void* clave, LSVEMapa mapa, LSVEMapa* propriedades);
 LSVEMapa* lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho);
 
 LSVEMapa* lsve_mapa_construir();

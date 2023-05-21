@@ -1,11 +1,13 @@
 ﻿#ifndef _CABEÇALHO_GENERAL
 #define _CABEÇALHO_GENERAL
 
+#include <stdio.h>
+
 typedef enum { false, true } bool;
 
-char clave_ficha;
-char clave_ficha_abre;
-char clave_ficha_fecha;
+char* clave_ficha;
+char* clave_ficha_abre;
+char* clave_ficha_fecha;
 
 char clave_ficheiro_encerro;
 char clave_ficheiro_forçar_encerro;
@@ -26,7 +28,6 @@ char* clave_lêr;
 * ex.: COMPILADÔR DA PLATAFORMA >$(Plataforma)> ..\..\Compiladôres.txt
 */
 char* clave_lêr_e_avançar;
-char* clave_procurar_abre;
 char* clave_lêr_avançar_e_procurar;
 /*
 * Usa a função 'system' para corrêr um commando atribuído à clave.
@@ -40,5 +41,10 @@ char* clave_corrêr;
 * ex.: COMPILADÔR >>> ..\..\Compiladôres.txt
 */
 char* clave_lêr_e_escolher;
+
+
+
+
+void* memória_allocar(size_t tamanho);
 
 #endif // _CABEÇALHO_GENERAL

@@ -13,15 +13,15 @@ lsve_linha_separar(char* separadôr, char* linha) {
     int n2 = 0;
     int n3 = 0;
 
-    char** matrizTratada = malloc(sizeof(char**));
+    char** matrizTratada = memória_allocar(sizeof(char**));
     if (matrizTratada == NULL) return matrizTratada;
 
-    char* linhaTratada = "";
+    char* linhaTratada = memória_allocar(sizeof(char));
 
     while (linha[n2]) {
         //printf("\n%c _ %s %s", linha[n2], separadôr, linha);
         if (linha[n2] != '\0') {
-            char* charactéreActual = malloc(2 * sizeof(char));
+            char* charactéreActual = memória_allocar(2 * sizeof(char));
             charactéreActual[0] = linha[n2];
             charactéreActual[1] = '\0';
 
@@ -65,18 +65,18 @@ lsve_linha_separar(char* separadôr, char* linha) {
 
 char*
 lsve_linha_separador_procurar(char* linha) {
-    if (linha_contém(clave_corrêr, linha)) return clave_corrêr;
     if (linha_contém(clave_lêr_e_escolher, linha)) return clave_lêr_e_escolher;
-    if (linha_contém(clave_lêr_avançar_e_procurar, linha)) return clave_lêr_avançar_e_procurar;
-    if (linha_contém(clave_lêr_e_avançar, linha)) return clave_lêr_e_avançar;
-    if (linha_contém(clave_lêr, linha)) return clave_lêr;
+    else if (linha_contém(clave_corrêr, linha)) return clave_corrêr;
+    else if (linha_contém(clave_lêr_avançar_e_procurar, linha)) return clave_lêr_avançar_e_procurar;
+    else if (linha_contém(clave_lêr_e_avançar, linha)) return clave_lêr_e_avançar;
+    else if (linha_contém(clave_lêr, linha)) return clave_lêr;
 
     return NULL;
 }
 
 char**
 lsve_ficha_tratar(char** linhas) {
-    char** fichaTítulo = malloc(sizeof(char*));
+    char** fichaTítulo = memória_allocar(sizeof(char*));
 
     int n = 0;
     while (linhas) {
@@ -93,9 +93,7 @@ lsve_ficha_tratar(char** linhas) {
 
 char*
 lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades) {
-    char* separadôr = "";
-    bool seAbre = 0;
-    bool seFecha = 0;
+    char* separadôr;
 
     //printf("\n\n~");
     //printf((char*)clave);
@@ -103,65 +101,12 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
 
     LSVEMapa mapa = *lsve_mapa_procurar(clave_tipo, clave, propriedades);
     printf("%s- %s- %s- %d-\n", (char*)mapa.passe, (char*)mapa.separadôr, (char*)mapa.valôr, mapa.i);
+    mapa = lsve_ficheiro_valôr_tratar_variável(clave_tipo, clave, mapa, propriedades);
 
     separadôr = lsve_linha_separador_procurar(mapa.separadôr);
 
     if (separadôr == clave_corrêr) {
-    ciclo_volta:
-        int n = 0;
-        char* commando = (char*) mapa.valôr;
-
-        char* clave_commando = malloc(sizeof(char)); // Nome da clave do commando.
-        char* clave_reposição = malloc(sizeof(char)); // Nome da clave, incluso os sinais, que será reposta.
-
-        while (commando[n] != '\0')
-        {
-            if (linha_contém("$(", commando)) {
-                int n_reposição = 0;
-                if (commando[n] == '$' && commando[n + 1] == '(') {
-                    seAbre = 1;
-
-                    clave_reposição = realloc(clave_reposição, (n_reposição + 2 * sizeof(char)));
-                    clave_reposição[n_reposição] = commando[n]; n_reposição++; n++;
-                    clave_reposição[n_reposição] = commando[n]; n_reposição++; n++;
-                    clave_reposição[n_reposição + 1] = '\0';
-
-                    int n_clave = 0;
-                    while (commando[n]) {
-                        if (commando[n] == ')') {
-                            seFecha = 1;
-                            clave_reposição = realloc(clave_reposição, (n_reposição + 1 * sizeof(char)));
-                            clave_reposição[n_reposição] = commando[n];
-                            clave_reposição[n_reposição + 1] = '\0';
-
-                            LSVEMapa mapa_corrida = *lsve_mapa_procurar(clave_tipo, clave_commando, propriedades);
-                            mapa.valôr = linha_repôr(mapa_corrida.valôr, clave_reposição, mapa.valôr);
-
-                            printf("\n\n");
-                            printf(mapa.valôr);
-
-                            goto ciclo_volta;
-                        }
-
-                        clave_reposição = realloc(clave_reposição, (n_reposição + 1 * sizeof(char)));
-                        clave_commando = realloc(clave_commando, (n_clave + 1 * sizeof(char)));
-                        clave_reposição[n_reposição] = commando[n];
-                        clave_commando[n_clave] = commando[n];
-                        clave_reposição[n_reposição + 1] = '\0';
-                        clave_commando[n_clave + 1] = '\0';
-
-                        n_reposição++;
-                        n_clave++;
-                        n++;
-                    }
-                }
-                n++;
-            }
-            else break;
-        }
-
-        printf("KKKKKKKKKK%s", (char*)mapa.valôr);
-        //system(commando);
+        system(mapa.valôr);
 
         return (char*) mapa.valôr;
     }
@@ -169,13 +114,13 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
         ConteúdoFicheiro cf = ficheiro_lêr(linha_aparar(mapa.valôr));
         LSVEMapa* mapa_propriedade = lsve_linha_matriz_mapear(cf.conteúdo);
 
-        char** mapa_propriedade_matriz = malloc(sizeof(char*));
+        char** mapa_propriedade_matriz = memória_allocar(sizeof(char*));
 
         int n = 0;
         while (mapa_propriedade[n].i == n) {
             mapa_propriedade_matriz = realloc(mapa_propriedade_matriz, (n + 1 * sizeof * mapa_propriedade_matriz) * sizeof(char*));
-            mapa_propriedade_matriz[n] = mapa_propriedade[n].passe;
-            printf("%s ", mapa_propriedade_matriz[n]);
+            mapa_propriedade_matriz[n] = strdup(mapa_propriedade[n].passe);
+            printf("%s %s\n", (char*)mapa_propriedade[n].valôr, mapa_propriedade_matriz[n]);
             n++;
         }
 
@@ -183,13 +128,15 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
         if (opçãoSeleccionada_construcção == NULL) return opçãoSeleccionada_construcção;
 
         LSVEMapa* mapa_seleccionado = lsve_mapa_procurar(clave_tipo, opçãoSeleccionada_construcção, mapa_propriedade);
-        mapa_seleccionado->i = 0; 
+        mapa_seleccionado->i = 0;
         // Não eliminas esta linha! Durante a comparação na busca, manipula o algorítmo que inicia procura por valôr 0.
         // 
         // Ao seleccionar o mapa aqui, têm-se o número da ordem escolhida. Se removeres esta linha, somente a primeira 
         // opção será válida.
 
-        return lsve_ficheiro_valôr_tratar(clave_tipo, mapa_seleccionado->passe, mapa_seleccionado);
+        mapa.valôr = lsve_ficheiro_valôr_tratar(clave_tipo, mapa_seleccionado->passe, mapa_propriedade);
+
+        return mapa.valôr;
     }
     else if (separadôr == clave_lêr_avançar_e_procurar) {
         printf(mapa.passe);
@@ -207,9 +154,73 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
     return strdup(mapa.valôr);
 }
 
+LSVEMapa 
+lsve_ficheiro_valôr_tratar_variável(Tipo clave_tipo, void* clave, LSVEMapa mapa, LSVEMapa* propriedades) {
+    bool seAbre = 0;
+    bool seFecha = 0;
+
+ciclo_volta:
+    int n = 0;
+    char* commando = (char*)mapa.valôr;
+
+    char* clave_commando = memória_allocar(sizeof(char)); // Nome da clave do commando.
+    char* clave_reposição = memória_allocar(2 * sizeof(char)); // Nome da clave, incluso os sinais, que será reposta.
+
+    while (commando[n] != '\0')
+    {
+        printf("%c", commando[n]);
+        if (linha_contém("$(", mapa.valôr)) {
+            if (commando[n] == '$' && commando[n + 1] == '(') {
+                int n_reposição = 0;
+                seAbre = 1;
+
+                printf("%c", commando[n + 1]);
+
+                n += 2;
+
+                clave_reposição = linha_complementar("$(", clave_reposição);
+
+                int n_clave = 0;
+                while (commando[n]) {
+                    printf("%c", commando[n]);
+                    if (commando[n] == ')') {
+                        seFecha = 1;
+
+                        clave_reposição = linha_complementar(clave_commando, clave_reposição);
+                        clave_reposição = linha_complementar(")", clave_reposição);
+
+
+                        printf("\n%s", clave_commando);
+                        LSVEMapa mapa_corrida = *lsve_mapa_procurar(clave_tipo, clave_commando, propriedades);
+                        printf("\n\n%s- %s- %s- %d-\n", (char*)mapa_corrida.passe, (char*)mapa_corrida.separadôr, (char*)mapa_corrida.valôr, mapa_corrida.i);
+
+                        mapa.valôr = linha_repôr(mapa_corrida.valôr, clave_reposição, mapa.valôr);
+
+                        printf("\n\n");
+                        printf(mapa.valôr);
+
+                        goto ciclo_volta;
+                    }
+
+                    clave_commando = realloc(clave_commando, (n_clave + 1 * sizeof(char)));
+                    clave_commando[n_clave] = commando[n];
+                    clave_commando[n_clave + 1] = '\0';
+
+                    n_clave++;
+                    n++;
+                }
+            }
+            n++;
+        }
+        else break;
+    }
+
+    return mapa;
+}
+
 LSVEMapa*
 lsve_mapa_construir() {
-    LSVEMapa* mapa = malloc(sizeof(LSVEMapa*));
+    LSVEMapa* mapa = memória_allocar(sizeof(LSVEMapa));
 
     mapa[0].passe = "NIL";
     mapa[0].separadôr = "NIL";
@@ -223,32 +234,30 @@ lsve_mapa_construir() {
 LSVEMapa*
 lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
     ConteúdoFicheiro ficheiroConteúdo = ficheiro_lêr(ficheiroCaminho);
-    LSVEMapa* mapa = (LSVEMapa*) mapa_construir();
+    printf("\n\n-%s- %d-\n\n", ficheiroCaminho, ficheiroConteúdo.quantidade_conteúdo);
 
-    printf("\n\n%s - %d \n\n", ficheiroCaminho, ficheiroConteúdo.quantidade_conteúdo);
+    LSVEMapa* mapa = lsve_mapa_construir();
 
     int n = 0;
-    while (ficheiroConteúdo.conteúdo) {
-        if (n != ficheiroConteúdo.quantidade_conteúdo) {
-            //printf(ficheiroConteúdo.conteúdo[n]);
-            char** linhaSeparada = lsve_linha_separar(lsve_linha_separador_procurar(ficheiroConteúdo.conteúdo[n]), ficheiroConteúdo.conteúdo[n]);
-            lsve_mapa_introduzir(&mapa, (LSVEMapa) { { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n }, linha_aparar(linhaSeparada[1]) });
+    while (n != ficheiroConteúdo.quantidade_conteúdo) {
+        //printf(ficheiroConteúdo.conteúdo[n]);
+        char* separadôr = lsve_linha_separador_procurar(ficheiroConteúdo.conteúdo[n]);
+        char** linhaSeparada = lsve_linha_separar(separadôr, ficheiroConteúdo.conteúdo[n]);
+        lsve_mapa_introduzir(&mapa, (LSVEMapa) { { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n }, linha_aparar(linhaSeparada[1]) });
 
-            printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
+        printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
 
-            //system("cls");
-            //// Try some Set Graphics Rendition (SGR) terminal escape sequences
-            //wprintf(L"\x1b[31mThis text has a red foreground using SGR.31.\r\n");
-            //wprintf(L"\x1b[1mThis text has a bright (bold) red foreground using SGR.1 to affect the previous color setting.\r\n");
-            //wprintf(L"\x1b[mThis text has returned to default colors using SGR.0 implicitly.\r\n");
-            //wprintf(L"\x1b[34;46mThis text shows the foreground and background change at the same time.\r\n");
-            //wprintf(L"\x1b[0mThis text has returned to default colors using SGR.0 explicitly.\r\n");
-            //wprintf(L"\x1b[31;32;33;34;35;36;101;102;103;104;105;106;107mThis text attempts to apply many colors in the same command. Note the colors are applied from left to right so only the right-most option of foreground cyan (SGR.36) and background bright white (SGR.107) is effective.\r\n");
-            //wprintf(L"\x1b[39mThis text has restored the foreground color only.\r\n");
-            //wprintf(L"\x1b[49mThis text has restored the background color only.\r\n");
-            n = n + 1;
-        }
-        else break;
+        //system("cls");
+        //// Try some Set Graphics Rendition (SGR) terminal escape sequences
+        //wprintf(L"\x1b[31mThis text has a red foreground using SGR.31.\r\n");
+        //wprintf(L"\x1b[1mThis text has a bright (bold) red foreground using SGR.1 to affect the previous color setting.\r\n");
+        //wprintf(L"\x1b[mThis text has returned to default colors using SGR.0 implicitly.\r\n");
+        //wprintf(L"\x1b[34;46mThis text shows the foreground and background change at the same time.\r\n");
+        //wprintf(L"\x1b[0mThis text has returned to default colors using SGR.0 explicitly.\r\n");
+        //wprintf(L"\x1b[31;32;33;34;35;36;101;102;103;104;105;106;107mThis text attempts to apply many colors in the same command. Note the colors are applied from left to right so only the right-most option of foreground cyan (SGR.36) and background bright white (SGR.107) is effective.\r\n");
+        //wprintf(L"\x1b[39mThis text has restored the foreground color only.\r\n");
+        //wprintf(L"\x1b[49mThis text has restored the background color only.\r\n");
+        n = n + 1;
     }
 
     return mapa;
@@ -256,7 +265,7 @@ lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
 
 LSVEMapa* 
 lsve_linha_matriz_mapear(char** linhas) {
-    LSVEMapa* mapa = malloc(sizeof(LSVEMapa*));
+    LSVEMapa* mapa = lsve_mapa_construir();
 
     int n = 0;
     while (linhas[n] != '\0') {
@@ -288,13 +297,19 @@ lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa) {
     {
     case tipo_char:
         while (mapa[i].passe != '\0') {
-            //printf("%s %s", (char*)mapa[i].passe, (char*)procura);
-            if (linha_contém((char*)procura, (char*)mapa[i].passe)) return &mapa[i];
+            printf("(/%d-%s-%s\\)\n", i, (char*)mapa[i].passe, (char*)procura);
+            //printf("(/%s-%s\\)\n", (char*)mapa[i].passe, (char*)procura);
+            if (linha_compara((char*)procura, (char*)mapa[i].passe)) {
+                printf("encontrado");
+                return &mapa[i];
+            }
             i = i + 1;
         }
         break;
     default: break;
     }
+
+    printf("não encontrado");
 
     return NULL;
 }

@@ -1,4 +1,5 @@
-﻿#include "ficheiro.h"
+﻿#include "general.h"
+#include "ficheiro.h"
 #include "mapa.h"
 #include "linha.h"
 #include "consola.h"
@@ -12,8 +13,8 @@ ConteúdoFicheiro
 ficheiro_lêr(char* ficheiroNome) {
     FILE* ficheiroLido = fopen(ficheiroNome, "r");
 
-    char** linhas = malloc(sizeof(char*));
-    char* linhaActualDoFicheiro = malloc(sizeof(char));
+    char** linhas = memória_allocar(sizeof(char*));
+    char* linhaActualDoFicheiro = memória_allocar(sizeof(char));
     char charactéreActualDoFicheiro = fgetc(ficheiroLido);
     char charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
 
@@ -36,26 +37,6 @@ ficheiro_lêr(char* ficheiroNome) {
             continue;
         }
 
-        if (charactéreAnteriôrDoFicheiro == '\n') {
-            linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
-
-            n = n + 1;
-
-            linhaActualDoFicheiro[n] = '\0';
-            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
-
-            linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
-            linhas[nl] = strdup(linhaActualDoFicheiro);
-            linhaActualDoFicheiro = malloc(sizeof(char*));
-
-            n = 0;
-            nl = nl + 1;
-
-            charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
-
-            continue;
-        }
-
         if (charactéreActualDoFicheiro == clave_ficheiro_forçar_encerro || charactéreActualDoFicheiro == clave_ficheiro_encerro) {
             linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
 
@@ -72,6 +53,26 @@ ficheiro_lêr(char* ficheiroNome) {
             break;
         }
 
+        if (charactéreAnteriôrDoFicheiro == '\n') {
+            linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
+
+            n = n + 1;
+
+            linhaActualDoFicheiro[n] = '\0';
+            linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
+
+            linhas = realloc(linhas, (nl + 1 * sizeof(linhas)) * sizeof(char**));
+            linhas[nl] = strdup(linhaActualDoFicheiro);
+            linhaActualDoFicheiro = memória_allocar(sizeof(char*));
+
+            n = 0;
+            nl = nl + 1;
+
+            charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
+
+            continue;
+        }
+
         linhaActualDoFicheiro[n] = charactéreAnteriôrDoFicheiro;
 
         n = n + 1;
@@ -79,26 +80,24 @@ ficheiro_lêr(char* ficheiroNome) {
         linhaActualDoFicheiro[n] = '\0';
         //linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, (n + 1 * sizeof(linhaActualDoFicheiro)) * sizeof(char*));
         linhaActualDoFicheiro = realloc(linhaActualDoFicheiro, n * sizeof(char*)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
-        
+
         charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
-        printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
+        //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
     }
 
-    ConteúdoFicheiro cf;
-    cf.quantidade_conteúdo = nl;
-    cf.conteúdo = linhas;
+    //ConteúdoFicheiro cf;
+    //cf.quantidade_conteúdo = nl;
+    //cf.conteúdo = linhas;
 
-    int i = 0;
-    while (cf.quantidade_conteúdo == i) {
-        printf(cf.conteúdo[i]);
+    /*int i = 0;
+    while (cf.quantidade_conteúdo != i) {
+        printf("%s", cf.conteúdo[i]);
+        i++;
     }
 
-    //printf("\n");
+    printf("\n");*/
 
-    free(linhaActualDoFicheiro);
-    fclose(ficheiroLido);
-
-    return cf;
+    return (ConteúdoFicheiro) { linhas, nl };
 }
 
 Mapa* 

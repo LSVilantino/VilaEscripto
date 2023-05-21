@@ -32,6 +32,27 @@ linha_contém(char* comparadôr, char* linha) {
     return 0;
 }
 
+bool linha_compara(char* comparadôr, char* linha) {
+    int linha_t = linha_charactéres_contar(linha) - 1;
+    int comparadôr_t = linha_charactéres_contar(comparadôr) - 1;
+
+    if (linha_t < comparadôr_t) return 0;
+
+    //printf("\n\n(/%s/%s\\)\n\n", linha, comparadôr);
+
+    int n = 0;
+    while (linha[n] != '\0') {
+        //printf("(/%c―%c\\) ", linha[n], comparadôr[n]);
+        if (comparadôr[n] == linha[n]) {
+            if (n == linha_t) return 1;
+            n++;
+        }
+        else return 0;
+    }
+
+    return 0;
+}
+
 int
 linha_charactéres_contar(char* linha) {
     int n = 0;
@@ -41,26 +62,33 @@ linha_charactéres_contar(char* linha) {
 }
 
 int
-linha_separador_contar(char separador, char* linha) {
-    int n = 1;
+linha_separadôr_contar(char* separador, char* linha) {
+    int separadôr_t = linha_charactéres_contar(separador) - 1;
+    int separadôr_qtd = 0;
+    int n = 0;
 
     for (int i = 0; linha[i] != '\0'; i++) {
-        if (linha[i] == separador) {
-            n = n + 1;
+        if (linha[i] == separador[n]) {
+            if (n == separadôr_t) {
+                separadôr_qtd++;
+            }
+            n++;
         }
+        else n = 0;
     }
 
     return n;
 }
 
-char* linha_complementar(char* complemento, char* linha) {
+char* 
+linha_complementar(char* complemento, char* linha) {
     if (complemento == '\0') return linha;
 
     int linha_t = linha_charactéres_contar(linha);
     int complemento_t = linha_charactéres_contar(complemento);
     int total_t = linha_t + complemento_t;
 
-    char* resultado = malloc(total_t * sizeof(char));
+    char* resultado = memória_allocar(total_t + 1 * sizeof(char));
 
     int linha_n = 0;
     while (linha_n != linha_t) {
@@ -162,12 +190,11 @@ linha_aparar(char* linha) {
 char* 
 linha_cortar(int de, int até, char* linha) {
     if (de > até || de == até) return '\0';
-    char* resultado = malloc(sizeof(char));
+    char* resultado = malloc((até - de + 1) * sizeof(char));
 
     int n = 0;
     while (linha) {
         if ((de + n) != até) {
-            resultado = realloc(resultado, (n + 1 * sizeof(char)));
             resultado[n] = linha[de + n];
             resultado[n + 1] = '\0';
             n++;
