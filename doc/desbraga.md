@@ -24,8 +24,8 @@ Como *segundo*, um outro ficheiro que contém os sinais, que deve seguir estrict
 
 	Desbragar ficheiro indicativo > desbraga-ficheiro-i (mostra o quê se leu do ficheiro)
 	Desbragar valôres das claves > desbraga-clave-e-valôr (mostra as claves e seu valôres)
-	Desbragar contenção > desbraga-contenção (mostra o processo para validar se, como amóstra, "ABCD" é contido em "ABCDEF" ― sim, "ABCDEF" contém "ABCD")
-	Desbragar comparação rígida > desbraga-comparação-rígida (mostra o processo para avaliar se, por exemplo, "ABCD" se compara com "ABCDEF" ― não, são diferentes, a considerar o inteiro: "ABCDEF" não é "ABCD".)
+	Desbragar contenção > desbraga-contenção (mostra o processo para validar se, como amóstra, "ABCD" é contido em "ABCDEF" ― sim, "ABCDEF" contém "ABCD". Usado para comparar nome das claves.)
+	Desbragar comparação rígida > desbraga-comparação-rígida (mostra o processo para avaliar se, por exemplo, "ABCD" se compara com "ABCDEF" ― não, são diferentes, a considerar o inteiro: "ABCDEF" não é "ABCD". Usado para comparar nome das claves.)
 	Desbragar reposição de variáveis > desbraga-repôr-variável (mostra as claves que foram repostas nos valôres, e por quais valôres foram repostas)
 
 ##### Não deve portar separadôres de corrida, pode ser que resulta em comportamento indefinido. Supostamente, seria somente corrido.
