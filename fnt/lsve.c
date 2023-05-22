@@ -13,7 +13,7 @@ lsve_linha_separar(char* separadôr, char* linha) {
     int n2 = 0;
     int n3 = 0;
 
-    char** matrizTratada = memória_allocar(sizeof(char**));
+    char** matrizTratada = memória_allocar(2 * sizeof(char*));
     if (matrizTratada == NULL) return matrizTratada;
 
     char* linhaTratada = memória_allocar(sizeof(char));
