@@ -1,4 +1,4 @@
-caminhoteste > ..\..\..\escripto\acólito\teste%
+caminhoteste > ..\..\..\escripto\acólito\teste
 caminhoteste1 >>> ..\..\..\escripto\acólito\ligação_.txt
 correr >@> mkdir $(caminhoteste1)%
 projecto >>> ..\..\..\escripto\acólito\ficheiro-construcção.txt

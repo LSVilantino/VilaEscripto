@@ -14,6 +14,15 @@ lsve_linha_separar(char* separadôr, char* linha) {
     int n3 = 0;
 
     char** matrizTratada = memória_allocar(2 * sizeof(char*));
+    // Alloca-se 2 linhas, com uma só o programa fecha, por algum motivo que desconheço. 
+    /* 
+    Talvez só não seja memória o suficiente para a declaração, mas não está de acordo com o normal,
+    pode haver algo incorrecto com allocações anteriôres no programa, nada aparente, 
+    suspeito do método de leitura de ficheiros.
+
+    Actualização: Eu eliminei a allocação de 2 linhas e parece ter funcionado sem motivo aparente, 
+    não se sabe a causa dos fechines anteriôres, manterei só por segurança.
+     */
     if (matrizTratada == NULL) return matrizTratada;
 
     char* linhaTratada = memória_allocar(sizeof(char));
