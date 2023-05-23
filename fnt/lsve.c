@@ -1,4 +1,4 @@
-﻿#include "lsve.h"
+#include "lsve.h"
 #include "linha.h"
 #include "ficheiro.h"
 #include "consola.h"
@@ -121,7 +121,7 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
     }
     else if (separadôr == clave_lêr_e_escolher) {
         ConteúdoFicheiro cf = ficheiro_lêr(linha_aparar(mapa.valôr));
-        LSVEMapa* mapa_propriedade = lsve_linha_matriz_mapear(cf.conteúdo);
+        LSVEMapa* mapa_propriedade = lsve_linha_matriz_mapear(cf);
 
         char** mapa_propriedade_matriz = memória_allocar(sizeof(char*));
 
@@ -266,23 +266,27 @@ lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
         //wprintf(L"\x1b[31;32;33;34;35;36;101;102;103;104;105;106;107mThis text attempts to apply many colors in the same command. Note the colors are applied from left to right so only the right-most option of foreground cyan (SGR.36) and background bright white (SGR.107) is effective.\r\n");
         //wprintf(L"\x1b[39mThis text has restored the foreground color only.\r\n");
         //wprintf(L"\x1b[49mThis text has restored the background color only.\r\n");
-        n = n + 1;
+        n++;
     }
 
     return mapa;
 }
 
 LSVEMapa* 
-lsve_linha_matriz_mapear(char** linhas) {
+lsve_linha_matriz_mapear(ConteúdoFicheiro cf) {
     LSVEMapa* mapa = lsve_mapa_construir();
 
     int n = 0;
-    while (linhas[n] != '\0') {
-        char** linhaSeparada = lsve_linha_separar(lsve_linha_separador_procurar(linhas[n]), linhas[n]);
+    while (cf.quantidade_conteúdo != n) {
+        char* separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]);
 
-        lsve_mapa_introduzir(&mapa, (LSVEMapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n, linha_aparar(linhaSeparada[1]) });
-        //printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
-        n = n + 1;
+        if (separadôr != NULL) {
+            char** linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]);
+            lsve_mapa_introduzir(&mapa, (LSVEMapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n, linha_aparar(linhaSeparada[1]) });
+            //printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
+        }
+
+        n++;
     }
 
     return mapa;

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Devem ser incluídas funções de propósito exclusivo ao LSVE,
 	estas são feitas para os casos de inviabilidade das de uso geral.
 
@@ -27,7 +27,7 @@ LSVEMapa* lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho);
 
 LSVEMapa* lsve_mapa_construir();
 LSVEMapa* lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa);
-LSVEMapa* lsve_linha_matriz_mapear(char** linhas);
+LSVEMapa* lsve_linha_matriz_mapear(ConteúdoFicheiro cf);
 void lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr);
 char** lsve_mapa_a_matriz_char(LSVEMapa* linhas);
 #endif // _CABEÇALHO_LSVE

@@ -1,7 +1,7 @@
 # VilaEscripto — público
 <img src="https://user-images.githubusercontent.com/118770355/232245381-213897db-1ce7-4705-8b57-bba86627b3d5.png"/> 
 
-###### Este documento ou quaisquer citados nele, pertencentes ao grupo Vilantino, são de acesso públicos e não devem ser re-publicados com quaisquer modificações. 
+###### Este documento ou quaisquer citados nele, pertencentes ao grupo Vilantino, são de acesso público e não devem ser re-publicados com quaisquer modificações. 
 
 # Funcionamento do LSVE
 

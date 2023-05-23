@@ -1,4 +1,4 @@
-﻿#include "general.h"
+#include "general.h"
 #include "ficheiro.h"
 #include "mapa.h"
 #include "linha.h"
@@ -85,19 +85,17 @@ ficheiro_lêr(char* ficheiroNome) {
         //printf("\n%c - %s", charactéreActualDoFicheiro, linhaActualDoFicheiro);
     }
 
-    //ConteúdoFicheiro cf;
-    //cf.quantidade_conteúdo = nl;
-    //cf.conteúdo = linhas;
+    ConteúdoFicheiro cf = (ConteúdoFicheiro){ linhas, nl };
 
-    /*int i = 0;
+    int i = 0;
     while (cf.quantidade_conteúdo != i) {
         printf("%s", cf.conteúdo[i]);
         i++;
     }
 
-    printf("\n");*/
+    //printf("\n");
 
-    return (ConteúdoFicheiro) { linhas, nl };
+    return cf;
 }
 
 Mapa* 
