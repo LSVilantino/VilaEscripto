@@ -162,7 +162,7 @@ linha_aparar(char* linha) {
 
     while (linha[n] == ' ') { n = n + 1; }
 
-    char* linhaTratada = malloc(linha_charactéres_contar(linha) * sizeof(char));
+    char* linhaTratada = malloc(linha_charactéres_contar(linha) + 1 * sizeof(char));
     while (linha[n] != '\0') {
         linhaTratada[i] = linha[n];
         linhaTratada[i + 1] = '\0';
