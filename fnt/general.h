@@ -1,4 +1,4 @@
-﻿#ifndef _CABEÇALHO_GENERAL
+#ifndef _CABEÇALHO_GENERAL
 #define _CABEÇALHO_GENERAL
 
 #include <stdio.h>
@@ -46,5 +46,5 @@ char* clave_lêr_e_escolher;
 
 
 void* memória_allocar(size_t tamanho);
-
+void* memória_re_allocar(size_t tamanho, void* p);
 #endif // _CABEÇALHO_GENERAL

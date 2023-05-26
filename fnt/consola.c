@@ -1,4 +1,4 @@
-﻿#include "consola.h"
+#include "consola.h"
 #include "linha.h"
 
 #include <stdio.h>
@@ -47,8 +47,9 @@ consola_opção_mostrar(int opçãoSeleccionada, char** opções) {
 char*
 consola_construir_menu(char** opções) {
     int opção = 0;
-    consola_opção_mostrar(opção, opções);
 
+    consola_opção_mostrar(opção, opções);
+    
     char* opçãoSeleccionada = "";
     char c = -1;
     while (c) {

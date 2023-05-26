@@ -31,9 +31,9 @@ main(int** _, char** argumentos) {
     char* ficheiro_utilizador = argumentos[1];
     char* ficheiro_desbraga = argumentos[2];
 
-
+    LSVEMapa* mapa_desbraga;
     if (ficheiro_desbraga != '\0') {
-        LSVEMapa* mapa_desbraga = &(LSVEMapa) { { "desbraga", ficheiro_desbraga, 0 }, clave_lêr_e_escolher };
+        mapa_desbraga = &(LSVEMapa) { { "desbraga", ficheiro_desbraga, 0 }, clave_lêr_e_escolher };
 
         mapa_desbraga->valôr = lsve_ficheiro_valôr_tratar(tipo_char, mapa_desbraga->passe, mapa_desbraga);
         desbraga_convenção = mapa_desbraga->valôr;
@@ -79,6 +79,9 @@ main(int** _, char** argumentos) {
     wprintf(L"\x1b[39m");
     wprintf(L"\x1b[49m");
     printf("\n");
+
+    free(mapa_propriedade);
+    free(mapa_desbraga);
 
 	return EXIT_SUCCESS;
 }

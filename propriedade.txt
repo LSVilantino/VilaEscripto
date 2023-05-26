@@ -1,6 +1,7 @@
-caminhoteste > ..\..\..\escripto\acólito\teste
-caminhoteste1 >>> ..\..\..\escripto\acólito\ligação_.txt
-correr >@> mkdir $(caminhoteste1)%
+caminho >>> ..\..\..\escripto\acólito\caminho.txt
+caminhomod >>> ..\..\..\escripto\acólito\caminho.txt
+versão > v0-0.0.0-0\
+correr >@> mkdir $(caminho)$(caminhomod)$(versão)%
 projecto >>> ..\..\..\escripto\acólito\ficheiro-construcção.txt
 caminho >$(projecto)> ..\..\..\escripto\acólito\caminho.txt
 sinal >$(projecto)> ..\..\..\escripto\acólito\sinal.txt

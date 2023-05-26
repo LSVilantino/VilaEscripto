@@ -25,9 +25,11 @@ char* lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* mapa);
 LSVEMapa lsve_ficheiro_valôr_tratar_variável(Tipo clave_tipo, void* clave, LSVEMapa mapa, LSVEMapa* propriedades);
 LSVEMapa* lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho);
 
-LSVEMapa* lsve_mapa_construir();
+void lsve_mapa_construir(LSVEMapa** mapa);
 LSVEMapa* lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa);
 LSVEMapa* lsve_linha_matriz_mapear(ConteúdoFicheiro cf);
+
 void lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr);
 char** lsve_mapa_a_matriz_char(LSVEMapa* linhas);
+
 #endif // _CABEÇALHO_LSVE

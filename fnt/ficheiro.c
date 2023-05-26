@@ -87,32 +87,30 @@ ficheiro_lêr(char* ficheiroNome) {
 
     ConteúdoFicheiro cf = (ConteúdoFicheiro){ linhas, nl };
 
-    int i = 0;
-    while (cf.quantidade_conteúdo != i) {
-        printf("%s", cf.conteúdo[i]);
-        i++;
-    }
+    //int i = 0;
+    //while (cf.quantidade_conteúdo != i) {
+    //    printf("%s", cf.conteúdo[i]);
+    //    i++;
+    //}
 
-    //printf("\n");
+    printf("\n");
 
     return cf;
 }
 
 Mapa* 
 ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
-    ConteúdoFicheiro ficheiroConteúdo = ficheiro_lêr(ficheiroCaminho);
+    ConteúdoFicheiro cf = ficheiro_lêr(ficheiroCaminho);
     Mapa* mapa = mapa_construir();
 
-    printf("\n\n%s - %d \n\n", ficheiroCaminho, ficheiroConteúdo.quantidade_conteúdo);
+    printf("\n\n%s - %d \n\n", ficheiroCaminho, cf.quantidade_conteúdo);
 
     int n = 0;
-    while (ficheiroConteúdo.conteúdo) {
-        if (n != ficheiroConteúdo.quantidade_conteúdo) {
+    while (cf.conteúdo) {
+        if (n != cf.quantidade_conteúdo) {
             //printf(ficheiroConteúdo.conteúdo[n]);
-            char** linhaSeparada = linha_separar(lsve_linha_separador_procurar(ficheiroConteúdo.conteúdo[n]), ficheiroConteúdo.conteúdo[n]);
-
+            char** linhaSeparada = linha_separar(lsve_linha_separador_procurar(cf.conteúdo[n]), cf.conteúdo[n]);
             mapa_introduzir(&mapa, (Mapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[1]), n });
-
             printf("%s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].valôr, mapa[n].i);
 
             //system("cls");

@@ -104,9 +104,9 @@ char*
 lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades) {
     char* separadôr;
 
-    //printf("\n\n~");
-    //printf((char*)clave);
-    //printf("~\n\n"); 
+    printf("\n\n~");
+    printf((char*)clave);
+    printf("~\n\n"); 
 
     LSVEMapa mapa = *lsve_mapa_procurar(clave_tipo, clave, propriedades);
     printf("%s- %s- %s- %d-\n", (char*)mapa.passe, (char*)mapa.separadôr, (char*)mapa.valôr, mapa.i);
@@ -120,16 +120,17 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
         return (char*) mapa.valôr;
     }
     else if (separadôr == clave_lêr_e_escolher) {
-        ConteúdoFicheiro cf = ficheiro_lêr(linha_aparar(mapa.valôr));
-        LSVEMapa* mapa_propriedade = lsve_linha_matriz_mapear(cf);
+        //ConteúdoFicheiro cf = ficheiro_lêr(linha_aparar(mapa.valôr));
+        //LSVEMapa* mapa_propriedade = lsve_linha_matriz_mapear(cf); // problema
 
-        char** mapa_propriedade_matriz = memória_allocar(sizeof(char*));
+        LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(linha_aparar(mapa.valôr)); // problema
+        char** mapa_propriedade_matriz = memória_allocar(2 * sizeof(char*));
 
         int n = 0;
         while (mapa_propriedade[n].i == n) {
             mapa_propriedade_matriz = realloc(mapa_propriedade_matriz, (n + 1 * sizeof * mapa_propriedade_matriz) * sizeof(char*));
             mapa_propriedade_matriz[n] = strdup(mapa_propriedade[n].passe);
-            printf("%s %s\n", (char*)mapa_propriedade[n].valôr, mapa_propriedade_matriz[n]);
+            //printf("%s %s\n", (char*)mapa_propriedade[n].valôr, mapa_propriedade_matriz[n]);
             n++;
         }
 
@@ -144,8 +145,10 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
         // opção será válida.
 
         mapa.valôr = lsve_ficheiro_valôr_tratar(clave_tipo, mapa_seleccionado->passe, mapa_propriedade);
+        free(mapa_propriedade_matriz);
+        free(mapa_propriedade);
 
-        return mapa.valôr;
+        return strdup(mapa.valôr);
     }
     else if (separadôr == clave_lêr_avançar_e_procurar) {
         printf(mapa.passe);
@@ -175,10 +178,11 @@ ciclo_volta:
     char* clave_commando = memória_allocar(sizeof(char)); // Nome da clave do commando.
     char* clave_reposição = memória_allocar(2 * sizeof(char)); // Nome da clave, incluso os sinais, que será reposta.
 
-    while (commando[n] != '\0')
-    {
-        printf("%c", commando[n]);
-        if (linha_contém("$(", mapa.valôr)) {
+    if (linha_contém("$(", mapa.valôr)) {
+
+        while (commando[n] != '\0')
+        {
+            printf("%c", commando[n]);
             if (commando[n] == '$' && commando[n + 1] == '(') {
                 int n_reposição = 0;
                 seAbre = 1;
@@ -221,39 +225,49 @@ ciclo_volta:
             }
             n++;
         }
-        else break;
     }
 
     return mapa;
 }
 
-LSVEMapa*
-lsve_mapa_construir() {
-    LSVEMapa* mapa = memória_allocar(sizeof(LSVEMapa));
+void
+lsve_mapa_construir(LSVEMapa** mapa) {
+    *mapa = memória_allocar(2 * sizeof(LSVEMapa));
 
-    mapa[0].passe = "NIL";
-    mapa[0].separadôr = "NIL";
-    mapa[0].valôr = "NIL";
-    mapa[0].i = 1; // Deve ser mantido a zero, por conta das comparações do método de introducção.
+    (*mapa)[0].passe = "NIL";
+    (*mapa)[0].separadôr = "NIL";
+    (*mapa)[0].valôr = "NIL";
+    (*mapa)[0].i = 1; // Deve ser mantido a um, por conta das comparações do método de introducção.
 
-    //printf("%s %s %d\n", (char*)mapa[0].passe, (char*)mapa[0].valôr, mapa[0].i);
-    return mapa;
+    //printf("%s %s %d\n", (char*)(*mapa)[0].passe, (char*)(*mapa)[0].valôr, (*mapa)[0].i);
 }
 
 LSVEMapa*
 lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
-    ConteúdoFicheiro ficheiroConteúdo = ficheiro_lêr(ficheiroCaminho);
-    printf("\n\n-%s- %d-\n\n", ficheiroCaminho, ficheiroConteúdo.quantidade_conteúdo);
+    ConteúdoFicheiro cf = ficheiro_lêr(ficheiroCaminho);
+    printf("\n\n-%s- %d-\n\n", ficheiroCaminho, cf.quantidade_conteúdo);
 
-    LSVEMapa* mapa = lsve_mapa_construir();
+    LSVEMapa* mapa;
+    LSVEMapa mapa_introductôr = { 0 };
+    char* separadôr;
+    char** linhaSeparada;
+
+    lsve_mapa_construir(&mapa);
 
     int n = 0;
-    while (n != ficheiroConteúdo.quantidade_conteúdo) {
-        //printf(ficheiroConteúdo.conteúdo[n]);
-        char* separadôr = lsve_linha_separador_procurar(ficheiroConteúdo.conteúdo[n]);
-        char** linhaSeparada = lsve_linha_separar(separadôr, ficheiroConteúdo.conteúdo[n]);
-        lsve_mapa_introduzir(&mapa, (LSVEMapa) { { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n }, linha_aparar(linhaSeparada[1]) });
+    while (cf.quantidade_conteúdo != n) {
+        //printf(cf.conteúdo[n]);
+        //printf("\n\n");
 
+        separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]);
+        linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]);
+
+        mapa_introductôr.passe = linha_aparar(linhaSeparada[0]);
+        mapa_introductôr.separadôr = linha_aparar(linhaSeparada[1]);
+        mapa_introductôr.valôr = linha_aparar(linhaSeparada[2]);
+        mapa_introductôr.i = n;
+
+        lsve_mapa_introduzir(&mapa, mapa_introductôr);
         printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
 
         //system("cls");
@@ -274,17 +288,18 @@ lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
 
 LSVEMapa* 
 lsve_linha_matriz_mapear(ConteúdoFicheiro cf) {
-    LSVEMapa* mapa = lsve_mapa_construir();
+    LSVEMapa* mapa;
+    lsve_mapa_construir(&mapa);
 
     int n = 0;
+    char* separadôr;
+    char** linhaSeparada;
     while (cf.quantidade_conteúdo != n) {
-        char* separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]);
+        separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]);
 
-        if (separadôr != NULL) {
-            char** linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]);
-            lsve_mapa_introduzir(&mapa, (LSVEMapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n, linha_aparar(linhaSeparada[1]) });
-            //printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
-        }
+        linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]);
+        lsve_mapa_introduzir(&mapa, (LSVEMapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n, linha_aparar(linhaSeparada[1]) });
+        printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
 
         n++;
     }
@@ -298,8 +313,11 @@ lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr) {
     while ((*mapa)[i].i == i) { i = i + 1; }
     if (valôr.i != i) valôr.i = i;
 
-    *mapa = realloc((*mapa), (i + 1 * sizeof(*mapa)) * sizeof(valôr)); // n + 1 é necessário pela 'regra do múltiplo a índice 0'.
+    //*mapa = memória_re_allocar((i + 1 * sizeof(**mapa)) * sizeof(valôr), *mapa); // Método "funcional"
+    *mapa = memória_re_allocar((i + 1) * sizeof(LSVEMapa), *mapa); // Como resolver isto?
     (*mapa)[i] = valôr;
+
+    //printf("\n%d %d %d\n\n", (*mapa)[i].i, valôr.i, i);
 }
 
 LSVEMapa*
@@ -310,10 +328,10 @@ lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa) {
     {
     case tipo_char:
         while (mapa[i].passe != '\0') {
-            printf("(/%d-%s-%s\\)\n", i, (char*)mapa[i].passe, (char*)procura);
+            //printf("(/%d-%s-%s\\)\n", i, (char*)mapa[i].passe, (char*)procura);
             //printf("(/%s-%s\\)\n", (char*)mapa[i].passe, (char*)procura);
             if (linha_compara((char*)procura, (char*)mapa[i].passe)) {
-                printf("encontrado");
+                //printf("encontrado");
                 return &mapa[i];
             }
             i = i + 1;
@@ -322,7 +340,7 @@ lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa) {
     default: break;
     }
 
-    printf("não encontrado");
+    //printf("não encontrado");
 
     return NULL;
 }
@@ -335,9 +353,9 @@ lsve_mapa_a_matriz_char(LSVEMapa* mapa) {
     while (mapa) {
         if (mapa[n].valôr != NULL) {
             char* linhaTratada = "";
-            strcat(linhaTratada, mapa[n].passe);
-            strcat(linhaTratada, mapa[n].separadôr);
-            strcat(linhaTratada, mapa[n].valôr);
+            linha_complementar(mapa[n].passe, linhaTratada);
+            linha_complementar(mapa[n].separadôr, linhaTratada);
+            linha_complementar(mapa[n].valôr, linhaTratada);
 
             linhas[n] = linha_aparar(linha_separar(mapa[n].separadôr, linhaTratada)[0]);
             linhas = realloc(linhas, (n + 1 * sizeof(linhas)) * sizeof(char*));
