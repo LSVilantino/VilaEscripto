@@ -267,8 +267,10 @@ lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
         mapa_introductôr.valôr = linha_aparar(linhaSeparada[2]);
         mapa_introductôr.i = n;
 
+        printf("a%s- %s- %s- %d-\n", (char*)mapa_introductôr.passe, (char*)mapa_introductôr.separadôr, (char*)mapa_introductôr.valôr, mapa_introductôr.i);
+
         lsve_mapa_introduzir(&mapa, mapa_introductôr);
-        printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
+        printf("b%s- %s- %s- %d-\n\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
 
         //system("cls");
         //// Try some Set Graphics Rendition (SGR) terminal escape sequences
@@ -317,7 +319,7 @@ lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr) {
     *mapa = memória_re_allocar((i + 1) * sizeof(LSVEMapa), *mapa); // Como resolver isto?
     (*mapa)[i] = valôr;
 
-    //printf("\n%d %d %d\n\n", (*mapa)[i].i, valôr.i, i);
+    printf("\n%d %d %d\n\n", (*mapa)[i].i, valôr.i, i);
 }
 
 LSVEMapa*

@@ -1,4 +1,4 @@
-﻿#include "linha.h"
+#include "linha.h"
 #include "lsve.h"
 
 #include <stdio.h>
@@ -157,21 +157,24 @@ linha_separar(char* separadôr, char* linha) {
 
 char* 
 linha_aparar(char* linha) {
-    int n = 0;
+    int n = 0; // Número à linha a partir da falta de espaço inicial.
+    int i = 0;
 
     while (linha[n] == ' ') { n = n + 1; }
 
-    char* linhaTratada = "";
-    int i = 0;
+    char* linhaTratada = malloc(linha_charactéres_contar(linha) * sizeof(char));
     while (linha[n] != '\0') {
-        strncpy(&linhaTratada[i], &linha[n], sizeof(linha[n] - 1));
-
+        linhaTratada[i] = linha[n];
         linhaTratada[i + 1] = '\0';
 
-        //printf("\n%d %d %c %c", i, n, linha[n], linhaTratada[i]);
-        n = n + 1;
-        i = i + 1;
+        //printf("\n%d %c %d %c", i, linhaTratada[i], n, linha[n]);
+        //printf("\n%s\n", linhaTratada);
+
+        n++;
+        i++;
     }
+
+    //printf(linhaTratada);
 
     int diferença = n - i;
     int índexReal = n - diferença;
@@ -179,12 +182,13 @@ linha_aparar(char* linha) {
     //printf("%d", índexReal);
 
     while (linhaTratada[índexReal - 1] == ' ' || linhaTratada[índexReal - 1] == '\n' || linhaTratada[índexReal - 1] == '\r' || linhaTratada[índexReal - 1] == '\t') {
-        linhaTratada[índexReal - 1] = '\0';
+        índexReal--;
+        linhaTratada = memória_re_allocar(índexReal, linhaTratada);
+        linhaTratada[índexReal] = '\0';
         //printf("\n%d %c", índexReal, linhaTratada[índexReal - 1]);
-        índexReal = índexReal - 1;
     }
 
-    return strdup(linhaTratada);
+    return linhaTratada;
 }
 
 char* 
