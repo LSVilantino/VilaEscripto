@@ -1,4 +1,4 @@
-﻿#ifndef _CABEÇALHO_CONSOLA
+#ifndef _CABEÇALHO_CONSOLA
 #define _CABEÇALHO_CONSOLA
 
 void consola_limpar();

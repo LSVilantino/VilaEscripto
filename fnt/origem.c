@@ -15,7 +15,7 @@
 #include <windows.h>
 
 int 
-main(int** _, char** argumentos) {
+main(int** argumento, char** argumentos) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
     // Define saída para usar sequências de consola virtual
@@ -39,49 +39,52 @@ main(int** _, char** argumentos) {
         desbraga_convenção = mapa_desbraga->valôr;
     }
 
-    char* ficheiroPropriedade_caminho = strdup(ficheiro_utilizador);
-    LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(ficheiroPropriedade_caminho);
+    return 0;
 
-    // ---------------------------------------------------------------------------------------------------
+    //char* ficheiroPropriedade_caminho = ficheiro_utilizador;
+    //LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(ficheiroPropriedade_caminho);
 
-    int n_propriedade = 0;
-    while (mapa_propriedade)
-    {
-        if (n_propriedade == mapa_propriedade[n_propriedade].i) {
-            printf("%d %d %s", n_propriedade, mapa_propriedade[n_propriedade].i, (char*)mapa_propriedade[n_propriedade].valôr);
-            mapa_propriedade[n_propriedade].valôr = lsve_ficheiro_valôr_tratar(tipo_char, mapa_propriedade[n_propriedade].passe, mapa_propriedade);
 
-            if (linha_compara(desbraga_convenção, têr_desbraga_convenção__ficheiro_expôr_valôr_tratado())) {
-                printf("\n");
-                wprintf(L"\x1b[34;46m%S %S %d", (char*)mapa_propriedade[n_propriedade].passe, (char*)mapa_propriedade[n_propriedade].valôr, mapa_propriedade[n_propriedade].i);
-                wprintf(L"\x1b[39m");
-                wprintf(L"\x1b[49m");
-                printf("\n");
-            }
+ //   // ---------------------------------------------------------------------------------------------------
 
-            n_propriedade++;
-        }
-        else break;
-    }
+ //   int n_propriedade = 0;
+ //   while (mapa_propriedade)
+ //   {
+ //       if (n_propriedade == mapa_propriedade[n_propriedade].i) {
+ //           printf("%d %d %s", n_propriedade, mapa_propriedade[n_propriedade].i, (char*)mapa_propriedade[n_propriedade].valôr);
+ //           mapa_propriedade[n_propriedade].valôr = lsve_ficheiro_valôr_tratar(tipo_char, mapa_propriedade[n_propriedade].passe, mapa_propriedade);
 
-    printf("\n");
-    wprintf(L"\x1b[34;46m%S %S %S %S %S %S %S %S %S", 
-        (char*)lsve_mapa_procurar(tipo_char, "caminho", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "sinal", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "receitu", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "construc", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "liga", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "reposit", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "subir", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "construir", mapa_propriedade)->valôr,
-        (char*)lsve_mapa_procurar(tipo_char, "repositório", mapa_propriedade)->valôr
-    );
-    wprintf(L"\x1b[39m");
-    wprintf(L"\x1b[49m");
-    printf("\n");
+ //           if (linha_compara(desbraga_convenção, têr_desbraga_convenção__ficheiro_expôr_valôr_tratado())) {
+ //               printf("\n");
+ //               wprintf(L"\x1b[34;46m%S %S %d", (char*)mapa_propriedade[n_propriedade].passe, (char*)mapa_propriedade[n_propriedade].valôr, mapa_propriedade[n_propriedade].i);
+ //               wprintf(L"\x1b[39m");
+ //               wprintf(L"\x1b[49m");
+ //               printf("\n");
+ //           }
 
-    free(mapa_propriedade);
-    free(mapa_desbraga);
+ //           n_propriedade++;
+ //       }
+ //       else break;
+ //   }
 
-	return EXIT_SUCCESS;
+ //   printf("\n");
+ //   wprintf(L"\x1b[34;46m%S %S %S %S %S %S %S %S %S", 
+ //       (char*)lsve_mapa_procurar(tipo_char, "caminho", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "sinal", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "receitu", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "construc", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "liga", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "reposit", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "subir", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "construir", mapa_propriedade)->valôr,
+ //       (char*)lsve_mapa_procurar(tipo_char, "repositório", mapa_propriedade)->valôr
+ //   );
+ //   wprintf(L"\x1b[39m");
+ //   wprintf(L"\x1b[49m");
+ //   printf("\n");
+
+ //   free(mapa_propriedade);
+ //   free(mapa_desbraga);
+
+	//return EXIT_SUCCESS;
 }

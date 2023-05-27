@@ -15,21 +15,23 @@ ficheiro_lêr(char* ficheiroNome) {
 
     char** linhas = memória_allocar(sizeof(char*));
     char* linhaActualDoFicheiro = memória_allocar(sizeof(char));
-    char charactéreActualDoFicheiro = fgetc(ficheiroLido);
+    char charactéreActualDoFicheiro = (char) fgetc(ficheiroLido);
     char charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
 
     if (linhas == NULL) return (ConteúdoFicheiro) { 0 };
 
     int n = 0;
     int nl = 0;
-    while (charactéreActualDoFicheiro = fgetc(ficheiroLido)) {
+    while (charactéreActualDoFicheiro != EOF) {
+        charactéreActualDoFicheiro = (char)fgetc(ficheiroLido);
         if (charactéreAnteriôrDoFicheiro == clave_ficheiro_comentário) {
-            while (charactéreAnteriôrDoFicheiro = fgetc(ficheiroLido))
+            while (charactéreAnteriôrDoFicheiro == EOF)
             {
+                charactéreAnteriôrDoFicheiro = (char)fgetc(ficheiroLido);
                 if (charactéreAnteriôrDoFicheiro == '\n') break;
             }
 
-            charactéreActualDoFicheiro = fgetc(ficheiroLido);
+            charactéreActualDoFicheiro = (char)fgetc(ficheiroLido);
             charactéreAnteriôrDoFicheiro = charactéreActualDoFicheiro;
             //charactéreActualDoFicheiro = fgetc(ficheiroLido);
 

@@ -9,67 +9,102 @@
 
 char**
 lsve_linha_separar(char* separadôr, char* linha) {
-    int n = 0;
-    int n2 = 0;
-    int n3 = 0;
+    int separadôr_i = 0;
+    int separadôr_t = linha_charactéres_contar(separadôr);
+    int resultado_i = 0;
+    int resultado_charac_i = 0;
 
-    char** matrizTratada = memória_allocar(2 * sizeof(char*));
-    // Alloca-se 2 linhas, com uma só o programa fecha, por algum motivo que desconheço. 
-    /* 
-    Talvez só não seja memória o suficiente para a declaração, mas não está de acordo com o normal,
-    pode haver algo incorrecto com allocações anteriôres no programa, nada aparente, 
-    suspeito do método de leitura de ficheiros.
+    char** resultado = memória_allocar(sizeof(char*));
+    resultado[resultado_i] = memória_allocar(2 * sizeof(char));
 
-    Actualização: Eu eliminei a allocação de 2 linhas e parece ter funcionado sem motivo aparente, 
-    não se sabe a causa dos fechines anteriôres, manterei só por segurança.
-     */
-    if (matrizTratada == NULL) return matrizTratada;
+    for (int i = 0; linha[i] != '\0'; i++)
+    {
+        if (separadôr[separadôr_i] == linha[i]) {
+            separadôr_i++;
 
-    char* linhaTratada = memória_allocar(sizeof(char));
+            if (separadôr_i == separadôr_t) {
+                resultado = memória_re_allocar(resultado_i + 1 * sizeof(char*), resultado);
 
-    while (linha[n2]) {
-        //printf("\n%c _ %s %s", linha[n2], separadôr, linha);
-        if (linha[n2] != '\0') {
-            char* charactéreActual = memória_allocar(2 * sizeof(char));
-            charactéreActual[0] = linha[n2];
-            charactéreActual[1] = '\0';
+                resultado_i++;
+                resultado[resultado_i] = strdup(separadôr);
 
-            //printf("%c", charactéreActual[0]);
-            if (linha_contém(separadôr, linhaTratada)) {
-                //printf(linhaTratada);
-                linhaTratada[(n3 - linha_charactéres_contar(separadôr)) - 1] = '\0';
-                matrizTratada[n] = strdup(linhaTratada);
-
-                //printf("\n1-%s-1", matrizTratada[n]);
-                
-                n++;
-
-                matrizTratada[n] = strdup(separadôr);
-                //printf("\n2-%s-2\n", matrizTratada[n]);
-
-                linhaTratada[0] = '\0';
-
-                n3 = 0;
-                n2 = n2 + 1;
-
-                n++;
+                resultado_i++;
+                resultado[resultado_i] = memória_allocar(2 * sizeof(char));
+                resultado_charac_i = 0;
+                separadôr_i = 0;
                 continue;
             }
-
-            strncpy(&linhaTratada[n3], &linha[n2], sizeof(linha[n2]));
-            linhaTratada[n3 + 1] = '\0';
-            matrizTratada[n] = strdup(linhaTratada);
-
-            if (matrizTratada[n] != NULL) {
-                n2++;
-                n3++;
-            }
+            else continue;
         }
-    }
-    //printf("\n0~%s\n1~%s", matrizTratada[0], matrizTratada[1]);
-    //printf("\nlinha - %s", linhaTratada);
+        else separadôr_i = 0;
 
-    return matrizTratada;
+        resultado[resultado_i] = memória_re_allocar(resultado_charac_i + 2, resultado[resultado_i]);
+        resultado[resultado_i][resultado_charac_i] = linha[i];
+        resultado[resultado_i][resultado_charac_i + 1] = '\0';
+
+        printf("%c-", resultado[resultado_i][resultado_charac_i]);
+        resultado_charac_i++;
+    }
+
+    return resultado;
+
+
+
+
+
+
+    //char** resultado = memória_allocar(sizeof(char*));
+    //char* porçãoActual = memória_allocar(sizeof(char));
+
+    //int porçãoActual_i = 0;
+    //int resultado_i = 0;
+    //resultado[resultado_i] = memória_allocar(sizeof(char));
+    //for (int i = 0; linha[i] != '\0'; i++)
+    //{
+    //    porçãoActual = memória_re_allocar(porçãoActual_i + 2, porçãoActual);
+    //    /*resultado[resultado_i] = memória_re_allocar(porçãoActual_i + 2, resultado[resultado_i]);
+    //    resultado[resultado_i][porçãoActual_i] = porçãoActual[porçãoActual_i] = linha[i];
+    //    resultado[resultado_i][porçãoActual_i + 1] = porçãoActual[porçãoActual_i + 1] = '\0';*/
+
+    //    porçãoActual[porçãoActual_i] = linha[i];
+    //    porçãoActual[porçãoActual_i + 1] = '\0';
+
+    //    resultado[resultado_i] = porçãoActual;
+
+    //    printf("%c", porçãoActual[porçãoActual_i]);
+    //    porçãoActual_i++;
+
+    //    if (linha_contém(separadôr, porçãoActual)) {
+    //        printf("\n\n%s-\n\n", porçãoActual);
+    //        porçãoActual[(porçãoActual_i - linha_charactéres_contar(separadôr))] = '\0';
+    //        //printf("%c", porçãoActual[porçãoActual_i]);
+
+    //        resultado = memória_re_allocar(resultado_i + 1 * sizeof(char*), resultado);
+    //        resultado[resultado_i] = strdup(porçãoActual);
+
+    //        //printf("\n1-%s-1", resultado[resultado_i]);
+
+    //        resultado_i++;
+
+    //        resultado = memória_re_allocar(resultado_i + 1 * sizeof(char*), resultado);
+    //        resultado[resultado_i] = strdup(separadôr);
+
+    //        //printf("\n2-%s-2\n", resultado[resultado_i]);
+
+    //        free(porçãoActual); porçãoActual = NULL;
+    //        porçãoActual = memória_allocar(sizeof(char));
+
+    //        porçãoActual_i = 0;
+    //        resultado_i++;
+
+    //        //resultado[resultado_i] = memória_allocar(sizeof(char));
+    //        continue;
+    //    }
+    //}
+
+    //free(porçãoActual);
+
+    //return resultado;
 }
 
 char*
@@ -120,9 +155,6 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
         return (char*) mapa.valôr;
     }
     else if (separadôr == clave_lêr_e_escolher) {
-        //ConteúdoFicheiro cf = ficheiro_lêr(linha_aparar(mapa.valôr));
-        //LSVEMapa* mapa_propriedade = lsve_linha_matriz_mapear(cf); // problema
-
         LSVEMapa* mapa_propriedade = lsve_ficheiro_conteúdo_mapear(linha_aparar(mapa.valôr));
         char** mapa_propriedade_matriz = lsve_mapa_a_matriz_char(mapa_propriedade);
 
@@ -137,8 +169,6 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
         // opção será válida.
 
         mapa.valôr = lsve_ficheiro_valôr_tratar(clave_tipo, mapa_seleccionado->passe, mapa_propriedade);
-        free(mapa_propriedade_matriz);
-        free(mapa_propriedade);
 
         return strdup(mapa.valôr);
     }
@@ -160,8 +190,7 @@ lsve_ficheiro_valôr_tratar(Tipo clave_tipo, void* clave, LSVEMapa* propriedades
 
 LSVEMapa 
 lsve_ficheiro_valôr_tratar_variável(Tipo clave_tipo, void* clave, LSVEMapa mapa, LSVEMapa* propriedades) {
-    bool seAbre = 0;
-    bool seFecha = 0;
+    printf((char*)clave);
 
 ciclo_volta:
     int n = 0;
@@ -176,9 +205,6 @@ ciclo_volta:
         {
             printf("%c", commando[n]);
             if (commando[n] == '$' && commando[n + 1] == '(') {
-                int n_reposição = 0;
-                seAbre = 1;
-
                 printf("%c", commando[n + 1]);
 
                 n += 2;
@@ -189,8 +215,6 @@ ciclo_volta:
                 while (commando[n]) {
                     printf("%c", commando[n]);
                     if (commando[n] == ')') {
-                        seFecha = 1;
-
                         clave_reposição = linha_complementar(clave_commando, clave_reposição);
                         clave_reposição = linha_complementar(")", clave_reposição);
 
@@ -242,18 +266,19 @@ lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
     LSVEMapa* mapa;
     LSVEMapa mapa_introductôr = { 0 };
     char* separadôr;
-    char** linhaSeparada;
+    char** linhaSeparada = memória_allocar(sizeof(char*));
 
     lsve_mapa_construir(&mapa);
 
     int n = 0;
     while (cf.quantidade_conteúdo != n) {
-        //printf(cf.conteúdo[n]);
-        //printf("\n\n");
+        printf(cf.conteúdo[n]);
+        printf("\n\n");
 
-        separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]);
-        linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]);
+        separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]); printf("A");
+        linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]); printf("B");
 
+        printf("----------%s----------\n", linhaSeparada[0]);
         mapa_introductôr.passe = linha_aparar(linhaSeparada[0]);
         mapa_introductôr.separadôr = linha_aparar(linhaSeparada[1]);
         mapa_introductôr.valôr = linha_aparar(linhaSeparada[2]);
@@ -279,26 +304,26 @@ lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho) {
     return mapa;
 }
 
-LSVEMapa* 
-lsve_linha_matriz_mapear(ConteúdoFicheiro cf) {
-    LSVEMapa* mapa;
-    lsve_mapa_construir(&mapa);
-
-    int n = 0;
-    char* separadôr;
-    char** linhaSeparada;
-    while (cf.quantidade_conteúdo != n) {
-        separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]);
-
-        linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]);
-        lsve_mapa_introduzir(&mapa, (LSVEMapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n, linha_aparar(linhaSeparada[1]) });
-        printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
-
-        n++;
-    }
-
-    return mapa;
-}
+//LSVEMapa* 
+//lsve_linha_matriz_mapear(ConteúdoFicheiro cf) {
+//    LSVEMapa* mapa;
+//    lsve_mapa_construir(&mapa);
+//
+//    int n = 0;
+//    char* separadôr;
+//    char** linhaSeparada;
+//    while (cf.quantidade_conteúdo != n) {
+//        separadôr = lsve_linha_separador_procurar(cf.conteúdo[n]);
+//
+//        linhaSeparada = lsve_linha_separar(separadôr, cf.conteúdo[n]);
+//        lsve_mapa_introduzir(&mapa, (LSVEMapa) { linha_aparar(linhaSeparada[0]), linha_aparar(linhaSeparada[2]), n, linha_aparar(linhaSeparada[1]) });
+//        printf("%s- %s- %s- %d-\n", (char*)mapa[n].passe, (char*)mapa[n].separadôr, (char*)mapa[n].valôr, mapa[n].i);
+//
+//        n++;
+//    }
+//
+//    return mapa;
+//}
 
 void
 lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr) {
@@ -342,11 +367,9 @@ char**
 lsve_mapa_a_matriz_char(LSVEMapa* mapa) {
     char** linhas = malloc(sizeof(char*));
 
-    int n = 0;
-    while (mapa[n].i == n) {
-        linhas = realloc(linhas, (n + 1) * sizeof(char*));
-        linhas[n] = mapa[n].passe;
-        n++;
+    for (int i = 0; mapa[i].i == i; i++) {
+        linhas = memória_re_allocar((i + 1) * sizeof(char*), linhas);
+        linhas[i] = mapa[i].passe;
     }
 
     return linhas;

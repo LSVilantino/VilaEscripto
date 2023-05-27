@@ -1,4 +1,4 @@
-caminho >>> ..\..\..\escripto\acólito\caminho.txt
+caminho >>> ..\..\..\escripto\acólito\caminho.txt%
 caminhomod >>> ..\..\..\escripto\acólito\caminho.txt
 versão > v0-0.0.0-0\
 correr >@> mkdir $(caminho)$(caminhomod)$(versão)%

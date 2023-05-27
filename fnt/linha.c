@@ -114,39 +114,37 @@ linha_separar(char* separadôr, char* linha) {
     int n2 = 0;
     int n3 = 0;
 
-    char** matrizTratada = malloc(sizeof(char*));
+    char** matrizTratada = malloc(2 * sizeof(char*));
     if (matrizTratada == NULL) return matrizTratada;
 
     char* linhaTratada = "";
 
-    while (linha[n2]) {
+    while (linha[n2] != '\0') {
         //printf("\n%c _ %s", linha[n2], linha);
-        if (linha[n2] != '\0') {
-            char* charactéreActual = malloc(2 * sizeof(char));
-            charactéreActual[0] = linha[n2];
-            charactéreActual[1] = '\0';
+        char* charactéreActual = malloc(2 * sizeof(char));
+        charactéreActual[0] = linha[n2];
+        charactéreActual[1] = '\0';
 
-            if (linha_contém(separadôr, linhaTratada)) {
-                linhaTratada[n3 - linha_charactéres_contar(separadôr) - 1] = '\0';
-                matrizTratada[n] = strdup(linhaTratada);
-
-                linhaTratada[0] = '\0';
-
-                n3 = 0;
-                n2 = n2 + 1;
-
-                n = n + 1;
-                continue;
-            }
-
-            strncpy(&linhaTratada[n3], &linha[n2], sizeof(linha[n2]));
-            linhaTratada[n3 + 1] = '\0';
+        if (linha_contém(separadôr, linhaTratada)) {
+            linhaTratada[n3 - linha_charactéres_contar(separadôr) - 1] = '\0';
             matrizTratada[n] = strdup(linhaTratada);
 
-            if (matrizTratada[n] != NULL) {
-                n2 = n2 + 1;
-                n3 = n3 + 1;
-            }
+            linhaTratada[0] = '\0';
+
+            n3 = 0;
+            n2 = n2 + 1;
+
+            n = n + 1;
+            continue;
+        }
+
+        strncpy(&linhaTratada[n3], &linha[n2], sizeof(linha[n2]));
+        linhaTratada[n3 + 1] = '\0';
+        matrizTratada[n] = strdup(linhaTratada);
+
+        if (matrizTratada[n] != NULL) {
+            n2 = n2 + 1;
+            n3 = n3 + 1;
         }
     }
     //printf("\n0~%s\n1~%s", matrizTratada[0], matrizTratada[1]);
@@ -157,38 +155,48 @@ linha_separar(char* separadôr, char* linha) {
 
 char* 
 linha_aparar(char* linha) {
-    int n = 0; // Número à linha a partir da falta de espaço inicial.
-    int i = 0;
+    //int n = 0; // Número à linha a partir da falta de espaço inicial.
+    //int i = 0;
 
-    while (linha[n] == ' ') { n = n + 1; }
+    //while (linha[n] == ' ') { n = n + 1; }
 
-    char* linhaTratada = malloc(linha_charactéres_contar(linha) + 1 * sizeof(char));
-    while (linha[n] != '\0') {
-        linhaTratada[i] = linha[n];
-        linhaTratada[i + 1] = '\0';
+    //char* linhaTratada = malloc(linha_charactéres_contar(linha) + 1 * sizeof(char));
+    //while (linha[n] != '\0') {
 
-        //printf("\n%d %c %d %c", i, linhaTratada[i], n, linha[n]);
-        //printf("\n%s\n", linhaTratada);
+    //    linhaTratada[i] = linha[n];
+    //    linhaTratada[i + 1] = '\0';
 
-        n++;
-        i++;
-    }
+    //    printf("\n%d %c %d %c", i, linhaTratada[i], n, linha[n]);
+    //    //printf("\n%s\n", linhaTratada);
 
-    //printf(linhaTratada);
+    //    n++;
+    //    i++;
+    //}
 
-    int diferença = n - i;
-    int índexReal = n - diferença;
+    //printf("linhaTratada -%s", linhaTratada);
 
-    //printf("%d", índexReal);
+    //int diferença = n - i;
+    //int índexReal = n - diferença;
 
-    while (linhaTratada[índexReal - 1] == ' ' || linhaTratada[índexReal - 1] == '\n' || linhaTratada[índexReal - 1] == '\r' || linhaTratada[índexReal - 1] == '\t') {
-        índexReal--;
-        linhaTratada = memória_re_allocar(índexReal, linhaTratada);
-        linhaTratada[índexReal] = '\0';
-        //printf("\n%d %c", índexReal, linhaTratada[índexReal - 1]);
-    }
+    ////printf("%d", índexReal);
 
-    return linhaTratada;
+    //while (linhaTratada[índexReal - 1] == ' ' || linhaTratada[índexReal - 1] == '\n' || linhaTratada[índexReal - 1] == '\r' || linhaTratada[índexReal - 1] == '\t') {
+    //    índexReal--;
+    //    linhaTratada = memória_re_allocar(índexReal, linhaTratada);
+    //    linhaTratada[índexReal] = '\0';
+    //    //printf("\n%d %c", índexReal, linhaTratada[índexReal - 1]);
+    //}
+
+
+    while (*linha == ' ') linha++;
+
+    char* término = linha + linha_charactéres_contar(linha) - 1;
+    while (término > linha && *término == ' ' || *término == '\n' || *término == '\r' || *término == '\t') término--;
+    término[1] = '\0';
+
+    printf("%s\n", linha);
+
+    return linha;
 }
 
 char* 
@@ -212,7 +220,6 @@ linha_cortar(int de, int até, char* linha) {
 char* 
 linha_repôr(char* reposição, char* alvo, char* linha) {
     int n = 0;
-    int n_lc = 0;
     int n_a = 0;
     int alvo_t = linha_charactéres_contar(alvo) - 1;
     int linha_t_i = linha_charactéres_contar(linha);

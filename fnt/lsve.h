@@ -27,7 +27,7 @@ LSVEMapa* lsve_ficheiro_conteúdo_mapear(char* ficheiroCaminho);
 
 void lsve_mapa_construir(LSVEMapa** mapa);
 LSVEMapa* lsve_mapa_procurar(Tipo tipo, void* procura, LSVEMapa* mapa);
-LSVEMapa* lsve_linha_matriz_mapear(ConteúdoFicheiro cf);
+//LSVEMapa* lsve_linha_matriz_mapear(ConteúdoFicheiro cf);
 
 void lsve_mapa_introduzir(LSVEMapa** mapa, LSVEMapa valôr);
 char** lsve_mapa_a_matriz_char(LSVEMapa* linhas);

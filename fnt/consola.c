@@ -2,6 +2,7 @@
 #include "linha.h"
 
 #include <stdio.h>
+#include <conio.h>
 #include <stdlib.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -31,16 +32,14 @@ void
 consola_opção_mostrar(int opçãoSeleccionada, char** opções) {
     consola_limpar();
 
-    int n = 0;
-    while (opções[n] != '\0')
+    for (int i = 0; opções[i] != '\0'; i++)
     {
-        if (n != opçãoSeleccionada) { printf("%s\r\n", opções[n]); }
+        if (opçãoSeleccionada != i) { printf("%s\r\n", opções[i]); }
         else {
-            wprintf(L"\x1b[34;46m%S\r\n", opções[n]);
+            wprintf(L"\x1b[34;46m%S\r\n", opções[i]);
             wprintf(L"\x1b[39m");
             wprintf(L"\x1b[49m");
         }
-        n = n + 1;
     }
 }
 
@@ -51,9 +50,9 @@ consola_construir_menu(char** opções) {
     consola_opção_mostrar(opção, opções);
     
     char* opçãoSeleccionada = "";
-    char c = -1;
+    int c = -1;
     while (c) {
-        c = getch();
+        c = _getch();
 
         /* 
         * Utiliza - se a tabela de códigos ASCII para a detecção da clave.
@@ -67,10 +66,10 @@ consola_construir_menu(char** opções) {
 
         switch (c) {
         case 27: { printf("ESCAPE"); return NULL; }
-        case 72: { printf("CIMA"); opção = opção - 1; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
-        case 80: { printf("BAIXO"); opção = opção + 1; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
-        case 75: { printf("ESQUERDA"); opção = opção - 1; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
-        //case 77: { printf("DIREITA"); opção = opção + 1; consola_opção_mostrar(opção, opções); break; }
+        case 72: { printf("CIMA"); opção--; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
+        case 80: { printf("BAIXO"); opção++; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
+        case 75: { printf("ESQUERDA"); opção--; consola_opção_mostrar(opção, opções); printf("%d ", opção); break; }
+        //case 77: { printf("DIREITA"); opção++; consola_opção_mostrar(opção, opções); break; }
         case 77: {
             consola_opção_mostrar(opção, opções);
             opçãoSeleccionada = opções[opção];
