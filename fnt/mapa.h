@@ -1,17 +1,11 @@
-﻿#ifndef _CABEÇALHO_MAPA
-
-#include "tipo.h"
-
+#ifndef _CABEÇALHO_MAPA
 #define _CABEÇALHO_MAPA
 
 typedef struct Mapa {
-    void* passe;
+    void* clave;
     void* valôr;
-    int i; //Índex
+    int i; // índex
 } Mapa;
 
-Mapa* mapa_construir();
-void mapa_introduzir(Mapa* mapa[], Mapa valôr);
-Mapa* mapa_procurar(Tipo tipo, void* procura, Mapa* mapa);
 
-#endif // _CABEÇALHO_MAPA
+#endif // !_CABEÇALHO_MAPA
