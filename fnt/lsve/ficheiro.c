@@ -1,7 +1,7 @@
 #include "ficheiro.h"
 #include "general.h"
 
-#include "pilha.h"
+#include "../pilha.h"
 
 #include <stdlib.h>
 #include <string.h>

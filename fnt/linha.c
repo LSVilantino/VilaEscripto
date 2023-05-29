@@ -9,13 +9,11 @@ int linha_contar(char* linha) {
 }
 
 char* linha_duplicar(char* linha) {
-    char* duplicata;
-    int tamanho = linha_contar(linha);
+    char* duplicata; int tamanho = linha_contar(linha);
 
-    duplicata = memória_allocar(tamanho + 1); // mais nil
+    duplicata = memória_allocar(tamanho + 1); // mais nil.
 
     for (int i = 0; i < tamanho; i++) duplicata[i] = linha[i];
-    
     duplicata[tamanho] = LINHA_NIL;
 
     return duplicata;

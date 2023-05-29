@@ -11,6 +11,7 @@
 #include <windows.h>
 
 int main(int** ignorado, char** argumentos) {
+    SetConsoleOutputCP(65001);
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
     char* ficheiroLSVECaminho = argumentos[1];
