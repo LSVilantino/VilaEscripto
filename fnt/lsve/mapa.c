@@ -1,6 +1,6 @@
 #include "mapa.h"
 #include "general.h"
-#include "../ficheiro.h"
+#include "ficheiro.h"
 
 #include <string.h>
 

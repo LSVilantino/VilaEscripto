@@ -15,6 +15,9 @@ int main(int** ignorado, char** argumentos) {
     setlocale(LC_CTYPE, "pt_PT.UTF-8");
 
     char* ficheiroLSVECaminho = argumentos[1];
+
+    if (ficheiroLSVECaminho == '\0') printf("\nDá-me um ficheiro para lêr."); return -1; // Sem ficheiros a ler, sem operação. 
+
     char* ficheiroDesbragaCaminho = argumentos[2];
 
     LSVEMapa mapaDesbraga;
