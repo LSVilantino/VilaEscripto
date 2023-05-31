@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 
-typedef enum { false, true } bool;
-
 const char* clave_ficha;
 const char* clave_ficha_abre;
 const char* clave_ficha_fecha;

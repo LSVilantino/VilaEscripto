@@ -32,6 +32,9 @@ ficheiro_lêr(char* caminho) {
         //printf("\n\n");
 
         if (pilha[recúo_quantidade] == EOF) break;
+        else if (pilha[recúo_quantidade] == LINHA_SALTA) {
+            break;
+        }
     }
 
     fclose(ficheiro);
