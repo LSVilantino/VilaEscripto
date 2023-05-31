@@ -31,9 +31,9 @@ ficheiro_lêr(char* caminho) {
         printf(pilha);
         //printf("\n\n");
 
-        if (pilha[recúo_quantidade] == EOF) break;
+        if (pilha[recúo_quantidade - 1] == EOF) break;
         else if (pilha[recúo_quantidade] == LINHA_SALTA) {
-            break;
+            // AFAZER ~ Armazenar linha anteriôr e preparar memória à seguinte. 
         }
     }
 
