@@ -22,19 +22,28 @@ ficheiro_lêr(char* caminho) {
     char** linhas = memória_allocar(sizeof(char*));
     int recúo_quantidade = 3;
     char* pilha = pilha_construir(recúo_quantidade);
+    int linhaActual_n = 0;
     char* linhaActual = memória_allocar(1);
 
     for (int i = 0;; i++) {
         pilha = pilha_introduzir(FICHEIRO_PRÓXIMO_CHARAC(ficheiro));
 
         //printf("\n\n");
-        printf(pilha);
+        //printf(pilha);
         //printf("\n\n");
 
-        if (pilha[recúo_quantidade - 1] == EOF) break;
-        else if (pilha[recúo_quantidade] == LINHA_SALTA) {
-            // AFAZER ~ Armazenar linha anteriôr e preparar memória à seguinte. 
+        if (pilha[recúo_quantidade - 1] == EOF) {
+            printf(linhaActual);
+            break;
         }
+        else if (pilha[recúo_quantidade] == LINHA_SALTA) {
+            // AFAZER ~ Armazenar linha anteriôr e preparar memória à seguinte.
+            printf(linhaActual);
+        }
+
+        linhaActual = memória_re_allocar(linhaActual_n + 1, linhaActual);
+        linhaActual[linhaActual_n] = pilha[0];
+        linhaActual_n++;
     }
 
     fclose(ficheiro);
