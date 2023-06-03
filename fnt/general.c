@@ -19,7 +19,7 @@ memória_re_allocar(size_t tamanho, void* p) {
     void* ponteiro = realloc(p, tamanho);
     if (ponteiro == NULL) {
         printf("Não se pôde re-alocar %zu digbis.\n", tamanho);
-        return p;
+        abort();
     }
 
     return ponteiro;

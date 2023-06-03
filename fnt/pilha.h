@@ -1,7 +1,7 @@
 #ifndef _CABEÇALHO_PILHA
 #define _CABEÇALHO_PILHA
 
-static char* pilha;
+static char* charactéres_pilha;
 static int recúo_quantidade;
 
 char* pilha_construir(int tamanho);

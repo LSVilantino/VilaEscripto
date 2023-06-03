@@ -11,6 +11,27 @@
 
 #define FICHEIRO_PRÓXIMO_CHARAC(ficheiro) (char) fgetc(ficheiro)
 
+static char** linhas;
+static int recúo_quantidade;
+static char* charactéres_pilha;
+static int linha_actual_n;
+static char* linha_actual;
+
+void ficheiro_lêr__linha_introduzir_charac(char charac, char** linha) {
+    char* linhaActual = *linha;
+    linhaActual = memória_re_allocar(linha_actual_n + 1, linhaActual);
+    linhaActual[linha_actual_n] = charac;
+    linhaActual[linha_actual_n + 1] = LINHA_NIL;
+    linha_actual_n++;
+}
+
+void ficheiro_lêr_arrancar() {
+    linhas = memória_allocar(sizeof(char*));
+    charactéres_pilha = pilha_construir(recúo_quantidade);
+    linha_actual_n = 0;
+    linha_actual = memória_allocar(1);
+}
+
 char**
 ficheiro_lêr(char* caminho) {
     FILE* ficheiro;
@@ -19,34 +40,29 @@ ficheiro_lêr(char* caminho) {
         printf("O ficheiro %s não foi encontrado, ou está ocupado.", caminho); abort();
     }
 
-    char** linhas = memória_allocar(sizeof(char*));
-    int recúo_quantidade = 3;
-    char* pilha = pilha_construir(recúo_quantidade);
-    int linhaActual_n = 0;
-    char* linhaActual = memória_allocar(1);
+    recúo_quantidade = 3;
+    ficheiro_lêr_arrancar();
 
     for (int i = 0;; i++) {
-        pilha = pilha_introduzir(FICHEIRO_PRÓXIMO_CHARAC(ficheiro));
+        charactéres_pilha = pilha_introduzir(FICHEIRO_PRÓXIMO_CHARAC(ficheiro));
 
         //printf("\n\n");
         //printf(pilha);
         //printf("\n\n");
 
-        if (pilha[recúo_quantidade - 1] == EOF) {
-            printf(linhaActual);
+        if (charactéres_pilha[recúo_quantidade - 1] == EOF) {
+            printf(linha_actual);
             break;
         }
-        else if (pilha[recúo_quantidade] == LINHA_SALTA) {
+        else if (charactéres_pilha[recúo_quantidade] == LINHA_SALTA) {
             // AFAZER ~ Armazenar linha anteriôr e preparar memória à seguinte.
-            printf(linhaActual);
+            printf(linha_actual);
         }
 
-        linhaActual = memória_re_allocar(linhaActual_n + 1, linhaActual);
-        linhaActual[linhaActual_n] = pilha[0];
-        linhaActual_n++;
+        ficheiro_lêr__linha_introduzir_charac(charactéres_pilha[0], &linha_actual);
     }
 
-    fclose(ficheiro);
+    fclose(ficheiro); // Fecha o ficheiro.
 
     return linhas;
 }
