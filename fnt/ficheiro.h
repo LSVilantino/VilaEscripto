@@ -1,6 +1,8 @@
 #ifndef _CABEÇALHO_FICHEIRO
 #define _CABEÇALHO_FICHEIRO
 
-char** ficheiro_lêr(char* ficheiro);
+#include "general.h"
+
+LINHA* ficheiro_lêr(LINHA caminho);
 
 #endif // !_CABEÇALHO_FICHEIRO

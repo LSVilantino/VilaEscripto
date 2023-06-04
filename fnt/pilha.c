@@ -3,29 +3,28 @@
 #include "general.h"
 
 #include <string.h>
-#include <stdlib.h>
 
-static char* charactéres_pilha;
-static int recúo_quantidade;
+static Pilha pilha;
 
-char* pilha_construir(int tamanho) {
-    recúo_quantidade = tamanho;
-    charactéres_pilha = memória_allocar(tamanho++);
-    charactéres_pilha[0] = LINHA_NIL;
+Pilha pilha_construir(size_t tamanho) {
+    pilha.recúo = tamanho;
+    pilha.tamanho_actual = 0;
+    pilha.conteúdo = memória_allocar(tamanho++);
 
-    return charactéres_pilha;
+    return pilha;
 }
 
-char* pilha_introduzir(char charac) {
-    char* cópia = linha_duplicar(charactéres_pilha);
+Pilha pilha_introduzir(char charac) {
+    char* cópia = linha_duplicar(pilha.conteúdo);
 
-    charactéres_pilha[0] = charac;
-    charactéres_pilha[recúo_quantidade] = LINHA_NIL;
+    pilha.conteúdo[0] = charac;
+    cópia[pilha.tamanho_actual] = LINHA_NIL;
+    if (pilha.tamanho_actual != pilha.recúo) pilha.tamanho_actual++;
+    pilha.conteúdo[pilha.tamanho_actual] = LINHA_NIL;
+    pilha.conteúdo[pilha.recúo - 1] = LINHA_NIL;
 
-    for (int i = recúo_quantidade - 1; i > 0; i--) {
-        charactéres_pilha[i] = cópia[i - 1];
-    }
+    for (int i = pilha.tamanho_actual - 1; i > 0; i--) pilha.conteúdo[i] = cópia[i - 1];
 
     free(cópia);
-    return charactéres_pilha;
+    return pilha;
 }

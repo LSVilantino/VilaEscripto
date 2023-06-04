@@ -1,10 +1,15 @@
 #ifndef _CABEÇALHO_PILHA
 #define _CABEÇALHO_PILHA
 
-static char* charactéres_pilha;
-static int recúo_quantidade;
+#include <stdlib.h>
 
-char* pilha_construir(int tamanho);
-char* pilha_introduzir(char charac);
+typedef struct Pilha {
+    char* conteúdo;
+    int recúo;
+    int tamanho_actual;
+} Pilha;
+
+Pilha pilha_construir(size_t tamanho);
+Pilha pilha_introduzir(char charac);
 
 #endif // !_CABEÇALHO_PILHA
