@@ -10,6 +10,7 @@ typedef struct Pilha {
 } Pilha;
 
 Pilha pilha_construir(size_t tamanho);
-Pilha pilha_introduzir(char charac);
+void pilha_introduzir(char charac);
+Pilha pilha_têr();
 
 #endif // !_CABEÇALHO_PILHA
