@@ -16,7 +16,7 @@ static int linha_actual_n;
 
 void
 ficheiro_lêr__linhas_introduzir_linha(LINHA linha, LINHA** linhas) {
-    (*linhas) = memória_re_allocar((linha_n + 1) * sizeof(LINHA), (*linhas));
+    (*linhas) = memória_re_allocar((linha_n + 2) * sizeof(LINHA), (*linhas));
     (*linhas)[linha_n] = linha_duplicar(linha);
     (*linhas)[linha_n + 1] = LINHA_NIL;
     printf("%s", (*linhas)[linha_n]);
@@ -26,7 +26,7 @@ ficheiro_lêr__linhas_introduzir_linha(LINHA linha, LINHA** linhas) {
 
 void
 ficheiro_lêr__linha_introduzir_charac(char charac, LINHA* linha) {
-    *linha = memória_re_allocar(linha_actual_n + 2, *linha);
+    (*linha) = memória_re_allocar(linha_actual_n + 2, (*linha));
     (*linha)[linha_actual_n] = charac;
     (*linha)[linha_actual_n + 1] = LINHA_NIL;
     //printf("%c", (*linha)[linha_actual_n]);
