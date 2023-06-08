@@ -8,8 +8,9 @@
 #define LINHA_NIL '\0'
 #define LINHA_SALTA '\n'
 #define FICHEIRO_MODO_LEITURA "r"
+#define FICHEIRO_MODO_LEITURA_BINÁRIA "rb"
 
-typedef enum { false, true } Dico;
+typedef enum { falso, vero } Dico;
 
 void* memória_allocar(size_t tamanho);
 void* memória_re_allocar(size_t tamanho, void* p);
