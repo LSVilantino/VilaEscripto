@@ -6,9 +6,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <wctype.h>
 
 Expressão expressão_interpretar(char* linha) {
-    Expressão resultado;
+    Expressão expressão;
 
     Pilha pilha = pilha_construir(3);
     int recúo = pilha.recúo;
@@ -16,10 +17,11 @@ Expressão expressão_interpretar(char* linha) {
 	int linha_n = 0;
 	int operadôr_n = 0;
 	int operadôr_linha_n = 0;
+	int clave_n = 0;
 
-	resultado.operador = memória_allocar(sizeof(Operação));
-	resultado.operador[operadôr_n].expectação = expecta_concedido;
-	resultado.operador[operadôr_n].linha = memória_allocar(1);
+	expressão.operador = memória_allocar(sizeof(Operação));
+	expressão.operador[operadôr_n].expectação = expecta_concedido;
+	expressão.operador[operadôr_n].linha = memória_allocar(1);
 
     while (recúo > 1)
     {
@@ -28,17 +30,32 @@ Expressão expressão_interpretar(char* linha) {
 			pilha_introduzir(linha[linha_n], &pilha);
 			linha_n++;
 		}
+		char charactére = pilha.conteúdo[recúo - 1];
 
-		if (pilha.conteúdo[recúo - 1] == LINHA_NIL) continue;
+		if (charactére == LINHA_NIL) continue;
 
-		resultado.operador[operadôr_n].seAbre = vero;
-		linha_introduzir_charactére(pilha.conteúdo[recúo - 1], operadôr_linha_n, &resultado.operador[operadôr_n].linha);
-		printf("%c", resultado.operador[operadôr_n].linha[operadôr_linha_n]);
+		if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére) {
+			continue;
+		}
+
+		/*if (charactére == clave_ficha) expressão.operador[operadôr_n].expectação = expecta_ficha_abre;
+		if (charactére == clave_ficha_abre) {
+			expressão.operador[operadôr_n].expectação = expecta_ficha_fecha;
+			expressão.operador[operadôr_n].seAbre = vero;
+		}
+		if (clave_têr_por_tipo(clave_ficha_fecha).pala[] == charactére) {
+			expressão.operador[operadôr_n].expectação = expecta_nil;
+			expressão.operador[operadôr_n].seFecha = vero;
+		}*/
+
+		expressão.operador[operadôr_n].seAbre = vero;
+		linha_introduzir_charactére(pilha.conteúdo[recúo - 1], operadôr_linha_n, &expressão.operador[operadôr_n].linha);
+		printf("%c", expressão.operador[operadôr_n].linha[operadôr_linha_n]);
 
 		operadôr_linha_n++;
     }
 
-    return resultado;
+    return expressão;
 }
 
 Intérprete interpretar(char** linhas) {

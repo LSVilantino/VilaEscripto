@@ -35,3 +35,9 @@ linha_duplicar(char* linha) {
 
     return duplicata;
 }
+
+Dico
+linha_comparar(char* comparadôr, const char* linha)
+{
+	return falso;
+}

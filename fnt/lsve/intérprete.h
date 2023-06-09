@@ -41,7 +41,11 @@ typedef enum Operação_Tipo {
 typedef enum Expectação {
     expecta_concedido,
     expecta_concessão,
-    expecta_valôr
+    expecta_valôr,
+    expecta_ficha_abre,
+    expecta_ficha_fecha,
+
+	expecta_nil // Nada a aguardar/descohece-se o quê aguardar.
 } Expectação;
 
 typedef struct Operação {
