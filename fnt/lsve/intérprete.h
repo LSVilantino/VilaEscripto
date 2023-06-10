@@ -8,10 +8,12 @@
 */
 
 typedef enum Rastilho_Tipo {
-    carece_concedido,
-    carece_concessão,
-    carece_concessão_válida,
-    carece_valôr,
+	rastilho__carece_concedido,
+	rastilho__carece_concessão,
+	rastilho__carece_concessão_válida,
+	rastilho__carece_valôr,
+	rastilho__expressão_excedente, // Quando se tem elementos mais do que esperados.
+	rastilho__nil,
 } Rastilho_Tipo;
 
 
@@ -28,36 +30,38 @@ typedef struct Rastilho {
 */
 
 typedef enum Operação_Tipo {
-    cocedido,
-    concessão_directa,
-    concessão_passiva,
-    concessão_selectiva,
-    concessão_corredora,
+	operação__concedido,
+	operação__concessão_directa,
+	operação__concessão_passiva,
+	operação__concessão_selectiva,
+	operação__concessão_corredora,
+	operação__valôr,
 } Operação_Tipo;
 
 /*
 * O quê se espera que venha a seguir?
 */
 typedef enum Expectação {
-    expecta_concedido,
-    expecta_concessão,
-    expecta_valôr,
-    expecta_ficha_abre,
-    expecta_ficha_fecha,
+    expectação__concedido,
+    expectação__concessão,
+    expectação__valôr,
+    expectação__ficha_abre,
+    expectação__ficha_fecha,
 
-	expecta_nil // Nada a aguardar/descohece-se o quê aguardar.
+	expectação__nil // Nada a aguardar/descohece-se o quê aguardar.
 } Expectação;
 
 typedef struct Operação {
     Operação_Tipo tipo;
 	Expectação expectação;
-    Dico seAbre;
-    Dico seFecha;
+    /*Dico seAbre;
+    Dico seFecha;*/
     char* linha;
 } Operação;
 
 typedef struct Expressão {
     Operação* operador;
+	Rastilho rastilho;
     char* linha;
 } Expressão;
 
