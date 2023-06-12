@@ -31,7 +31,7 @@ clave_têr_por_tipo(Palaclave_Tipo tipo) {
 	return claves[i];
 }
 
-Palaclave_Tipo clave_comprarar(char* linha) {
+Palaclave_Tipo clave_comparar(char* linha) {
 	Palaclave clave;
 
 	int i = 0;

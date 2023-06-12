@@ -37,7 +37,50 @@ linha_duplicar(char* linha) {
 }
 
 Dico
-linha_comparar(char* comparadôr, const char* linha)
-{
-	return falso;
+linha_contém(char* comparadôr, const char* linha) {
+	int tamanho_comparadôr = 0;
+	while (comparadôr[tamanho_comparadôr] != LINHA_NIL) {
+		tamanho_comparadôr++;
+	}
+
+	tamanho_comparadôr--;
+
+	int n = 0;
+	int n_comparador = 0;
+	while (linha[n] != '\0') {
+		//printf("(%c//%c) ", linha[n], comparador[n_comparador]);
+		if (linha[n] == comparadôr[n_comparador]) {
+			//printf("(%d %c/%d %c - %d) ", n, linha[n], n_comparador, comparador[n_comparador], tamanho_comparador);
+			if (n_comparador == tamanho_comparadôr) return 1;
+			n_comparador++;
+		}
+		else {
+			n_comparador = 0;
+		}
+		n++;
+	}
+
+	return 0;
+}
+
+Dico
+linha_comparar(char* comparadôr, const char* linha) {
+	int linha_t = linha_contar(linha) - 1;
+	int comparadôr_t = linha_contar(comparadôr) - 1;
+
+	if (linha_t < comparadôr_t) return 0;
+
+	//printf("\n\n(/%s/%s\\)\n\n", linha, comparadôr);
+
+	int n = 0;
+	while (linha[n] != LINHA_NIL) {
+		//printf("(/%c―%c\\) ", linha[n], comparadôr[n]);
+		if (comparadôr[n] == linha[n]) {
+			if (n == linha_t) return 1;
+			n++;
+		}
+		else return 0;
+	}
+
+	return 0;
 }

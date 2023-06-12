@@ -26,8 +26,13 @@ void matriz_linha_introduzir_linha(char* linha, int posição, char*** matriz);
 * Duplica a linha dada.
 */
 char* linha_duplicar(char* linha);
+
 /*
-* Comparar duas linhas.
+* Valida se uma linha está contida em outra.
+*/
+Dico linha_contém(char* comparadôr, const char* linha);
+/*
+* Comparar o conteúdo de duas linhas.
 */
 Dico linha_comparar(char* comparadôr, const char* linha);
 

@@ -1,5 +1,5 @@
 #include "ficheiro.h"
-#include "general.h"
+#include "../general.h"
 
 #include "../pilha.h"
 
@@ -21,7 +21,7 @@ ficheiro_lêr(char* caminho) {
 
     char** linhas = memória_allocar(sizeof(char*));
     int recúo_quantidade = 3;
-    char* pilha = pilha_construir(recúo_quantidade);
+    Pilha pilha = pilha_construir(recúo_quantidade);
     char* linhaActual = memória_allocar(1);
 
     for (int i = 0;; i++) {

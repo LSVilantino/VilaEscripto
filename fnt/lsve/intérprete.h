@@ -13,6 +13,8 @@ typedef enum Rastilho_Tipo {
 	rastilho__carece_concessão_válida,
 	rastilho__carece_valôr,
 	rastilho__expressão_excedente, // Quando se tem elementos mais do que esperados.
+	rastilho__encerro_forçado, // Quando se encontra quebra-de-ficheiro na linha.
+	rastilho__comentário, // Linha comentada.
 	rastilho__nil,
 } Rastilho_Tipo;
 

@@ -15,7 +15,7 @@
 int main(int** ignorado, char** argumentos) {
 	SetConsoleOutputCP(65001);
 	//setlocale(LC_ALL, "pt_PT.UTF-8");
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, ""); // Localidade independente.
 
 	char* ficheiroLSVECaminho = argumentos[1];
 
