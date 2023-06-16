@@ -17,7 +17,25 @@ linha_introduzir_charactére(char charactére, int posição, char** linha)
 	(*linha)[posição + 1] = LINHA_NIL;
 }
 
-void matriz_linha_introduzir_linha(char* linha, int posição, char*** matriz)
+void
+linha_introduzir_linha(char* linhaIntroduzida, int* posição, char** linha)
+{
+	int linhaIntroduzida_t = linha_contar(linhaIntroduzida);
+	int linha_t = linha_contar((*linha));
+	int linha_ttl = linhaIntroduzida_t + linha_t;
+
+	(*linha) = memória_re_allocar(linha_ttl + 1, (*linha));
+
+	int linhaIntroduzida_n = 0;
+	while (linhaIntroduzida_n != linhaIntroduzida_t && (*posição) != linha_ttl) {
+		(*linha)[(*posição)++] = linhaIntroduzida[linhaIntroduzida_n++];
+	}
+
+	(*linha)[linha_ttl] = LINHA_NIL;
+}
+
+void
+matriz_linha_introduzir_linha(char* linha, int posição, char*** matriz)
 {
 	(*matriz) = memória_re_allocar((posição + 2) * sizeof(LINHA), (*matriz));
 	(*matriz)[posição] = linha_duplicar(linha);
@@ -47,7 +65,7 @@ linha_contém(char* comparadôr, const char* linha) {
 
 	int n = 0;
 	int n_comparador = 0;
-	while (linha[n] != '\0') {
+	while (linha[n] != LINHA_NIL) {
 		//printf("(%c//%c) ", linha[n], comparador[n_comparador]);
 		if (linha[n] == comparadôr[n_comparador]) {
 			//printf("(%d %c/%d %c - %d) ", n, linha[n], n_comparador, comparador[n_comparador], tamanho_comparador);

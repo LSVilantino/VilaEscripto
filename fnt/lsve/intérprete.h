@@ -11,6 +11,7 @@ typedef enum Rastilho_Tipo {
 	rastilho__carece_concedido,
 	rastilho__carece_concessão,
 	rastilho__carece_concessão_válida,
+	rastilho__carece_ficha_válida,
 	rastilho__carece_valôr,
 	rastilho__expressão_excedente, // Quando se tem elementos mais do que esperados.
 	rastilho__encerro_forçado, // Quando se encontra quebra-de-ficheiro na linha.
@@ -38,6 +39,7 @@ typedef enum Operação_Tipo {
 	operação__concessão_selectiva,
 	operação__concessão_corredora,
 	operação__valôr,
+	operação__nil // Terminação das operações
 } Operação_Tipo;
 
 /*
@@ -56,15 +58,17 @@ typedef enum Expectação {
 typedef struct Operação {
     Operação_Tipo tipo;
 	Expectação expectação;
-    /*Dico seAbre;
-    Dico seFecha;*/
     char* linha;
+
+	int índice;
 } Operação;
 
 typedef struct Expressão {
     Operação* operador;
 	Rastilho rastilho;
     char* linha;
+
+	int índice;
 } Expressão;
 
 typedef struct Intérprete {

@@ -12,8 +12,10 @@ Palaclave claves[] = {
 	{ "#", clave_ficheiro_comentário },
 	/*{ '(', clave_ficha_abre },
 	{ ')', clave_ficha_fecha },*/
-	{ ">$(€)>", clave_lêr_avançar_e_procurar },
-	{ "$(€)", clave_ficha },
+	{ ">$()>", clave_lêr_avançar_e_procurar },
+	{ "$()", clave_ficha },
+	{ "(", clave_ficha_abre },
+	{ ")", clave_ficha_fecha },
 	{ ">>>", clave_lêr_e_escolher },
 	{ ">@>", clave_corrêr },
 	{ ">>", clave_lêr_e_avançar },
