@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <wctype.h>
 
+#define ÍNDICE_ERRO -1
+
 LINHA rastilho_definir_linha_de_erro(Rastilho_Tipo tipo) {
 	LINHA linha = LINHA_NIL;
 
@@ -30,7 +32,7 @@ LINHA rastilho_definir_linha_de_erro(Rastilho_Tipo tipo) {
 
 Operação operação_construir_falha() {
 	Operação operação = { 0 };
-	operação.índice = -1;
+	operação.índice = ÍNDICE_ERRO;
 	return operação;
 }
 
@@ -59,10 +61,10 @@ void operação_re_definir(int operadôr_n, Expressão* expressão, Expectação
 
 Expressão expressão_construir_falha() {
 	Expressão expressãoFalha = { 0 };
-	expressãoFalha.índice = -1;
+	expressãoFalha.índice = ÍNDICE_ERRO;
 
 	operação_re_definir(0, &expressãoFalha, expectação__nil, operação__nil, 1);
-	expressãoFalha.operador[0].índice = -1;
+	expressãoFalha.operador[0].índice = ÍNDICE_ERRO;
 
 	return expressãoFalha;
 }
@@ -102,7 +104,9 @@ void expressão_rastilho_definir(Expressão* expressão, Rastilho_Tipo rastilho_
 	(*expressão).rastilho.erro = rastilho_definir_linha_de_erro(rastilho_tipo);
 }
 
-Expressão expressão_interpretar(char* linha, Expressão* expressões) {
+Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
+	Expressão* expressões = (*intérprete).expressão;
+
 	Expressão expressão;
 	expressão.linha = linha;
 
@@ -116,6 +120,10 @@ Expressão expressão_interpretar(char* linha, Expressão* expressões) {
 
 	LINHA ficha = memória_allocar(1);
 	int ficha_n = 0;
+
+	// Quantos ciclos devem ser pulados?
+	// Utiliza-se quando se lê e valida charactéres da pilha.
+	int pula = 0;
 
 	expressão.operador = NULL;
 	operação_re_definir(operadôr_n, &expressão, expectação__concedido, operação__concedido, 1);
@@ -141,7 +149,13 @@ Expressão expressão_interpretar(char* linha, Expressão* expressões) {
 			Quanto maior a pilha, mais iterações levam para chegar
 			algum valôr. Até lá, foram-se os índices.
 		*/
+
 		if (charactére == LINHA_NIL) continue;
+
+		if (pula != 0) {
+			pula--;
+			continue;
+		}
 
 		/*
 			Se o encerro forçado for encontrado, encerra-se tudo e retorna o que foi armazenado.
@@ -246,8 +260,31 @@ Expressão expressão_interpretar(char* linha, Expressão* expressões) {
 				expressão.operador[operadôr_n].linha[operadôr_linha_n + 1] = LINHA_NIL;
 
 				printf("%c", expressão.operador[operadôr_n].linha[operadôr_linha_n]);
-			}
 
+				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 2]) {
+					operadôr_linha_n++;
+					expressão.operador[operadôr_n].linha[operadôr_linha_n] = charactére;
+					expressão.operador[operadôr_n].linha[operadôr_linha_n + 1] = LINHA_NIL;
+
+					expressão.operador[operadôr_n].tipo = operação__concessão_passiva;
+
+					pula = 1;
+
+					printf("%c", expressão.operador[operadôr_n].linha[operadôr_linha_n]);
+				}
+
+				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 3]) {
+					operadôr_linha_n++;
+					expressão.operador[operadôr_n].linha[operadôr_linha_n] = charactére;
+					expressão.operador[operadôr_n].linha[operadôr_linha_n + 1] = LINHA_NIL;
+
+					expressão.operador[operadôr_n].tipo = operação__concessão_selectiva;
+
+					pula = 2;
+
+					printf("%c", expressão.operador[operadôr_n].linha[operadôr_linha_n]);
+				}
+			}
 
 			if (expressão.operador[operadôr_n].tipo == operação__concedido) expressão.operador[operadôr_n].expectação = expectação__concedido;
 			else if (expressão.operador[operadôr_n].tipo == operação__concessão_directa) {
@@ -290,7 +327,7 @@ Intérprete interpretar(char** linhas) {
     while(linhas[expressão_n] != LINHA_NIL)
     {
 		resultado.expressão = memória_re_allocar((expressão_n + 1) * sizeof(Expressão), resultado.expressão);
-        resultado.expressão[expressão_n] = expressão_interpretar(linhas[expressão_n], resultado.expressão);
+        resultado.expressão[expressão_n] = expressão_interpretar(linhas[expressão_n], &resultado);
 
 		if (resultado.expressão[expressão_n].rastilho.tipo != rastilho__nil) {
 			if (resultado.expressão[expressão_n].rastilho.tipo == rastilho__encerro_forçado) {
