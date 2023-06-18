@@ -1,5 +1,5 @@
 nome do commando > direcionar caminho
-commando de directório > cd
-caminho do directório > C:\
-$(nome do commando ) >$(commando de directório )$(caminho do directório )
+commando de directório > mkdir
+caminho do directório > C:\agora
+$(nome do commando ) >*$(commando de directório )$(caminho do directório )
 $( direcionar caminho ) > "'o nome da clave agora é um comando, êh o.0 *'"%

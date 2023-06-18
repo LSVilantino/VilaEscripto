@@ -201,7 +201,7 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 				}
 
 				linha_introduzir_linha(valôrDaFicha.linha, &operadôr_linha_n, &expressão.operador[operadôr_n].linha);
-				printf(expressão.operador[operadôr_n].linha);
+				printf(valôrDaFicha.linha);
 
 				free(ficha);
  				ficha = memória_allocar(2);
@@ -236,6 +236,10 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 				expressão_rastilho_definir(&expressão, rastilho__nil);
 			}
 
+			if (operação_daExpressão_têrPorTipo(operação__concessão_corredora, expressão).índice != ÍNDICE_ERRO) {
+				system(operação_daExpressão_têrPorTipo(operação__valôr, expressão).linha);
+			}
+
 			operadôr_n = 0;
 			return expressão;
 		}
@@ -261,9 +265,21 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 
 				printf("%c", expressão.operador[operadôr_n].linha[operadôr_linha_n]);
 
+				if (clave_têr_por_tipo(clave_corrêr).pala[1] == pilha.conteúdo[recúo - 2]) {
+					operadôr_linha_n++;
+					expressão.operador[operadôr_n].linha[operadôr_linha_n] = pilha.conteúdo[recúo - 2];
+					expressão.operador[operadôr_n].linha[operadôr_linha_n + 1] = LINHA_NIL;
+
+					expressão.operador[operadôr_n].tipo = operação__concessão_corredora;
+
+					pula = 1;
+
+					printf("%c", expressão.operador[operadôr_n].linha[operadôr_linha_n]);
+				}
+
 				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 2]) {
 					operadôr_linha_n++;
-					expressão.operador[operadôr_n].linha[operadôr_linha_n] = charactére;
+					expressão.operador[operadôr_n].linha[operadôr_linha_n] = pilha.conteúdo[recúo - 2];
 					expressão.operador[operadôr_n].linha[operadôr_linha_n + 1] = LINHA_NIL;
 
 					expressão.operador[operadôr_n].tipo = operação__concessão_passiva;
@@ -275,7 +291,7 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 
 				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 3]) {
 					operadôr_linha_n++;
-					expressão.operador[operadôr_n].linha[operadôr_linha_n] = charactére;
+					expressão.operador[operadôr_n].linha[operadôr_linha_n] = pilha.conteúdo[recúo - 3];
 					expressão.operador[operadôr_n].linha[operadôr_linha_n + 1] = LINHA_NIL;
 
 					expressão.operador[operadôr_n].tipo = operação__concessão_selectiva;
@@ -287,7 +303,9 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 			}
 
 			if (expressão.operador[operadôr_n].tipo == operação__concedido) expressão.operador[operadôr_n].expectação = expectação__concedido;
-			else if (expressão.operador[operadôr_n].tipo == operação__concessão_directa) {
+			else if (expressão.operador[operadôr_n].tipo == operação__concessão_directa ||
+				expressão.operador[operadôr_n].tipo == operação__concessão_corredora
+				) {
 				operadôr_linha_n = 0;
 				operadôr_n++;
 
@@ -319,21 +337,23 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 }
 
 Intérprete interpretar(char** linhas) {
-    Intérprete resultado;
+	Intérprete resultado;
 
 	int expressão_n = 0;
+	int linha_n = 0;
 	resultado.expressão = memória_allocar(sizeof(Expressão));
 
-    while(linhas[expressão_n] != LINHA_NIL)
-    {
+	while (linhas[linha_n] != LINHA_NIL)
+	{
 		resultado.expressão = memória_re_allocar((expressão_n + 1) * sizeof(Expressão), resultado.expressão);
-        resultado.expressão[expressão_n] = expressão_interpretar(linhas[expressão_n], &resultado);
+		resultado.expressão[expressão_n] = expressão_interpretar(linhas[expressão_n], &resultado);
 
 		if (resultado.expressão[expressão_n].rastilho.tipo != rastilho__nil) {
 			if (resultado.expressão[expressão_n].rastilho.tipo == rastilho__encerro_forçado) {
 				printf("\n\n--------------------------------\n");
 				printf("Quebra: %s", resultado.expressão[expressão_n].rastilho.erro);
 				printf("\n--------------------------------\n\n");
+				abort();
 				break;
 			}
 
@@ -343,7 +363,7 @@ Intérprete interpretar(char** linhas) {
 				printf("\n--------------------------------\n\n");
 
 				resultado.expressão[expressão_n].índice = expressão_n;
-				expressão_n++;
+				expressão_n++; linha_n++;
 				continue;
 			}
 
@@ -356,8 +376,8 @@ Intérprete interpretar(char** linhas) {
 		}
 
 		resultado.expressão[expressão_n].índice = expressão_n;
-		expressão_n++;
-    }
+		expressão_n++; linha_n++;
+	}
 
-    return resultado;
+	return resultado;
 }

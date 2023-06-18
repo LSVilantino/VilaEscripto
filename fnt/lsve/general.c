@@ -17,7 +17,7 @@ Palaclave claves[] = {
 	{ "(", clave_ficha_abre },
 	{ ")", clave_ficha_fecha },
 	{ ">>>", clave_lêr_e_escolher },
-	{ ">@>", clave_corrêr },
+	{ ">*", clave_corrêr },
 	{ ">>", clave_lêr_e_avançar },
 	{ ">", clave_lêr },
 };
