@@ -6,7 +6,7 @@
 /*
 	Conta os charactéres de uma linha.
 */
-int linha_contar(char* linha);
+int linha_contar(const char* linha);
 /*
 	Introduz um novo charactére numa linha allocada.
 	
@@ -39,5 +39,10 @@ Dico linha_contém(char* comparadôr, const char* linha);
 	Comparar o conteúdo de duas linhas.
 */
 Dico linha_comparar(char* comparadôr, const char* linha);
+
+/*
+Remove espaços do início e fim da linha.
+*/
+char* linha_aparar(char* linha);
 
 #endif // !_CABEÇALHO_LINHA

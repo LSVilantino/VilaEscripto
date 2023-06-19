@@ -7,6 +7,7 @@
 
 #define LINHA_NIL '\0'
 #define LINHA_SALTA '\n'
+#define ESPAÇO ' '
 #define FICHEIRO_MODO_LEITURA "r"
 #define FICHEIRO_MODO_LEITURA_BINÁRIA "rb"
 

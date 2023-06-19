@@ -40,11 +40,21 @@ ficheiro_lêr(LINHA caminho) {
         //printf(pilha);
         //printf("\n\n");
 
+		// Valida se o fim do ficheiro é seguido por um salta-linhas.
+		if (pilha.conteúdo[pilha.recúo - 1] == EOF) {
+			// Introduz a linha à matriz e esquece a última linha-salta.
+			linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, &linha_actual); linha_actual_n++;
+			matriz_linha_introduzir_linha(linha_actual, linha_n, &linhas); linha_n++;
+
+			break;
+		}
+
 		// Verifica se o último charactére da pilha é um linha-salta.
         if (pilha.conteúdo[pilha.recúo - 1] == LINHA_SALTA) {
             // Valida se o fim do ficheiro é seguido por um salta-linhas.
             if (pilha.conteúdo[pilha.recúo - 2] == EOF) {
 				// Introduz a linha à matriz e esquece a última linha-salta.
+				linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 2], linha_actual_n, &linha_actual); linha_actual_n++;
 				matriz_linha_introduzir_linha(linha_actual, linha_n, &linhas); linha_n++;
 
                 break;

@@ -1,5 +1,14 @@
-nome do commando > direcionar caminho
+sujeito > eu
+acção > dei
+artigo > os
+objecto > pães
+alvo > paulo
+frase > $(sujeito) $(acção) $(artigo) $(objecto) ao $(alvo)
+
+mostrar na tela >* echo $(frase)
+
+nome do commando > cria caminho
 commando de directório > mkdir
-caminho do directório > C:\agora
-$(nome do commando ) >*$(commando de directório )$(caminho do directório )
-$( direcionar caminho ) > "'o nome da clave agora é um comando, êh o.0 *'"%
+caminho do directório > C:\agora\vou\fazer\códigos
+$(nome do commando) >* $(commando de directório) $(caminho do directório)
+$(cria caminho) > "'A clave agora é o literal de um comando. Êh? o.0 *'"

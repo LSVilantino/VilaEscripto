@@ -104,7 +104,7 @@ void expressão_rastilho_definir(Expressão* expressão, Rastilho_Tipo rastilho_
 	(*expressão).rastilho.erro = rastilho_definir_linha_de_erro(rastilho_tipo);
 }
 
-Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
+Expressão expressão_interpretar(char* linha, Intérprete* intérprete, int* expressão_n) {
 	Expressão* expressões = (*intérprete).expressão;
 
 	Expressão expressão;
@@ -204,7 +204,7 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 				printf(valôrDaFicha.linha);
 
 				free(ficha);
- 				ficha = memória_allocar(2);
+				ficha = memória_allocar(2);
 				ficha_n = 0;
 
 				expressão.operador[operadôr_n].expectação = expectação__nil;
@@ -212,7 +212,6 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 			}
 
 			linha_introduzir_charactére(charactére, ficha_n, &ficha);
-
 			ficha_n++;
 			continue;
 		}
@@ -221,20 +220,26 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 			A linha é o limitante que separa cada linha, quando for atingido, avalia-se a linha
 			e seus elementos para averiguar a sua integridade.
 		*/
-		if (charactére == LINHA_SALTA) {
+		if (charactére == LINHA_SALTA || charactére == EOF) {
 			printf("\n");
 
 			if (operadôr_n == 0) {
 				expressão_rastilho_definir(&expressão, rastilho__carece_concessão);
-				/*printf("\n\n\n\n\n\n\n");
-				printf("Falta concessão");*/
 			}
+			if (operadôr_n == 0 && expressão.operador[operadôr_n].linha[operadôr_linha_n] == LINHA_NIL){
+				// Se a linha estiver vazia, inteiramente, não mostra mensagens, é irritante.
+				expressão_rastilho_definir(&expressão, rastilho__nil);
+				printf("\n");
+			}
+
 			if (operadôr_n == 1) {
 				expressão_rastilho_definir(&expressão, rastilho__carece_valôr);
 			}
 			if (operadôr_n == 2) {
 				expressão_rastilho_definir(&expressão, rastilho__nil);
 			}
+
+			expressão.operador[operadôr_n].linha = linha_aparar(expressão.operador[operadôr_n].linha);
 
 			if (operação_daExpressão_têrPorTipo(operação__concessão_corredora, expressão).índice != ÍNDICE_ERRO) {
 				system(operação_daExpressão_têrPorTipo(operação__valôr, expressão).linha);
@@ -254,8 +259,9 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 		*/
 		if (expressão.operador[operadôr_n].expectação == expectação__concessão) {
 			if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére) {
-				operadôr_n++;
+				expressão.operador[operadôr_n].linha = linha_aparar(expressão.operador[operadôr_n].linha);
 
+				operadôr_n++;
 				operação_re_definir(operadôr_n, &expressão, expectação__valôr, operação__concessão_directa, 2);
 
 				operadôr_linha_n = 0;
@@ -306,6 +312,7 @@ Expressão expressão_interpretar(char* linha, Intérprete* intérprete) {
 			else if (expressão.operador[operadôr_n].tipo == operação__concessão_directa ||
 				expressão.operador[operadôr_n].tipo == operação__concessão_corredora
 				) {
+				expressão.operador[operadôr_n].linha = linha_aparar(expressão.operador[operadôr_n].linha);
 				operadôr_linha_n = 0;
 				operadôr_n++;
 
@@ -346,13 +353,15 @@ Intérprete interpretar(char** linhas) {
 	while (linhas[linha_n] != LINHA_NIL)
 	{
 		resultado.expressão = memória_re_allocar((expressão_n + 1) * sizeof(Expressão), resultado.expressão);
-		resultado.expressão[expressão_n] = expressão_interpretar(linhas[expressão_n], &resultado);
+		resultado.expressão[expressão_n] = expressão_interpretar(linhas[expressão_n], &resultado, &expressão_n);
 
 		if (resultado.expressão[expressão_n].rastilho.tipo != rastilho__nil) {
 			if (resultado.expressão[expressão_n].rastilho.tipo == rastilho__encerro_forçado) {
 				printf("\n\n--------------------------------\n");
 				printf("Quebra: %s", resultado.expressão[expressão_n].rastilho.erro);
 				printf("\n--------------------------------\n\n");
+
+				_set_abort_behavior(0, _WRITE_ABORT_MSG);
 				abort();
 				break;
 			}
@@ -360,6 +369,16 @@ Intérprete interpretar(char** linhas) {
 			if (resultado.expressão[expressão_n].rastilho.tipo == rastilho__comentário) {
 				printf("\n\n--------------------------------\n");
 				printf("Ignorância: %s", resultado.expressão[expressão_n].rastilho.erro);
+				printf("\n--------------------------------\n\n");
+
+				resultado.expressão[expressão_n].índice = expressão_n;
+				expressão_n++; linha_n++;
+				continue;
+			}
+
+			if (resultado.expressão[expressão_n].rastilho.tipo == rastilho__carece_concessão) {
+				printf("\n\n--------------------------------\n");
+				printf("%s", resultado.expressão[expressão_n].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
 				resultado.expressão[expressão_n].índice = expressão_n;

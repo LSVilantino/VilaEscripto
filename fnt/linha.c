@@ -1,8 +1,10 @@
 #include "linha.h"
 #include "general.h"
 
+#include <stdlib.h>
+
 int
-linha_contar(char* linha) {
+linha_contar(const char* linha) {
     int tamanho = 0;
     while (linha[tamanho]) tamanho++;
 
@@ -101,4 +103,17 @@ linha_comparar(char* comparadôr, const char* linha) {
 	}
 
 	return 0;
+}
+
+char*
+linha_aparar(char* linha) {
+	while (*linha == ESPAÇO) linha++;
+
+	char* término = linha + linha_contar(linha) - 1; // Posição da linha a partir do sem-espaço.
+	while (término > linha && *término == ESPAÇO || *término == LINHA_SALTA || *término == '\r' || *término == '\t') término--;
+	término[1] = LINHA_NIL;
+
+	//printf("%s\n", linha);
+
+	return linha;
 }
