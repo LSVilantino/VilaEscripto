@@ -20,7 +20,7 @@ linha_introduzir_charactére(char charactére, int posição, char** linha)
 }
 
 void
-linha_introduzir_linha(char* linhaIntroduzida, int* posição, char** linha)
+linha_agregar_linha(char* linhaIntroduzida, int* posição, char** linha)
 {
 	int linhaIntroduzida_t = linha_contar(linhaIntroduzida);
 	int linha_t = linha_contar((*linha));

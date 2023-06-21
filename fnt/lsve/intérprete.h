@@ -76,7 +76,7 @@ typedef struct Intérprete {
     Rastilho* rastilho;
 } Intérprete;
 
-Expressão expressão_interpretar(char* linha, Intérprete* intérprete, int* expressão_n);
+void expressão_interpretar(char* linha, Intérprete* intérprete, int* expressão_n);
 Intérprete interpretar(char** linha);
 
 #endif // !_CABEÇALHO_LSVE_INTÉRPRETE

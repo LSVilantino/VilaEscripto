@@ -18,7 +18,7 @@ void linha_introduzir_charactére(char charactére, int posição, char** linha)
 /*
 	Introduz uma linha à outra.
 */
-void linha_introduzir_linha(char* linhaIntroduzida, int* posição, char** linha);
+void linha_agregar_linha(char* linhaIntroduzida, int* posição, char** linha);
 /*
 	Introduz uma linha numa matriz allocada.
 	
