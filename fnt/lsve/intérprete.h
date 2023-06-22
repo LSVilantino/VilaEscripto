@@ -33,12 +33,23 @@ typedef struct Rastilho {
 */
 
 typedef enum Operação_Tipo {
+	// Clave
 	operação__concedido,
+	// O valôr da clave é literalmente o que seguir.
 	operação__concessão_directa,
+	// O valôr da clave é o caminho do ficheiro,
+	// importa-se as claves de outro ficheiro
 	operação__concessão_passiva,
+	// O valôr da clave é o da clave de outro ficheiro.
+	// Indica-se o nome da clave e é buscado em outro ficheiro.
+	operação__concessão_objectiva,
+	// O valôr da clave é o que o utilizador seleccionar.
 	operação__concessão_selectiva,
+	// Corre-se o commando que segue a clave.
 	operação__concessão_corredora,
+	// Valôr da clave.
 	operação__valôr,
+	// Nada.
 	operação__nil // Terminação das operações
 } Operação_Tipo;
 

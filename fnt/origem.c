@@ -17,6 +17,8 @@ int main(int** ignorado, char** argumentos) {
 	//setlocale(LC_ALL, "pt_PT.UTF-8");
 	setlocale(LC_ALL, ""); // Independente terminal da localidade.
 
+	system("cls");
+
 	char* ficheiroLSVECaminho = argumentos[1];
 
 	if (ficheiroLSVECaminho == LINHA_NIL) {

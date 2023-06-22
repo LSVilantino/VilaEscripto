@@ -7,8 +7,10 @@ frase > $(sujeito) $(acção) $(artigo) $(objecto) ao $(alvo)
 
 mostrar na tela >* echo $(frase)
 
+caminho vilaescripto >(vilaescripto)> D:\des\escripto\acólito\caminho.txt
 caminho >> D:\des\escripto\acólito\caminho.txt
 
+caminho do vilaescripto >:[ > caminho do projecto vilaescripto é: $(caminho vilaescripto)
 caminho do the chest :) > caminho do projecto the chest é: $(thechest)
 
 nome do commando > cria caminho

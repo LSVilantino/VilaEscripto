@@ -225,6 +225,26 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			continue;
 		}
 
+		if ((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo == operação__concessão_objectiva &&
+			clave_têr_por_tipo(clave_ficha).pala[2] == charactére) {
+			if (clave_têr_por_tipo(clave_lêr).pala[0] == pilha.conteúdo[recúo - 2]) {
+				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = linha_aparar((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
+				operadôr_linha_n = 0;
+				operadôr_n++;
+
+				operação_re_definir(operadôr_n, &(*intérprete).expressão[(*expressão_n)], expectação__nil, operação__valôr, 1);
+
+				pula = 1;
+				continue;
+			}
+			else
+			{
+				expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__carece_concessão_válida);
+				(*expressão_n)++;
+				break;
+			}
+		}
+
 		/*
 			A linha é o limitante que separa cada linha, quando for atingido, avalia-se a linha
 			e seus elementos para averiguar a sua integridade.
@@ -251,12 +271,14 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 
 			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = linha_aparar((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
 
+			Operação a;
+
 			// Todos as operações que precisam dos valôres completos são validados após o registro de toda a linha.
-			if (operação_daExpressão_têrPorTipo(operação__concessão_corredora, (*intérprete).expressão[(*expressão_n)]).índice != ÍNDICE_ERRO) {
+			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_corredora, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
 				system(operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]).linha);
 			}
 
-			if (operação_daExpressão_têrPorTipo(operação__concessão_passiva, (*intérprete).expressão[(*expressão_n)]).índice != ÍNDICE_ERRO) {
+			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_passiva, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
 				Operação caminho = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
 				char** ficheiro_linhas = ficheiro_lêr(caminho.linha);
 				Intérprete dado = interpretar(ficheiro_linhas);
@@ -264,6 +286,20 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 				(*expressão_n)++;
 
 				intérprete_agregar(dado.expressão, expressão_n, intérprete);
+				continue;
+			}
+
+			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_objectiva, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
+				Operação caminho = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
+				char** ficheiro_linhas = ficheiro_lêr(caminho.linha);
+				Intérprete dado = interpretar(ficheiro_linhas);
+
+
+				Expressão b = expressões_têrPorClave(a.linha, dado.expressão);
+
+				(*intérprete).expressão[(*expressão_n)].operador[2].linha = b.operador[2].linha;
+
+				(*expressão_n)++;
 				continue;
 			}
 
@@ -280,6 +316,23 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			e/ou nome da clave.
 		*/
 		if ((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].expectação == expectação__concessão) {
+			if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére &&
+				clave_têr_por_tipo(clave_ficha).pala[1] == pilha.conteúdo[recúo - 2])
+			{
+				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = linha_aparar((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
+
+				operadôr_n++;
+				operação_re_definir(operadôr_n, &(*intérprete).expressão[(*expressão_n)], expectação__valôr, operação__concessão_directa, 1);
+
+				operadôr_linha_n = 0;
+
+				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].expectação = expectação__nil;
+				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo = operação__concessão_objectiva;
+
+				pula = 1;
+				continue;
+			}
+
 			if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére) {
 				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = linha_aparar((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
 
