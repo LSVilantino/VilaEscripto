@@ -85,6 +85,8 @@ linha_contém(char* comparadôr, const char* linha) {
 
 Dico
 linha_comparar(char* comparadôr, const char* linha) {
+	if (linha == NULL || comparadôr == NULL) return 0;
+
 	int linha_t = linha_contar(linha) - 1;
 	int comparadôr_t = linha_contar(comparadôr) - 1;
 

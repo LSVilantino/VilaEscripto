@@ -1,3 +1,32 @@
+sistema >>> D:\des\escripto\acólito\sistema.txt
+#Permite selecção de um projecto.
+projecto >>> D:\des\escripto\acólito\projecto.txt
+
+#Pega a clave com o nome do projecto dentro do caminho,
+#obtém o caminho do projecto seleccionado.
+caminho projecto >($(projecto))> D:\des\escripto\acólito\caminho.txt
+
+#Mostra o caminho do projecto seleccionado.
+caminho do $(projecto) >:[ > caminho do projecto $(projecto) é: $(caminho projecto)
+
+
+#-------------------------------------------------------------------------------
+
+
+#Traz as claves do caminho, todos os caminhos de todos os projectos.
+caminho >> D:\des\escripto\acólito\caminho.txt
+
+#Mostra o caminho do the chest "importado" acima.
+caminho do the chest :) > caminho do projecto the chest é: $(thechest)
+
+#Cria uma pasta em um directório dado
+nome do commando > cria caminho
+commando de directório > mkdir
+caminho do directório > C:\agora\vou\fazer\códigos
+$(nome do commando) >* $(commando de directório) $(caminho do directório)
+$(cria caminho) > "'A clave agora é o literal de um comando. Êh? o.0 *'"
+
+#Fabrica uma frase com as claves dadas.
 sujeito > eu
 acção > dei
 artigo > os
@@ -7,14 +36,4 @@ frase > $(sujeito) $(acção) $(artigo) $(objecto) ao $(alvo)
 
 mostrar na tela >* echo $(frase)
 
-caminho vilaescripto >(vilaescripto)> D:\des\escripto\acólito\caminho.txt
-caminho >> D:\des\escripto\acólito\caminho.txt
-
-caminho do vilaescripto >:[ > caminho do projecto vilaescripto é: $(caminho vilaescripto)
-caminho do the chest :) > caminho do projecto the chest é: $(thechest)
-
-nome do commando > cria caminho
-commando de directório > mkdir
-caminho do directório > C:\agora\vou\fazer\códigos
-$(nome do commando) >* $(commando de directório) $(caminho do directório)
-$(cria caminho) > "'A clave agora é o literal de um comando. Êh? o.0 *'"
+caminho2 >> D:\des\escripto\acólito\$(projecto)-$(sistema).txt

@@ -3,27 +3,26 @@
 #include "../pilha.h"
 #include "../linha.h"
 #include "../ficheiro.h"
+#include "consola.h"
 #include "general.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <wctype.h>
 
-#define ÍNDICE_ERRO -1
-
 LINHA rastilho_definir_linha_de_erro(Rastilho_Tipo tipo) {
 	LINHA linha = LINHA_NIL;
 
 	switch (tipo)
 	{
-	case rastilho__carece_concedido: { linha = "Carece concedido/clave, indefinido."; break; }
-	case rastilho__carece_concessão: { linha = "Carece concessão/separador."; break; }
-	case rastilho__carece_concessão_válida: { linha = "A concessão é inválida"; break; }
-	case rastilho__carece_ficha_válida: { linha = "A ficha é inválida"; break; }
-	case rastilho__carece_valôr: { linha = "Carece valôr à clave"; break; }
-	case rastilho__expressão_excedente: { linha = "Existem mais operadores do que o esperado, formatação incorrecta."; break; }
-	case rastilho__encerro_forçado: { linha = "Encerrou-se o ficheiro forçadamente."; break; }
-	case rastilho__comentário: { linha = "Expressão comentada."; break; }
+	case rastilho__carece_concedido: { linha = "Carece concedido/clave, indefinido.\0"; break; }
+	case rastilho__carece_concessão: { linha = "Carece concessão/separador.\0"; break; }
+	case rastilho__carece_concessão_válida: { linha = "A concessão é inválida\0"; break; }
+	case rastilho__carece_ficha_válida: { linha = "A ficha é inválida\0"; break; }
+	case rastilho__carece_valôr: { linha = "Carece valôr à clave\0"; break; }
+	case rastilho__expressão_excedente: { linha = "Existem mais operadores do que o esperado, formatação incorrecta.\0"; break; }
+	case rastilho__encerro_forçado: { linha = "Encerrou-se o ficheiro forçadamente.\0"; break; }
+	case rastilho__comentário: { linha = "Expressão comentada.\0"; break; }
 	case rastilho__nil: { break; }
 	default: break;
 	}
@@ -174,13 +173,16 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = LINHA_NIL;
 
 			(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n)++;
+			break;
 		}
 
 		if (clave_têr_por_tipo(clave_ficheiro_comentário).pala[0] == charactére) {
 			expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__comentário);
+			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo = operação__concedido;
 			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = LINHA_NIL;
 
 			(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n)++;
+			break;
 		}
 
 		if (clave_têr_por_tipo(clave_ficha).pala[0] == charactére) {
@@ -207,6 +209,7 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 				if (valôrDaFicha.índice == -1) {
 					expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__carece_ficha_válida);
 					(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n)++;
+					break;
 				}
 
 				linha_agregar_linha(valôrDaFicha.linha, &operadôr_linha_n, &(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
@@ -253,10 +256,12 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			printf("\n");
 
 			(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n);
-			 
+			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = linha_aparar((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
+
 			if (operadôr_n == 0 && (*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha[operadôr_linha_n] != LINHA_NIL) {
 				expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__carece_concessão);
-			} else if (operadôr_n == 0 && (*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha[operadôr_linha_n] == LINHA_NIL){
+			}
+			else if (operadôr_n == 0 && (*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha[operadôr_linha_n] == LINHA_NIL){
 				// Se a linha estiver vazia, inteiramente, não mostra mensagens, é irritante.
 				expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__nil);
 				printf("\n");
@@ -268,8 +273,6 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			if (operadôr_n == 2) {
 				expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__nil);
 			}
-
-			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = linha_aparar((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
 
 			Operação a;
 
@@ -294,10 +297,29 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 				char** ficheiro_linhas = ficheiro_lêr(caminho.linha);
 				Intérprete dado = interpretar(ficheiro_linhas);
 
-
 				Expressão b = expressões_têrPorClave(a.linha, dado.expressão);
 
-				(*intérprete).expressão[(*expressão_n)].operador[2].linha = b.operador[2].linha;
+
+				Operação c = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
+				Operação d = operação_daExpressão_têrPorTipo(operação__valôr, b);
+
+				(*intérprete).expressão[(*expressão_n)].operador[caminho.índice].linha = b.operador[d.índice].linha;
+
+				(*expressão_n)++;
+				continue;
+			}
+
+			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_selectiva, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
+				Operação caminho = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
+				char** ficheiro_linhas = ficheiro_lêr(caminho.linha);
+				Intérprete dado = interpretar(ficheiro_linhas);
+
+				Operação operaçãoSeleccionada = lsve_consola_construir_menu(dado.expressão);
+
+				Expressão b = expressões_têrPorClave(operaçãoSeleccionada.linha, dado.expressão);
+				Operação d = operação_daExpressão_têrPorTipo(operação__valôr, b);
+
+				(*intérprete).expressão[(*expressão_n)].operador[caminho.índice].linha = b.operador[d.índice].linha;
 
 				(*expressão_n)++;
 				continue;
@@ -386,7 +408,8 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			if ((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo == operação__concedido) (*intérprete).expressão[(*expressão_n)].operador[operadôr_n].expectação = expectação__concedido;
 			else if ((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo == operação__concessão_directa ||
 				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo == operação__concessão_corredora ||
-				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo == operação__concessão_passiva
+				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo == operação__concessão_passiva ||
+				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo == operação__concessão_selectiva
 				) {
 				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = linha_aparar((*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha);
 				operadôr_linha_n = 0;
@@ -427,10 +450,10 @@ Intérprete interpretar(char** linhas) {
 		(*resultado).expressão = memória_re_allocar((expressão_n + 1) * sizeof(Expressão), (*resultado).expressão);
 		expressão_interpretar(linhas[linha_n], resultado, &expressão_n);
 
-		if ((*resultado).expressão[expressão_n].rastilho.tipo != rastilho__nil) {
-			if ((*resultado).expressão[expressão_n].rastilho.tipo == rastilho__encerro_forçado) {
+		if ((*resultado).expressão[expressão_n - 1].rastilho.tipo != rastilho__nil) {
+			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__encerro_forçado) {
 				printf("\n\n--------------------------------\n");
-				printf("Quebra: %s", (*resultado).expressão[expressão_n].rastilho.erro);
+				printf("Quebra: %s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
 				_set_abort_behavior(0, _WRITE_ABORT_MSG);
@@ -438,27 +461,27 @@ Intérprete interpretar(char** linhas) {
 				break;
 			}
 
-			if ((*resultado).expressão[expressão_n].rastilho.tipo == rastilho__comentário) {
+			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__comentário) {
 				printf("\n\n--------------------------------\n");
-				printf("Ignorância: %s", (*resultado).expressão[expressão_n].rastilho.erro);
+				printf("Ignorância: %s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
 				linha_n++;
 				continue;
 			}
 
-			if ((*resultado).expressão[expressão_n].rastilho.tipo == rastilho__carece_concessão) {
+			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__carece_concessão) {
 				printf("\n\n--------------------------------\n");
-				printf("%s", (*resultado).expressão[expressão_n].rastilho.erro);
+				printf("%s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
 				linha_n++;
 				continue;
 			}
 
-			if ((*resultado).expressão[expressão_n].rastilho.tipo == rastilho__carece_ficha_válida) {
+			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__carece_ficha_válida) {
 				printf("\n\n--------------------------------\n");
-				printf("Problema: %s", (*resultado).expressão[expressão_n].rastilho.erro);
+				printf("Problema: %s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 				break;
 			}

@@ -3,6 +3,8 @@
 
 #include "../general.h"
 
+#define ÍNDICE_ERRO -1
+
 /*
 * Qual o erro foi gerado?
 */
@@ -86,6 +88,14 @@ typedef struct Intérprete {
     Expressão* expressão;
     Rastilho* rastilho;
 } Intérprete;
+
+Operação operação_construir_falha();
+Operação operação_daExpressão_têrPorTipo(Operação_Tipo tipo, Expressão expressão);
+void operação_re_definir(int operadôr_n, Expressão* expressão, Expectação expectação, Operação_Tipo operação_tipo, size_t linha_t);
+Expressão expressão_construir_falha();
+Operação operação_daExpressão_têrPorClave(LINHA linha, Expressão expressão);
+Dico operação_daExpressão_seTem_PorClave(LINHA linha, Expressão expressão);
+Expressão expressões_têrPorClave(LINHA clave, Expressão* expressões);
 
 void expressão_interpretar(char* linha, Intérprete* intérprete, int* expressão_n);
 Intérprete interpretar(char** linha);
