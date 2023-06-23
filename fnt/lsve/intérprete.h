@@ -98,6 +98,7 @@ Dico operação_daExpressão_seTem_PorClave(LINHA linha, Expressão expressão);
 Expressão expressões_têrPorClave(LINHA clave, Expressão* expressões);
 
 void expressão_interpretar(char* linha, Intérprete* intérprete, int* expressão_n);
-Intérprete interpretar(char** linha);
+int intérprete_expressões_contar(Intérprete* intérprete);
+Intérprete* interpretar(char** linhas, Intérprete* intérprete);
 
 #endif // !_CABEÇALHO_LSVE_INTÉRPRETE

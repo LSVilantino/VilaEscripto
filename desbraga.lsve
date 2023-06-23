@@ -9,7 +9,6 @@ caminho projecto >($(projecto))> D:\des\escripto\acólito\caminho.txt
 #Mostra o caminho do projecto seleccionado.
 caminho do $(projecto) >:[ > caminho do projecto $(projecto) é: $(caminho projecto)
 
-
 #-------------------------------------------------------------------------------
 
 

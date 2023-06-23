@@ -105,12 +105,18 @@ void expressão_rastilho_definir(Expressão* expressão, Rastilho_Tipo rastilho_
 }
 
 void intérprete_agregar(Expressão* expressões, int* posição, Intérprete* agregado) {
+
+	printf("\n\n\n---------------\n\n\n");
+
 	int expressão_n = 0;
 	while (expressões[expressão_n].índice == expressão_n) {
 		(*agregado).expressão = memória_re_allocar(((*posição) + 1) * sizeof(Expressão), (*agregado).expressão);
 		(*agregado).expressão[(*posição)] = expressões[expressão_n];
 
 		(*agregado).expressão[(*posição)].índice = (*posição);
+
+		printf("%d - %s\n", (*agregado).expressão[(*posição)].índice, (*agregado).expressão[(*posição)].operador[0].linha);
+
 		expressão_n++; (*posição)++;
 	}
 }
@@ -169,19 +175,23 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			Se o encerro forçado for encontrado, encerra-se tudo e retorna o que foi armazenado.
 		*/
 		if (clave_têr_por_tipo(clave_ficheiro_forçar_encerro).pala[0] == charactére) {
+			(*intérprete).expressão[(*expressão_n)] = expressão_construir_falha();
 			expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__encerro_forçado);
 			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = LINHA_NIL;
 
-			(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n)++;
+			(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n);
+			(*expressão_n)++;
 			break;
 		}
 
 		if (clave_têr_por_tipo(clave_ficheiro_comentário).pala[0] == charactére) {
+			(*intérprete).expressão[(*expressão_n)] = expressão_construir_falha();
 			expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__comentário);
 			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].tipo = operação__concedido;
 			(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha = LINHA_NIL;
 
-			(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n)++;
+			(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n);
+			(*expressão_n)++;
 			break;
 		}
 
@@ -203,10 +213,9 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 					Uma vez lida a clave da ficha, obtém-se seu valôr.
 				*/
 				Expressão expressãoDaFicha = expressões_têrPorClave(ficha, (*intérprete).expressão);
-				Operação_Tipo a = expressãoDaFicha.operador[2].tipo;
 				Operação valôrDaFicha = operação_daExpressão_têrPorTipo(operação__valôr, expressãoDaFicha);
 
-				if (valôrDaFicha.índice == -1) {
+				if (valôrDaFicha.índice == ÍNDICE_ERRO) {
 					expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__carece_ficha_válida);
 					(*intérprete).expressão[(*expressão_n)].índice = (*expressão_n)++;
 					break;
@@ -261,10 +270,12 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			if (operadôr_n == 0 && (*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha[operadôr_linha_n] != LINHA_NIL) {
 				expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__carece_concessão);
 			}
-			else if (operadôr_n == 0 && (*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha[operadôr_linha_n] == LINHA_NIL){
+			else if (operadôr_n == 0 && (*intérprete).expressão[(*expressão_n)].operador[operadôr_n].linha[operadôr_linha_n] == LINHA_NIL) {
 				// Se a linha estiver vazia, inteiramente, não mostra mensagens, é irritante.
+				(*intérprete).expressão[(*expressão_n)] = expressão_construir_falha();
 				expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__nil);
 				printf("\n");
+				break;
 			}
 
 			if (operadôr_n == 1) {
@@ -284,21 +295,30 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_passiva, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
 				Operação caminho = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
 				char** ficheiro_linhas = ficheiro_lêr(caminho.linha);
-				Intérprete dado = interpretar(ficheiro_linhas);
+				Intérprete* dado = memória_allocar(sizeof(Intérprete));
+				dado->expressão = NULL;
+				interpretar(ficheiro_linhas, dado);
 
 				(*expressão_n)++;
 
-				intérprete_agregar(dado.expressão, expressão_n, intérprete);
+				intérprete_agregar(dado->expressão, expressão_n, intérprete);
+				free(dado);
 				continue;
 			}
 
 			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_objectiva, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
 				Operação caminho = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
 				char** ficheiro_linhas = ficheiro_lêr(caminho.linha);
-				Intérprete dado = interpretar(ficheiro_linhas);
+				Intérprete* dado = memória_allocar(sizeof(Intérprete));
+				dado->expressão = NULL;
+				int dado_n = 0;
+				intérprete_agregar((*intérprete).expressão, &dado_n, dado);
 
-				Expressão b = expressões_têrPorClave(a.linha, dado.expressão);
+				char* linhadooperador = dado->expressão[0].operador[0].linha;
 
+				interpretar(ficheiro_linhas, dado);
+
+				Expressão b = expressões_têrPorClave(a.linha, dado->expressão);
 
 				Operação c = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
 				Operação d = operação_daExpressão_têrPorTipo(operação__valôr, b);
@@ -306,22 +326,27 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 				(*intérprete).expressão[(*expressão_n)].operador[caminho.índice].linha = b.operador[d.índice].linha;
 
 				(*expressão_n)++;
+
+				free(dado);
 				continue;
 			}
 
 			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_selectiva, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
 				Operação caminho = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
 				char** ficheiro_linhas = ficheiro_lêr(caminho.linha);
-				Intérprete dado = interpretar(ficheiro_linhas);
+				Intérprete* dado = memória_allocar(sizeof(Intérprete));
+				dado->expressão = NULL;
+				interpretar(ficheiro_linhas, dado);
 
-				Operação operaçãoSeleccionada = lsve_consola_construir_menu(dado.expressão);
+				Operação operaçãoSeleccionada = lsve_consola_construir_menu(dado->expressão);
 
-				Expressão b = expressões_têrPorClave(operaçãoSeleccionada.linha, dado.expressão);
+				Expressão b = expressões_têrPorClave(operaçãoSeleccionada.linha, dado->expressão);
 				Operação d = operação_daExpressão_têrPorTipo(operação__valôr, b);
 
 				(*intérprete).expressão[(*expressão_n)].operador[caminho.índice].linha = b.operador[d.índice].linha;
 
 				(*expressão_n)++;
+				free(dado);
 				continue;
 			}
 
@@ -438,22 +463,35 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
     }
 }
 
-Intérprete interpretar(char** linhas) {
-	Intérprete* resultado = memória_allocar(sizeof(Intérprete));
 
+int intérprete_expressões_contar(Intérprete* intérprete) {
 	int expressão_n = 0;
+
+	if ((*intérprete).expressão != NULL) {
+		while ((*intérprete).expressão[expressão_n].índice == expressão_n) expressão_n++;
+	}
+
+	return expressão_n;
+}
+
+Intérprete* interpretar(char** linhas, Intérprete* intérprete) {
+	int expressão_n = intérprete_expressões_contar(intérprete);
+
+	if (expressão_n == 0) {
+		(*intérprete).expressão = memória_re_allocar(sizeof(Expressão), (*intérprete).expressão);
+	}
+
 	int linha_n = 0;
-	(*resultado).expressão = memória_allocar(sizeof(Expressão));
 
 	while (linhas[linha_n] != LINHA_NIL)
 	{
-		(*resultado).expressão = memória_re_allocar((expressão_n + 1) * sizeof(Expressão), (*resultado).expressão);
-		expressão_interpretar(linhas[linha_n], resultado, &expressão_n);
+		(*intérprete).expressão = memória_re_allocar((expressão_n + 1) * sizeof(Expressão), (*intérprete).expressão);
+		expressão_interpretar(linhas[linha_n], intérprete, &expressão_n);
 
-		if ((*resultado).expressão[expressão_n - 1].rastilho.tipo != rastilho__nil) {
-			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__encerro_forçado) {
+		if ((*intérprete).expressão[expressão_n - 1].rastilho.tipo != rastilho__nil) {
+			if ((*intérprete).expressão[expressão_n - 1].rastilho.tipo == rastilho__encerro_forçado) {
 				printf("\n\n--------------------------------\n");
-				printf("Quebra: %s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
+				printf("Quebra: %s", (*intérprete).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
 				_set_abort_behavior(0, _WRITE_ABORT_MSG);
@@ -461,27 +499,27 @@ Intérprete interpretar(char** linhas) {
 				break;
 			}
 
-			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__comentário) {
+			if ((*intérprete).expressão[expressão_n - 1].rastilho.tipo == rastilho__comentário) {
 				printf("\n\n--------------------------------\n");
-				printf("Ignorância: %s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
+				printf("Ignorância: %s", (*intérprete).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
 				linha_n++;
 				continue;
 			}
 
-			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__carece_concessão) {
+			if ((*intérprete).expressão[expressão_n - 1].rastilho.tipo == rastilho__carece_concessão) {
 				printf("\n\n--------------------------------\n");
-				printf("%s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
+				printf("%s", (*intérprete).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
 				linha_n++;
 				continue;
 			}
 
-			if ((*resultado).expressão[expressão_n - 1].rastilho.tipo == rastilho__carece_ficha_válida) {
+			if ((*intérprete).expressão[expressão_n - 1].rastilho.tipo == rastilho__carece_ficha_válida) {
 				printf("\n\n--------------------------------\n");
-				printf("Problema: %s", (*resultado).expressão[expressão_n - 1].rastilho.erro);
+				printf("Problema: %s", (*intérprete).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 				break;
 			}
@@ -490,5 +528,5 @@ Intérprete interpretar(char** linhas) {
 		linha_n++;
 	}
 
-	return (*resultado);
+	return intérprete;
 }

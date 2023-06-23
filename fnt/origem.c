@@ -22,23 +22,26 @@ int main(int** ignorado, char** argumentos) {
 
 	system("cls");
 
-	// Argumento 0 é o próprio programa.
-	char* ficheiroLSVECaminho = argumentos[1];
-
-	if (ficheiroLSVECaminho != NULL) {
-		interpretar(ficheiro_lêr(ficheiroLSVECaminho));
-	}
-	else {
-		printf("\nDá-me um ficheiro para lêr.");
-		return -1; // Sem ficheiros a ler, sem operação.
-	}
+	Intérprete* intérprete = memória_allocar(sizeof(Intérprete));
+	intérprete->expressão = NULL;
 
 	char* ficheiroDesbragaCaminho = argumentos[2];
 
 	if (ficheiroDesbragaCaminho != NULL) {
-		interpretar(ficheiro_lêr(ficheiroDesbragaCaminho));
+		interpretar(ficheiro_lêr(ficheiroDesbragaCaminho), intérprete);
 
 		//desbraga_convenção = mapaDesbraga.valôr;
+	}
+
+	// Argumento 0 é o próprio programa.
+	char* ficheiroLSVECaminho = argumentos[1];
+
+	if (ficheiroLSVECaminho != NULL) {
+		interpretar(ficheiro_lêr(ficheiroLSVECaminho), intérprete);
+	}
+	else {
+		printf("\nDá-me um ficheiro para lêr.");
+		return -1; // Sem ficheiros a ler, sem operação.
 	}
 
 	int c = -1;
