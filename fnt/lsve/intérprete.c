@@ -314,17 +314,12 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 				int dado_n = 0;
 				intérprete_agregar((*intérprete).expressão, &dado_n, dado);
 
-				char* linhadooperador = dado->expressão[0].operador[0].linha;
-
 				interpretar(ficheiro_linhas, dado);
 
 				Expressão b = expressões_têrPorClave(a.linha, dado->expressão);
-
-				Operação c = operação_daExpressão_têrPorTipo(operação__valôr, (*intérprete).expressão[(*expressão_n)]);
 				Operação d = operação_daExpressão_têrPorTipo(operação__valôr, b);
 
 				(*intérprete).expressão[(*expressão_n)].operador[caminho.índice].linha = b.operador[d.índice].linha;
-
 				(*expressão_n)++;
 
 				free(dado);
