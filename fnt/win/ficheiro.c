@@ -17,8 +17,9 @@ static int linha_actual_n;
 LINHA*
 ficheiro_lêr(LINHA caminho) {
     FILE* ficheiro;
-    errno_t numErro = fopen_s(&ficheiro, caminho, FICHEIRO_MODO_LEITURA);
-    if (numErro != 0) {
+
+	ficheiro = fopen(caminho, FICHEIRO_MODO_LEITURA);
+    if (ficheiro == NULL) {
         printf("O ficheiro %s não foi encontrado, ou está ocupado.", caminho); abort();
     }
 

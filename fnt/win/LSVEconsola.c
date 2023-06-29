@@ -1,15 +1,19 @@
-#include "consola.h"
-#include "../linha.h"
+#include "LSVEconsola.h"
+#include "linha.h"
 
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
+#include <conio.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#endif // _WIN32
 
 void
 lsve_consola_limpar()
 {
+#ifdef _WIN32
 	HANDLE lidanteSaída = GetStdHandle(STD_OUTPUT_HANDLE);
 	fflush(NULL); // Limpa carga de entrada.
 
@@ -26,20 +30,25 @@ lsve_consola_limpar()
 	FillConsoleOutputAttribute(lidanteSaída, consolaInfo.wAttributes, tamanho, início, &escripto); // Limpa atributos (coloração) da consola.
 
 	SetConsoleCursorPosition(lidanteSaída, início);
+#else 
+	system("clear");
+#endif //_WIN32
 }
 
 void
 lsve_consola_opção_mostrar(int opçãoSeleccionada, Expressão* expressões) {
+#ifdef _WIN32
 	lsve_consola_limpar();
+#endif
 
 	for (int i = 0; expressões[i].índice == i; i++)
 	{
 		Operação operação = operação_daExpressão_têrPorTipo(operação__concedido, expressões[i]);
-		if (opçãoSeleccionada != i) { printf("%s\r\n", operação.linha); }
+		if (opçãoSeleccionada != i) { printf("%s\n", operação.linha); }
 		else {
-			wprintf(L"\x1b[34;46m%S\r\n", operação.linha);
-			wprintf(L"\x1b[39m");
-			wprintf(L"\x1b[49m");
+			printf("\x1b[34;46m%s\n", operação.linha);
+			printf("\x1b[39m");
+			printf("\x1b[49m");
 		}
 	}
 }
@@ -53,7 +62,7 @@ lsve_consola_construir_menu(Expressão* expressões) {
 	Operação opçãoSeleccionada = operação_construir_falha();
 	int c = -1;
 	while (c) {
-		c = _getch();
+		c = getc(stdin);
 
 		/*
 		* Utiliza - se a tabela de códigos ASCII para a detecção da clave.

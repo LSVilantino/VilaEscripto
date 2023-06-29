@@ -1,7 +1,7 @@
+#include "LSVEgeneral.h"
 #include "general.h"
-#include "../general.h"
 
-#include "../linha.h"
+#include "linha.h"
 
 #include <stdio.h>
 #include  <stdlib.h>

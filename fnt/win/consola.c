@@ -2,14 +2,18 @@
 #include "linha.h"
 
 #include <stdio.h>
-#include <conio.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
+#include <conio.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#endif // _WIN32
 
 void
 consola_limpar()
 {
+#ifdef _WIN32
 	HANDLE lidanteSaída = GetStdHandle(STD_OUTPUT_HANDLE);
 	fflush(NULL); // Limpa carga de entrada.
 
@@ -26,19 +30,22 @@ consola_limpar()
 	FillConsoleOutputAttribute(lidanteSaída, consolaInfo.wAttributes, tamanho, início, &escripto); // Limpa atributos (coloração) da consola.
 
 	SetConsoleCursorPosition(lidanteSaída, início);
+#else 
+	system("clear");
+#endif //_WIN32
 }
 
 void
 consola_opção_mostrar(int opçãoSeleccionada, char** opções) {
 	consola_limpar();
 
-	for (int i = 0; opções[i] != '\0'; i++)
+	for (int i = 0; opções[i] != LINHA_NIL; i++)
 	{
-		if (opçãoSeleccionada != i) { printf("%s\r\n", opções[i]); }
+		if (opçãoSeleccionada != i) { printf("%s\n", opções[i]); }
 		else {
-			wprintf(L"\x1b[34;46m%S\r\n", opções[i]);
-			wprintf(L"\x1b[39m");
-			wprintf(L"\x1b[49m");
+			printf("\x1b[34;46m%s\n", opções[i]);
+			printf("\x1b[39m");
+			printf("\x1b[49m");
 		}
 	}
 }
@@ -52,7 +59,7 @@ consola_construir_menu(char** opções) {
 	char* opçãoSeleccionada = "";
 	int c = -1;
 	while (c) {
-		c = _getch();
+		c = getc(stdin);
 
 		/*
 		* Utiliza - se a tabela de códigos ASCII para a detecção da clave.

@@ -1,10 +1,10 @@
-#include "intérprete.h"
+#include "LSVEintérprete.h"
 
-#include "../pilha.h"
-#include "../linha.h"
-#include "../ficheiro.h"
-#include "consola.h"
-#include "general.h"
+#include "pilha.h"
+#include "linha.h"
+#include "ficheiro.h"
+#include "LSVEconsola.h"
+#include "LSVEgeneral.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,6 +38,7 @@ Operação operação_construir_falha() {
 
 Operação operação_daExpressão_têrPorTipo(Operação_Tipo tipo, Expressão expressão) {
 	int operadôr_n = 0;
+
   	while (expressão.operador[operadôr_n].índice == operadôr_n) {
 		if (expressão.operador[operadôr_n].tipo == tipo) {
 			return expressão.operador[operadôr_n];
@@ -70,7 +71,6 @@ Expressão expressão_construir_falha() {
 }
 
 Operação operação_daExpressão_têrPorClave(LINHA linha, Expressão expressão) {
-	int operadôr_n = 0;
 	Operação operador_clave = operação_daExpressão_têrPorTipo(operação__concedido, expressão);
 
 	if (linha_comparar(linha, operador_clave.linha)) return operador_clave;
@@ -78,7 +78,6 @@ Operação operação_daExpressão_têrPorClave(LINHA linha, Expressão express�
 }
 
 Dico operação_daExpressão_seTem_PorClave(LINHA linha, Expressão expressão) {
-	int operadôr_n = 0;
 	Operação operador_clave = operação_daExpressão_têrPorTipo(operação__concedido, expressão);
 
 	if (linha_comparar(linha, operador_clave.linha)) return vero;
@@ -106,7 +105,7 @@ void expressão_rastilho_definir(Expressão* expressão, Rastilho_Tipo rastilho_
 
 void intérprete_agregar(Expressão* expressões, int* posição, Intérprete* agregado) {
 
-	printf("\n\n\n---------------\n\n\n");
+	//printf("\n\n\n---------------\n\n\n");
 
 	int expressão_n = 0;
 	while (expressões[expressão_n].índice == expressão_n) {
@@ -115,7 +114,7 @@ void intérprete_agregar(Expressão* expressões, int* posição, Intérprete* a
 
 		(*agregado).expressão[(*posição)].índice = (*posição);
 
-		printf("%d - %s\n", (*agregado).expressão[(*posição)].índice, (*agregado).expressão[(*posição)].operador[0].linha);
+		//printf("%d - %s\n", (*agregado).expressão[(*posição)].índice, (*agregado).expressão[(*posição)].operador[0].linha);
 
 		expressão_n++; (*posição)++;
 	}
@@ -133,6 +132,7 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 	int clave_n = 0;
 
 	LINHA ficha = memória_allocar(1);
+	ficha[0] = LINHA_NIL;
 	int ficha_n = 0;
 
 	// Quantos ciclos devem ser pulados?
@@ -226,6 +226,7 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 
 				free(ficha);
 				ficha = memória_allocar(2);
+				ficha[0] = LINHA_NIL;
 				ficha_n = 0;
 
 				(*intérprete).expressão[(*expressão_n)].operador[operadôr_n].expectação = expectação__nil;
@@ -285,7 +286,7 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 				expressão_rastilho_definir(&(*intérprete).expressão[(*expressão_n)], rastilho__nil);
 			}
 
-			Operação a;
+			Operação a = operação_construir_falha();
 
 			// Todos as operações que precisam dos valôres completos são validados após o registro de toda a linha.
 			if ((a = operação_daExpressão_têrPorTipo(operação__concessão_corredora, (*intérprete).expressão[(*expressão_n)])).índice != ÍNDICE_ERRO) {
@@ -321,7 +322,6 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 
 				(*intérprete).expressão[(*expressão_n)].operador[caminho.índice].linha = b.operador[d.índice].linha;
 				(*expressão_n)++;
-
 				free(dado);
 				continue;
 			}
@@ -339,7 +339,6 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 				Operação d = operação_daExpressão_têrPorTipo(operação__valôr, b);
 
 				(*intérprete).expressão[(*expressão_n)].operador[caminho.índice].linha = b.operador[d.índice].linha;
-
 				(*expressão_n)++;
 				free(dado);
 				continue;
@@ -489,7 +488,9 @@ Intérprete* interpretar(char** linhas, Intérprete* intérprete) {
 				printf("Quebra: %s", (*intérprete).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
+#ifdef _WIN32
 				_set_abort_behavior(0, _WRITE_ABORT_MSG);
+#endif
 				abort();
 				break;
 			}
@@ -518,6 +519,8 @@ Intérprete* interpretar(char** linhas, Intérprete* intérprete) {
 				printf("\n--------------------------------\n\n");
 				break;
 			}
+
+			linha_n++;
 		}
 
 		linha_n++;

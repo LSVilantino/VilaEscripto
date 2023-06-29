@@ -1,10 +1,9 @@
-#include "lsve/mapa.h"
-#include "lsve/general.h"
-#include "lsve/tipo.h"
+#include "LSVEgeneral.h"
+#include "LSVEtipo.h"
 
-#include "lsve/desbraga.h"
-#include "lsve/ficheiro.h"
-#include "lsve/intérprete.h"
+#include "LSVEdesbraga.h"
+#include "ficheiro.h"
+#include "LSVEintérprete.h"
 
 #include "consola.h"
 
@@ -12,15 +11,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#ifdef _WIN32
 #include <conio.h>
 #include <windows.h>
+#endif //_WIN32
 
 int main(int** ignorado, char** argumentos) {
+#ifdef _WIN32
 	SetConsoleOutputCP(65001);
 	//setlocale(LC_ALL, "pt_PT.UTF-8");
 	setlocale(LC_ALL, ""); // Independente terminal da localidade.
 
 	system("cls");
+#endif //_WIN32
 
 	Intérprete* intérprete = memória_allocar(sizeof(Intérprete));
 	intérprete->expressão = NULL;
@@ -45,9 +49,9 @@ int main(int** ignorado, char** argumentos) {
 	}
 
 	int c = -1;
-	printf("\n\n\nPrima entra pa sair");
+	printf("\n\nPrima entra pa sair");
 	while (c) {
-		c = _getch();
+		c = getc(stdin);
 
 		if (c == 13) {
 			break;

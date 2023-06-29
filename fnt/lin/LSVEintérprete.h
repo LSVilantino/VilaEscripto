@@ -1,9 +1,7 @@
 #ifndef _CABEÇALHO_LSVE_INTÉRPRETE
 #define _CABEÇALHO_LSVE_INTÉRPRETE
 
-#include "../general.h"
-
-#define ÍNDICE_ERRO -1
+#include "general.h"
 
 /*
 * Qual o erro foi gerado?

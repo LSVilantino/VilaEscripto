@@ -44,7 +44,7 @@ clave_lêr_e_escolher // >>>
 
 typedef struct Palaclave {
 	const char* pala;
-	enum Palaclave_Tipo tipo;
+	Palaclave_Tipo tipo;
 } Palaclave;
 
 Palaclave clave_têr_por_tipo(Palaclave_Tipo tipo);
