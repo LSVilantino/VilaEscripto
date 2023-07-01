@@ -22,7 +22,7 @@ typedef enum Rastilho_Tipo {
 
 typedef struct Rastilho {
     Rastilho_Tipo tipo;
-    char* erro;
+    Linha erro;
 } Rastilho;
 
 /*
@@ -33,24 +33,14 @@ typedef struct Rastilho {
 */
 
 typedef enum Operação_Tipo {
-	// Clave
-	operação__concedido,
-	// O valôr da clave é literalmente o que seguir.
-	operação__concessão_directa,
-	// O valôr da clave é o caminho do ficheiro,
-	// importa-se as claves de outro ficheiro
-	operação__concessão_passiva,
-	// O valôr da clave é o da clave de outro ficheiro.
-	// Indica-se o nome da clave e é buscado em outro ficheiro.
-	operação__concessão_objectiva,
-	// O valôr da clave é o que o utilizador seleccionar.
-	operação__concessão_selectiva,
-	// Corre-se o commando que segue a clave.
-	operação__concessão_corredora,
-	// Valôr da clave.
-	operação__valôr,
-	// Nada.
-	operação__nil // Terminação das operações
+	operação__concedido, // Clave. 
+	operação__concessão_directa, // O valôr da clave é literalmente o que seguir.
+	operação__concessão_passiva, // O valôr da clave é são as claves de outro ficheiro.
+	operação__concessão_objectiva, // Indica-se o nome da clave e é buscado em outro ficheiro.
+	operação__concessão_selectiva, // O valôr da clave é o que o utilizador seleccionar.
+	operação__concessão_corredora, // Corre-se o commando que segue a clave.
+	operação__valôr, // Valôr da clave.
+	operação__nil // Nada. Terminação das operações
 } Operação_Tipo;
 
 /*
@@ -69,17 +59,13 @@ typedef enum Expectação {
 typedef struct Operação {
     Operação_Tipo tipo;
 	Expectação expectação;
-    char* linha;
-
-	int índice;
+    Linha linha;
 } Operação;
 
 typedef struct Expressão {
     Operação* operador;
 	Rastilho rastilho;
-    char* linha;
-
-	int índice;
+    Linha linha;
 } Expressão;
 
 typedef struct Intérprete {
@@ -91,12 +77,12 @@ Operação operação_construir_falha();
 Operação operação_daExpressão_têrPorTipo(Operação_Tipo tipo, Expressão expressão);
 void operação_re_definir(int operadôr_n, Expressão* expressão, Expectação expectação, Operação_Tipo operação_tipo, size_t linha_t);
 Expressão expressão_construir_falha();
-Operação operação_daExpressão_têrPorClave(LINHA linha, Expressão expressão);
-Dico operação_daExpressão_seTem_PorClave(LINHA linha, Expressão expressão);
-Expressão expressões_têrPorClave(LINHA clave, Expressão* expressões);
+Operação operação_daExpressão_têrPorClave(Linha linha, Expressão expressão);
+Dico operação_daExpressão_seTem_PorClave(Linha linha, Expressão expressão);
+Expressão expressões_têrPorClave(Linha clave, Expressão* expressões);
 
-void expressão_interpretar(char* linha, Intérprete* intérprete, int* expressão_n);
+void expressão_interpretar(Linha linha, Intérprete* intérprete, int* expressão_n);
 int intérprete_expressões_contar(Intérprete* intérprete);
-Intérprete* interpretar(char** linhas, Intérprete* intérprete);
+void interpretar(Linha* linhas, Intérprete* intérprete);
 
 #endif // !_CABEÇALHO_LSVE_INTÉRPRETE

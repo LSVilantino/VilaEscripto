@@ -488,9 +488,7 @@ Intérprete* interpretar(char** linhas, Intérprete* intérprete) {
 				printf("Quebra: %s", (*intérprete).expressão[expressão_n - 1].rastilho.erro);
 				printf("\n--------------------------------\n\n");
 
-#ifdef _WIN32
 				_set_abort_behavior(0, _WRITE_ABORT_MSG);
-#endif
 				abort();
 				break;
 			}

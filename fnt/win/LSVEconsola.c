@@ -4,16 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef _WIN32
 #include <conio.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#endif // _WIN32
 
 void
 lsve_consola_limpar()
 {
-#ifdef _WIN32
 	HANDLE lidanteSaída = GetStdHandle(STD_OUTPUT_HANDLE);
 	fflush(NULL); // Limpa carga de entrada.
 
@@ -30,9 +27,6 @@ lsve_consola_limpar()
 	FillConsoleOutputAttribute(lidanteSaída, consolaInfo.wAttributes, tamanho, início, &escripto); // Limpa atributos (coloração) da consola.
 
 	SetConsoleCursorPosition(lidanteSaída, início);
-#else 
-	system("clear");
-#endif //_WIN32
 }
 
 void

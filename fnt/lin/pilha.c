@@ -1,17 +1,21 @@
 #include "pilha.h"
 #include "linha.h"
-#include "general.h"
 
+#include <stdint.h>
 #include <string.h>
 
-Pilha pilha_construir(size_t tamanho) {
+Pilha pilha_construir(Lato elementos[]) {
     Pilha pilha;
-    pilha.recúo = tamanho;
 
-    tamanho++;
+    if (elementos[0].tipo == tipo_tamanho) {
+        int* tamanho = (int*) elementos[0].elemento;
+        pilha.recúo = *tamanho;
 
-    pilha.tamanho_actual = 0;
-    pilha.conteúdo = memória_preên_allocar(tamanho, 1);
+        (*tamanho)++;
+
+        pilha.tamanho_actual = 0;
+        pilha.conteúdo = memória_preên_allocar(*tamanho, 1);
+    }
 
     return pilha;
 }

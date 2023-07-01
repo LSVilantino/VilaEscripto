@@ -4,12 +4,12 @@
 #include <stdlib.h>
 
 void 
-linha_arrancar(size_t tamanho, LINHA linha) {
+linha_arrancar(size_t tamanho, Linha linha) {
 	for(int i = 0; i < tamanho; i++) { linha[i] = LINHA_NIL; }
 }
 
 int
-linha_contar(const LINHA linha) {
+linha_contar(const Linha linha) {
     int tamanho = 0;
     while (linha[tamanho]) tamanho++;
 
@@ -17,7 +17,7 @@ linha_contar(const LINHA linha) {
 }
 
 void
-linha_introduzir_charactére(char charactére, int posição, LINHA* linha)
+linha_introduzir_charactére(char charactére, int posição, Linha* linha)
 {
 	(*linha) = memória_re_allocar(posição + 2, (*linha));
 	(*linha)[posição] = charactére;
@@ -25,7 +25,7 @@ linha_introduzir_charactére(char charactére, int posição, LINHA* linha)
 }
 
 void
-linha_agregar_linha(LINHA linhaIntroduzida, int* posição, LINHA* linha)
+linha_agregar_linha(Linha linhaIntroduzida, int* posição, Linha* linha)
 {
 	int linhaIntroduzida_t = linha_contar(linhaIntroduzida);
 	int linha_t = linha_contar((*linha));
@@ -42,17 +42,17 @@ linha_agregar_linha(LINHA linhaIntroduzida, int* posição, LINHA* linha)
 }
 
 void
-matriz_linha_introduzir_linha(LINHA linha, int posição, LINHA** matriz)
+matriz_linha_introduzir_linha(Linha linha, int posição, Linha** matriz)
 {
-	(*matriz) = memória_re_allocar((posição + 2) * sizeof(LINHA), (*matriz));
+	(*matriz) = memória_re_allocar((posição + 2) * sizeof(Linha), (*matriz));
 	(*matriz)[posição] = linha_duplicar(linha);
 }
 
-LINHA
-linha_duplicar(LINHA linha) {
+Linha
+linha_duplicar(Linha linha) {
 	int tamanho = linha_contar(linha);
 
-	LINHA duplicata = memória_preên_allocar((tamanho + 1), sizeof(char));
+	Linha duplicata = memória_preên_allocar((tamanho + 1), sizeof(char));
 
 	for (int i = 0; i < tamanho; i++) {
 		duplicata[i] = linha[i];
@@ -64,7 +64,7 @@ linha_duplicar(LINHA linha) {
 }
 
 Dico
-linha_contém(LINHA comparadôr, const LINHA linha) {
+linha_contém(Linha comparadôr, const Linha linha) {
 	int tamanho_comparadôr = 0;
 	while (comparadôr[tamanho_comparadôr] != LINHA_NIL) {
 		tamanho_comparadôr++;
@@ -91,7 +91,7 @@ linha_contém(LINHA comparadôr, const LINHA linha) {
 }
 
 Dico
-linha_comparar(LINHA comparadôr, const LINHA linha) {
+linha_comparar(Linha comparadôr, const Linha linha) {
 	if (linha == NULL || comparadôr == NULL) return 0;
 
 	int linha_t = linha_contar(linha) - 1;
@@ -114,11 +114,11 @@ linha_comparar(LINHA comparadôr, const LINHA linha) {
 	return 0;
 }
 
-LINHA
-linha_aparar(LINHA linha) {
+Linha
+linha_aparar(Linha linha) {
 	while (*linha == ESPAÇO) linha++;
 
-	LINHA término = linha + linha_contar(linha) - 1; // Posição da linha a partir do sem-espaço.
+	Linha término = linha + linha_contar(linha) - 1; // Posição da linha a partir do sem-espaço.
 	while (término > linha && *término == ESPAÇO || *término == LINHA_SALTA || *término == '\r' || *término == '\t') término--;
 	término[1] = LINHA_NIL;
 

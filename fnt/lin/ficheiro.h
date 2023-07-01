@@ -3,6 +3,6 @@
 
 #include "general.h"
 
-LINHA* ficheiro_lêr(LINHA caminho);
+Grade* ficheiro_lêr(Linha caminho);
 
 #endif // !_CABEÇALHO_FICHEIRO

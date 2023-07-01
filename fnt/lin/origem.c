@@ -1,5 +1,6 @@
 #include "general.h"
 #include "ficheiro.h"
+#include "teclado/ASCII.h"
 
 #include "LSVEintérprete.h"
 
@@ -8,11 +9,15 @@
 #include <string.h>
 #include <stdlib.h>
 
+int argumentos_requiridos = 3;
+
 int main(int argquan, char** argumentos) {
 	char* ficheiroDesbraga = nil;
 	char* ficheiroLSVE = nil;
 
-	if (argquan == 3) {
+	if (argquan > argumentos_requiridos) { abort(); }
+
+	if (argquan == argumentos_requiridos) {
 		if (argumentos[2]) { ficheiroDesbraga = argumentos[2]; }
 		if (argumentos[1]) { ficheiroLSVE = argumentos[1]; }
 	}
@@ -22,18 +27,17 @@ int main(int argquan, char** argumentos) {
 
 	Intérprete* intérprete = memória_allocar(sizeof(Intérprete));
 	intérprete->expressão = nil;
-	intérprete->expressão = memória_allocar(sizeof(Expressão));
 
 	if(ficheiroDesbraga) {
-		LINHA* ficheiroDesbraga_linhas = ficheiro_lêr(ficheiroDesbraga);
-		free(ficheiroDesbraga_linhas[0]);
-		free(ficheiroDesbraga_linhas);
+		Grade* ficheiroDesbraga_linhas = ficheiro_lêr(ficheiroDesbraga);
+		//interpretar(ficheiroDesbraga_linhas, intérprete);
+		des_allocar_grade(ficheiroDesbraga_linhas);
 	}
 
 	if(ficheiroLSVE) {
-		LINHA* ficheiroLSVE_linhas = ficheiro_lêr(ficheiroLSVE);
-		free(ficheiroLSVE_linhas[0]);
-		free(ficheiroLSVE_linhas);
+		Grade* ficheiroLSVE_linhas = ficheiro_lêr(ficheiroLSVE);
+		//interpretar(ficheiroLSVE_linhas, intérprete);
+		des_allocar_grade(ficheiroLSVE_linhas);
 	}
 
     int c;
@@ -42,7 +46,7 @@ int main(int argquan, char** argumentos) {
 		fflush(stdin);
 		c = getc(stdin);
 
-		if (c == 10) {
+		if (c == entra) {
 			break;
 		}
 	}

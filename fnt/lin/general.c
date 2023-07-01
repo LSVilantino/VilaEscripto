@@ -3,6 +3,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void
+des_allocar_grade(Grade* grade) {
+    for(int i = 0; grade[i].índice == i; i++) {
+        if (grade[i].filho != nil) {
+            des_allocar_grade(grade[i].filho);
+            free(grade[i].filho);
+        }
+
+        free(grade[i].elemento);
+    }
+
+    free(grade->elemento);
+    free(grade);
+}
+
 void*
 memória_allocar(size_t tamanho) {
     void* ponteiro = malloc(tamanho);
