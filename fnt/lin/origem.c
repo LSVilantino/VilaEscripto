@@ -30,7 +30,7 @@ int main(int argquan, char** argumentos) {
 
 	if(ficheiroDesbraga) {
 		Grade* ficheiroDesbraga_linhas = ficheiro_lêr(ficheiroDesbraga);
-		//interpretar(ficheiroDesbraga_linhas, intérprete);
+		interpretar(ficheiroDesbraga_linhas->elemento, intérprete);
 		des_allocar_grade(ficheiroDesbraga_linhas);
 	}
 

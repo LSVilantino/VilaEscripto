@@ -83,6 +83,6 @@ Expressão expressões_têrPorClave(Linha clave, Expressão* expressões);
 
 void expressão_interpretar(Linha linha, Intérprete* intérprete, int* expressão_n);
 int intérprete_expressões_contar(Intérprete* intérprete);
-void interpretar(Linha* linhas, Intérprete* intérprete);
+void interpretar(Grade** linhas, Intérprete* intérprete);
 
 #endif // !_CABEÇALHO_LSVE_INTÉRPRETE

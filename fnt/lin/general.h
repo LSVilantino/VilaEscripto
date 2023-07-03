@@ -20,12 +20,45 @@ typedef void* Objecto;
 // Construcção de tipo dicotômico.
 typedef enum { falso, vero } Dico;
 
-typedef enum {
-    tipo_charactére, // char
-    tipo_linha, // char* / Linha
-    tipo_inteiro, // int
-    tipo_tamanho, // size_t
-} Tipo;
+//-------------------------
+// DEFINIÇÕES FUNCIONAIS
+//-------------------------
+
+#define linha_juntar(a, b) a ## b
+#define linha_juntar_cobra(a, b) a ## _ ## b
+
+/*
+    reutilização em enumeradores precisam seguir uma ordem
+    específica para estarem sempre alinhados uns com os outros,
+    em formato de cadeia de dependência.
+
+    #define elems_A(prefixo) linha_juntar(prefixo, A_um)
+    #define elems_B(prefixo) linha_juntar(prefixo, B_um)
+    #define elems_C(prefixo) linha_juntar(prefixo, C_um)
+
+    enum A {
+        elems_A() (A_um = 1)
+    }
+
+    enum B {
+        elems_A(B_) (B_A_um = 1, compatível com enum A)
+        elems_B() (B_um = 2, elemento de B)
+    }
+
+    enum C {
+        elems_A(C_) (C_A_um = 1, compatível com enum A e B)
+        elems_B(C_) (C_B_um = 2, compatível com enum B)
+        elems_C() (C_um = 3, elemento de C)
+    }
+*/
+
+#define elems_tipo(nome) \
+    linha_juntar(nome, tipo_charactére), /*char*/               \
+    linha_juntar(nome, tipo_linha),      /*char* ou Linha */    \
+    linha_juntar(nome, tipo_inteiro),    /*int*/                \
+    linha_juntar(nome, tipo_tamanho),    /*size_t*/             \
+
+typedef enum { elems_tipo() } Tipo;
 
 //-------------------------
 // DEFINIÇÕES DE ELEMENTOS
@@ -53,17 +86,16 @@ typedef enum {
     simplesmente para que não se tenha os efeitos de têr que
     replicar os mesmos campos em todos os lugares necessários.
 */
-#define elems_lato {        \
-    Tipo tipo;              \
+#define elems_lato(prefixoTipo) \
+    linha_juntar(prefixoTipo, Tipo) tipo;              \
     Objecto elemento;       \
-}                           \
 
-typedef struct Lato elems_lato Lato;
+typedef struct { elems_lato() } Lato;
 
-typedef struct Grade {
+typedef struct {
     int índice;
 
-    struct elems_lato;
+    struct { elems_lato() };
     struct Grade* filho;
 } Grade;
 

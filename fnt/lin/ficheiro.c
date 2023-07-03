@@ -42,7 +42,7 @@ ficheiro_lêr(Linha caminho) {
         char charactére = FICHEIRO_PRÓXIMO_CHARAC(ficheiro);
         pilha_introduzir(charactére, &pilha);
 
-        printf("%c - %s\n", charactére, pilha.conteúdo);
+        //printf("%c - %s\n", charactére, pilha.conteúdo);
 
         // Valida se o fim do ficheiro é seguido por um salta-linhas.
         if (pilha.conteúdo[pilha.recúo - 1] == EOF) {
