@@ -4,9 +4,22 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
+/*
+    construir depois alguns sinais indicadores para
+    controlar o fluxo da aplicação
+*/
+
+//#if defined(DESBRAGA) && DESBRAGA > 0
+#define DESBRAGA_MENSAGEM(formato, ...) printf("DESBRAGA ― %s:%d:%s: " \
+formato, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+//#else
+//#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
+//#endif
+
 #define nil NULL
 
-// 'linha' (repare o i minúsculo) muitas das vezes é nome de variáveis
+// 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
 #define Linha char*
 
 #define LINHA_NIL '\0'
@@ -18,7 +31,7 @@
 typedef void* Objecto;
 
 // Construcção de tipo dicotômico.
-typedef enum { falso, vero } Dico;
+typedef enum { fal, vero } Dico;
 
 //-------------------------
 // DEFINIÇÕES FUNCIONAIS
@@ -86,20 +99,23 @@ typedef enum { elems_tipo() } Tipo;
     simplesmente para que não se tenha os efeitos de têr que
     replicar os mesmos campos em todos os lugares necessários.
 */
-#define elems_lato(prefixoTipo) \
-    linha_juntar(prefixoTipo, Tipo) tipo;              \
-    Objecto elemento;       \
+#define elems_lato(prefixoTipo)                 \
+    linha_juntar(prefixoTipo, Tipo) tipo;       \
+    Dico precisa_libertar;                      \
+    Objecto elemento;                           \
 
 typedef struct { elems_lato() } Lato;
 
 typedef struct {
-    int índice;
-
     struct { elems_lato() };
+
+    int índice;
     struct Grade* filho;
 } Grade;
 
-void des_allocar_grade(Grade* grade);
+void grade_introduzir(Grade** grade, int índice, Tipo tipo, Dico precisa_libertar, void* elemento);
+Dico grade_é_do_tipo(Tipo tipo, Grade grade);
+void grade_des_allocar(Grade** grade);
 
 void* memória_allocar(size_t tamanho);
 void* memória_preên_allocar(size_t tamanho_allocação, size_t tamanho_tipo);

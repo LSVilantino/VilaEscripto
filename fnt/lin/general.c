@@ -3,19 +3,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
-des_allocar_grade(Grade* grade) {
-    for(int i = 0; grade[i].índice == i; i++) {
-        if (grade[i].filho != nil) {
-            des_allocar_grade(grade[i].filho);
-            free(grade[i].filho);
-        }
+void 
+grade_introduzir(Grade** grade, int índice, Tipo tipo, Dico precisa_libertar, void* elemento) {
+    (*grade) = memória_re_allocar((índice + 2) * sizeof(Grade), (*grade));
+    (*grade)[índice].índice = índice;
+    (*grade)[índice].tipo = tipo;
+    (*grade)[índice].precisa_libertar = precisa_libertar;
+    (*grade)[índice].elemento = elemento;
+    (*grade)[índice].filho = nil;
 
-        free(grade[i].elemento);
+    (*grade)[índice + 1].índice = -1;
+}
+
+Dico 
+grade_é_do_tipo(Tipo tipo, Grade grade) {
+    if (grade.tipo == tipo) return vero;
+    else return fal;
+}
+
+void
+grade_des_allocar(Grade** grade) {
+    int i = 0;
+    while((*grade)[i].índice == i) {
+        DESBRAGA_MENSAGEM("%d - %d\n", (*grade)[i].índice, i);
+
+        if ((*grade)[i].precisa_libertar) { free((*grade)[i].elemento); }
+        if ((*grade)[i].filho != nil) { grade_des_allocar((*grade)[i].filho); }
+
+        i++;
     }
 
-    free(grade->elemento);
-    free(grade);
+    if ((*grade) != nil) free((*grade));
 }
 
 void*

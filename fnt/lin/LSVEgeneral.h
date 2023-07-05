@@ -8,6 +8,7 @@
 typedef enum { 
     elems_tipo(lsve_)
     lsve_tipo_grade,
+    lsve_tipo_intérprete
 }
 LSVE_Tipo;
 

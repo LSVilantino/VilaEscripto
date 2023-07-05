@@ -23,17 +23,12 @@ Pilha pilha_construir(Lato elementos[]) {
 void pilha_introduzir(char charac, Pilha* pilha) {
     char* cópia = linha_duplicar(pilha->conteúdo);
 
-    //printf(cópia);
-
     pilha->conteúdo[0] = charac;
-
-    //printf("%c", pilha->conteúdo[pilha->recúo - 1]);
-
     cópia[pilha->tamanho_actual] = LINHA_NIL;
     if (pilha->tamanho_actual != pilha->recúo) pilha->tamanho_actual++;
 
     pilha->conteúdo[pilha->recúo] = LINHA_NIL;
-
+    
     for (int i = pilha->tamanho_actual - 1; i > 0; i--) pilha->conteúdo[i] = cópia[i - 1];
 
     free(cópia);

@@ -2,6 +2,7 @@
 #include "ficheiro.h"
 #include "teclado/ASCII.h"
 
+#include "LSVEgeneral.h"
 #include "LSVEintérprete.h"
 
 #include <locale.h>
@@ -25,19 +26,23 @@ int main(int argquan, char** argumentos) {
 		if (argumentos[1]) { ficheiroLSVE = argumentos[1]; }
 	}
 
+	Grade* grade_intérprete = nil;
+
 	Intérprete* intérprete = memória_allocar(sizeof(Intérprete));
 	intérprete->expressão = nil;
 
+	grade_introduzir(&grade_intérprete, 0, lsve_tipo_intérprete, vero, intérprete);
+
 	if(ficheiroDesbraga) {
 		Grade* ficheiroDesbraga_linhas = ficheiro_lêr(ficheiroDesbraga);
-		interpretar(ficheiroDesbraga_linhas->elemento, intérprete);
-		des_allocar_grade(ficheiroDesbraga_linhas);
+		interpretar(&ficheiroDesbraga_linhas, &grade_intérprete);
+		grade_des_allocar(&ficheiroDesbraga_linhas);
 	}
 
 	if(ficheiroLSVE) {
 		Grade* ficheiroLSVE_linhas = ficheiro_lêr(ficheiroLSVE);
 		//interpretar(ficheiroLSVE_linhas, intérprete);
-		des_allocar_grade(ficheiroLSVE_linhas);
+		grade_des_allocar(&ficheiroLSVE_linhas);
 	}
 
     int c;
@@ -51,8 +56,6 @@ int main(int argquan, char** argumentos) {
 		}
 	}
 
-	free(intérprete->expressão);
-	free(intérprete);
-
+	grade_des_allocar(&grade_intérprete);
 	return 0;
 }

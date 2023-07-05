@@ -81,8 +81,13 @@ Operação operação_daExpressão_têrPorClave(Linha linha, Expressão express�
 Dico operação_daExpressão_seTem_PorClave(Linha linha, Expressão expressão);
 Expressão expressões_têrPorClave(Linha clave, Expressão* expressões);
 
-void expressão_interpretar(Linha linha, Intérprete* intérprete, int* expressão_n);
-int intérprete_expressões_contar(Intérprete* intérprete);
-void interpretar(Grade** linhas, Intérprete* intérprete);
+void expressão_interpretar(Grade** linha, Grade** intérprete, int* expressão_n);
+int intérprete_expressões_contar(Grade* intérprete);
+
+/*
+	1 - ponteiro real
+	2 - ponteiro real
+*/
+void interpretar(Grade** linhas, Grade** intérprete);
 
 #endif // !_CABEÇALHO_LSVE_INTÉRPRETE
