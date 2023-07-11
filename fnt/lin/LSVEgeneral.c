@@ -25,7 +25,7 @@ Palaclave claves[] = {
 Palaclave
 clave_têr_por_tipo(Palaclave_Tipo tipo) {
 	int i = 0;
-	while (claves[i].pala != LINHA_NIL) {
+	while (claves[i].pala[0] != LINHA_NIL) {
 		if (claves[i].tipo == tipo) break;
 		i++;
 	}
@@ -37,7 +37,7 @@ Palaclave_Tipo clave_comparar(char* linha) {
 	Palaclave clave;
 
 	int i = 0;
-	while (claves[i].pala != LINHA_NIL) {
+	while (claves[i].pala[0] != LINHA_NIL) {
 		clave = claves[i];
 		linha_comparar(linha, clave.pala);
 		i++;

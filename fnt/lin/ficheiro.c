@@ -25,11 +25,13 @@ ficheiro_lêr(Linha caminho) {
         (Lato){tipo_tamanho, fal, &(int){3}}
     });
 
-    int linha_actual_n = 0;
-    int linha_n = 0;
+    int 
+    linha_actual_n = 0, 
+    linha_n = 0
+    ;
 
-    Grade* resultado = nil;
-    grade_introduzir(&resultado, linha_n, tipo_linha, vero, nil);
+    Grade* linhas = nil;
+    grade_introduzir(&linhas, linha_n, tipo_linha, vero, nil);
 
     // recúo = tamanho da pilha, o quanto os charactéres recuam.
     // recúo - 1 = último charactére
@@ -44,7 +46,7 @@ ficheiro_lêr(Linha caminho) {
         // Valida se o fim do ficheiro é seguido por um salta-linhas.
         if (pilha.conteúdo[pilha.recúo - 1] == EOF) {
             // Introduz a linha à matriz e esquece a última linha-salta.
-            linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, (Linha*) &resultado[linha_n].elemento); 
+            linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, (Linha*) &linhas[linha_n].elemento); 
             linha_actual_n = 0; 
 
             break;
@@ -55,24 +57,24 @@ ficheiro_lêr(Linha caminho) {
             // Valida se o fim do ficheiro é seguido por um salta-linhas.
             if (pilha.conteúdo[pilha.recúo - 2] == EOF) {
 				// Introduz a linha à matriz e esquece a última linha-salta.
-				linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 2], linha_actual_n, (Linha*) &resultado[linha_n].elemento);
+				linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 2], linha_actual_n, (Linha*) &linhas[linha_n].elemento);
                 linha_actual_n = 0;
 
                 break;
             }
 
 			// Introduz a linha-salta e sua linha à matriz.
-			linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, (Linha*) &resultado[linha_n].elemento);
+			linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, (Linha*) &linhas[linha_n].elemento);
             linha_actual_n = 0;
 			linha_n++;
-            grade_introduzir(&resultado, linha_n, tipo_linha, vero, nil);
+            grade_introduzir(&linhas, linha_n, tipo_linha, vero, nil);
 
             continue;
         }
 
 		// Introduz último charactére da pilha à linha actual.
         if (pilha.conteúdo[pilha.recúo - 1] != LINHA_NIL) {
-			linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, (Linha*) &resultado[linha_n].elemento); 
+			linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, (Linha*) &linhas[linha_n].elemento); 
             linha_actual_n++;
         }
     }
@@ -81,5 +83,5 @@ ficheiro_lêr(Linha caminho) {
     fclose(ficheiro);
     free(pilha.conteúdo);
 
-    return resultado;
+    return linhas;
 }

@@ -5,35 +5,37 @@
 
 void 
 grade_introduzir(Grade** grade, int índice, Tipo tipo, Dico precisa_libertar, void* elemento) {
-    (*grade) = memória_re_allocar((índice + 2) * sizeof(Grade), (*grade));
-    (*grade)[índice].índice = índice;
-    (*grade)[índice].tipo = tipo;
-    (*grade)[índice].precisa_libertar = precisa_libertar;
-    (*grade)[índice].elemento = elemento;
-    (*grade)[índice].filho = nil;
+#define _grade (*grade)
 
-    (*grade)[índice + 1].índice = -1;
-}
+    _grade = memória_re_allocar((índice + 2) * sizeof(Grade), _grade);
+    _grade[índice].índice = índice;
+    _grade[índice].tipo = tipo;
+    _grade[índice].precisa_libertar = precisa_libertar;
+    _grade[índice].elemento = elemento;
+    _grade[índice].filho = nil;
 
-Dico 
-grade_é_do_tipo(Tipo tipo, Grade grade) {
-    if (grade.tipo == tipo) return vero;
-    else return fal;
+    _grade[índice + 1].índice = -1;
+
+#undef _grade
 }
 
 void
 grade_des_allocar(Grade** grade) {
-    int i = 0;
-    while((*grade)[i].índice == i) {
-        DESBRAGA_MENSAGEM("%d - %d\n", (*grade)[i].índice, i);
+#define _grade (*grade)
 
-        if ((*grade)[i].precisa_libertar) { free((*grade)[i].elemento); }
-        if ((*grade)[i].filho != nil) { grade_des_allocar((*grade)[i].filho); }
+    int i = 0;
+    while(_grade[i].índice == i) {
+        DESBRAGA_MENSAGEM("%d - %d\n", _grade[i].índice, i);
+
+        if (_grade[i].precisa_libertar == vero) { free(_grade[i].elemento); }
+        if (_grade[i].filho != nil) { grade_des_allocar(&_grade[i].filho); }
 
         i++;
     }
 
-    if ((*grade) != nil) free((*grade));
+    free(_grade);
+
+#undef _grade
 }
 
 void*

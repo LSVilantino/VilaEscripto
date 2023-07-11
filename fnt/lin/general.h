@@ -4,19 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-/*
-    construir depois alguns sinais indicadores para
-    controlar o fluxo da aplicação
-*/
-
-//#if defined(DESBRAGA) && DESBRAGA > 0
-#define DESBRAGA_MENSAGEM(formato, ...) printf("DESBRAGA ― %s:%d:%s: " \
-formato, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-//#else
-//#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
-//#endif
-
 #define nil NULL
 
 // 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
@@ -27,6 +14,30 @@ formato, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
 #define ESPAÇO ' '
 #define FICHEIRO_MODO_LEITURA "r"
 #define FICHEIRO_MODO_LEITURA_BINÁRIA "rb"
+
+
+
+
+/*
+    construir depois alguns sinais indicadores para
+    controlar o fluxo da aplicação
+*/
+
+//#if defined(DESBRAGA) && DESBRAGA > 0
+#define DESBRAGA_MENSAGEM(formato, ...) printf("DESBRAGA ― %s:%d:%s: " \
+formato, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+printf("%c", LINHA_SALTA); \
+//#else
+//#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
+//#endif
+
+
+
+
+
+
+
+
 
 typedef void* Objecto;
 
