@@ -144,10 +144,11 @@ void expressão_interpretar(char* linha, Intérprete* intérprete, int* express�
 
 	while (recúo > 1)
 	{
-		/* Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
-		*  o último charactére armazenado.
-		*
-		* Se a linha não estiver ao fim, introduz o último charactére à pilha.
+		/* 
+			Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
+			o último charactére armazenado.
+		
+			Se a linha não estiver ao fim, introduz o último charactére à pilha.
 		*/
 		if (linha[linha_n] == LINHA_NIL) { recúo--; }
 		else {

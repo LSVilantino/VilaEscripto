@@ -1,5 +1,7 @@
 #include "ficheiro.h"
 
+#include "general.h"
+
 #include "linha.h"
 #include "pilha.h"
 
@@ -31,7 +33,15 @@ ficheiro_lêr(Linha caminho) {
     ;
 
     Grade* linhas = nil;
-    grade_introduzir(&linhas, linha_n, tipo_linha, vero, nil);
+    grade_introduzir(&linhas, 
+        (Grade) {
+        .índice = linha_n,
+        .constatação = "linha",
+        .tipo = tipo_linha,
+        .precisa_libertar = vero,
+        .elemento = nil,
+        }
+    );
 
     // recúo = tamanho da pilha, o quanto os charactéres recuam.
     // recúo - 1 = último charactére
@@ -67,7 +77,15 @@ ficheiro_lêr(Linha caminho) {
 			linha_introduzir_charactére(pilha.conteúdo[pilha.recúo - 1], linha_actual_n, (Linha*) &linhas[linha_n].elemento);
             linha_actual_n = 0;
 			linha_n++;
-            grade_introduzir(&linhas, linha_n, tipo_linha, vero, nil);
+            grade_introduzir(&linhas, 
+                (Grade) {
+                .índice = linha_n,
+                .constatação = "linha",
+                .tipo = tipo_linha,
+                .precisa_libertar = vero,
+                .elemento = nil,
+                }
+            );
 
             continue;
         }

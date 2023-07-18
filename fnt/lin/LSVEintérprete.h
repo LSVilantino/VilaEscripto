@@ -7,7 +7,7 @@
 * Qual o erro foi gerado?
 */
 
-typedef enum Rastilho_Tipo {
+typedef enum {
 	rastilho__carece_concedido,
 	rastilho__carece_concessão,
 	rastilho__carece_concessão_válida,
@@ -20,7 +20,7 @@ typedef enum Rastilho_Tipo {
 } Rastilho_Tipo;
 
 
-typedef struct Rastilho {
+typedef struct {
     Rastilho_Tipo tipo;
     Linha erro;
 } Rastilho;
@@ -32,7 +32,7 @@ typedef struct Rastilho {
 * Uma concessão direta? Onde se concede o valôr bruto?
 */
 
-typedef enum Operação_Tipo {
+typedef enum {
 	operação__concedido, // Clave. 
 	operação__concessão_directa, // O valôr da clave é literalmente o que seguir.
 	operação__concessão_passiva, // O valôr da clave é são as claves de outro ficheiro.
@@ -46,7 +46,7 @@ typedef enum Operação_Tipo {
 /*
 * O quê se espera que venha a seguir?
 */
-typedef enum Expectação {
+typedef enum {
     expectação__concedido,
     expectação__concessão,
     expectação__valôr,
@@ -56,26 +56,30 @@ typedef enum Expectação {
 	expectação__nil // Nada a aguardar/descohece-se o quê aguardar.
 } Expectação;
 
-typedef struct Operação {
+typedef struct {
+	int índice;
+
     Operação_Tipo tipo;
 	Expectação expectação;
     Linha linha;
 } Operação;
 
-typedef struct Expressão {
+typedef struct {
+	int índice;
+
     Operação* operador;
 	Rastilho rastilho;
     Linha linha;
 } Expressão;
 
-typedef struct Intérprete {
+typedef struct {
     Expressão* expressão;
     Rastilho* rastilho;
 } Intérprete;
 
 Operação operação_construir_falha();
 Operação operação_daExpressão_têrPorTipo(Operação_Tipo tipo, Expressão expressão);
-void operação_re_definir(int operadôr_n, Expressão* expressão, Expectação expectação, Operação_Tipo operação_tipo, size_t linha_t);
+void operação_re_definir(int operador_n, Grade* expressão, Expectação expectação, Operação_Tipo operação_tipo, size_t linha_t);
 Expressão expressão_construir_falha();
 Operação operação_daExpressão_têrPorClave(Linha linha, Expressão expressão);
 Dico operação_daExpressão_seTem_PorClave(Linha linha, Expressão expressão);
@@ -84,9 +88,11 @@ Expressão expressões_têrPorClave(Linha clave, Expressão* expressões);
 /*
 	1 - ponteiro real
 	2 - ponteiro real
+			deve ter o mesmo nome do argumento referente na funcção interpretar, 
+			uma definição é compartilhada.
 	3 - ponteiro real, auto-incremental.
 */
-void expressão_interpretar(Grade* linha, Grade** intérprete, int* expressão_n);
+void expressão_interpretar(const Grade* linha, Grade** intérprete, int* expressão_n);
 int intérprete_expressões_contar(Grade* intérprete);
 
 /*

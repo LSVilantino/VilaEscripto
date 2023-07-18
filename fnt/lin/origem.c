@@ -28,10 +28,15 @@ int main(int argquan, char** argumentos) {
 
 	Grade* grade_intérprete = nil;
 
-	Intérprete* intérprete = memória_allocar(sizeof(Intérprete));
-	intérprete->expressão = nil;
-
-	grade_introduzir(&grade_intérprete, 0, lsve_tipo_intérprete, vero, intérprete);
+	grade_introduzir(&grade_intérprete, 
+		(Grade) {
+		.índice = 0,
+		.constatação = var_nome(intérprete),
+		.tipo = lsve_tipo_intérprete,
+		.precisa_libertar = vero,
+		.elemento = memória_allocar(sizeof(Intérprete))
+		}
+	);
 
 	if(ficheiroDesbraga) {
 		Grade* ficheiroDesbraga_linhas = ficheiro_lêr(ficheiroDesbraga);

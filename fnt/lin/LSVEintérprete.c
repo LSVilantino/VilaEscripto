@@ -12,22 +12,76 @@
 #include <stdlib.h>
 #include <wctype.h>
 
+void operação_re_definir(int operador_n, Grade* expressão, Expectação expectação, Operação_Tipo operação_tipo, size_t linha_t) {
+#if !defined(operação_re_definir__3)
+
+#define operação_re_definir__3
+#define expressão__3            (*expressão)
+#define operadores__3           (expressão__3.filho)
+#define operador_grade__3       (operadores__3[operador_n])
+#define operador__3             (*(Operação*) operador_grade__3.elemento)
+
+#endif // #if !defined(operação_re_definir__3)
+
+	grade_introduzir(&operadores__3,
+		(Grade) {
+		.índice = operador_n,
+        .constatação = nil,
+		.tipo = lsve_tipo_operador,
+		.precisa_libertar = vero,
+		.elemento = memória_allocar(sizeof(Operação))
+		}
+	);
+    
+	operador__3.índice = operador_n;
+	operador__3.tipo = operação_tipo;
+	operador__3.expectação = expectação;
+
+	int índice = 0;
+
+	grade_introduzir(&operador_grade__3.filho,
+		(Grade) {
+		.índice = índice++,
+		.constatação = var_nome(linha),
+		.tipo = lsve_tipo_linha,
+		.precisa_libertar = vero,
+		.elemento = memória_allocar(linha_t)
+		}
+	);
+
+#undef operação_re_definir__3
+#undef expressão__3
+#undef operadores__3
+#undef operador__3
+}
+
 void 
-interpretar_linha(Grade* linha, Grade** intérprete, int* expressão_n) {
-#define _linha ((char*) (*linha).elemento)
-#define _expressão_n (*expressão_n)
+interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
+#if !defined(interpretar_linha__2)
 
-#define _operador ((Operação) _expressão_grade.filho[operador_n])
-#define _operadores ((Operação) _expressão_grade.filho)
+#define interpretar_linha__2
+#define linha__2				((char*) (*linha).elemento)
+#define intérprete__2			(*((Intérprete*)(*intérprete)->elemento))
+#define intérprete_grade__2		(*intérprete)
+#define rastilho__2				(*(Rastilho*) &intérprete__2.filho[1].elemento)
+#define expressão_n__2			(*expressão_n)
+#define expressões__2			(intérprete_grade__2.filho)
+#define expressão__2			((Expressão) intérprete_grade__2.filho[0].elemento[expressão_n__2])
+#define expressão_grade__2		(intérprete_grade__2.filho[expressão_n__2])
+#define operadores_grade__2		(expressão_grade__2.filho)
+#define operadores__2			(*(Operação**) &expressão_grade__2.filho[operador_n].elemento)
+#define operador__2				((*(Operação**) &expressão_grade__2.filho[operador_n].elemento)[operador_n])
+#define operador_grade__2		(expressão_grade__2.filho[operador_n])
+#define recúo__2                recúo - 1
 
-#define _recúo recúo - 1
+#endif // #if !defined(interpretar_linha__2)
 
-    int 
-    linha_n = 0, 
-    
-    operador_n = 0, 
-    operador_linha_n = 0, 
-    
+	int
+    linha_n = 0,
+
+    operador_n = 0,
+    operador_linha_n = 0,
+
     clave_n = 0,
     ficha_n = 0,
 
@@ -36,14 +90,38 @@ interpretar_linha(Grade* linha, Grade** intérprete, int* expressão_n) {
 
     Pilha pilha = pilha_construir((Lato[])
     {
-        (Lato){tipo_tamanho, fal, &(int){3}}
+        (Lato) { tipo_tamanho, fal, &(int){3} }
     });
 
     int recúo = pilha.recúo;
 
     Linha ficha = memória_preên_allocar(1, sizeof(char));
 
-    DESBRAGA_MENSAGEM("LINHA A DESBRAGAR %s", _linha)
+    DESBRAGA_MENSAGEM("LINHA A DESBRAGAR %s", linha__2)
+
+    grade_introduzir(&expressões__2, 
+        (Grade) {
+        .índice = 0, 
+        .constatação = var_nome(expressão),
+        .tipo = lsve_tipo_expressão, 
+        .precisa_libertar = vero, 
+        .elemento = memória_allocar(sizeof(Grade))
+        }
+    );
+
+    expressão_grade__2.filho = nil;
+
+    grade_introduzir(&operadores_grade__2, 
+        (Grade) {
+        .índice = 0, 
+        .constatação = var_nome(operação),
+        .tipo = lsve_tipo_operador, 
+        .precisa_libertar = vero, 
+        .elemento = nil
+        }
+    );
+    
+    operação_re_definir(operador_n, &expressão_grade__2, expectação__concedido, operação__concedido, 1);
 
     while(recúo > 1) {
         /* Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
@@ -51,15 +129,15 @@ interpretar_linha(Grade* linha, Grade** intérprete, int* expressão_n) {
 		*
 		* Se a linha não estiver ao fim, introduz o último charactére à pilha.
 		*/
-		if (_linha[linha_n] == LINHA_NIL) { recúo--; }
+		if (linha__2[linha_n] == LINHA_NIL) { recúo--; }
 		else {
-			pilha_introduzir(_linha[linha_n], &pilha);
+			pilha_introduzir(linha__2[linha_n], &pilha);
 			
             linha_n++;
 		}
         
-		char charactére = pilha.conteúdo[_recúo];
-        DESBRAGA_MENSAGEM("%c", charactére)
+		char charactére = pilha.conteúdo[recúo__2];
+        //DESBRAGA_MENSAGEM("%c", charactére)
 
         /*
 			As primeiras corridas do ciclo caem em endereço nil,
@@ -76,6 +154,25 @@ interpretar_linha(Grade* linha, Grade** intérprete, int* expressão_n) {
 			pula--;
 			continue;
 		}
+
+
+
+
+
+
+
+        if (operador__2.expectação == expectação__concedido ||
+            operador__2.expectação == expectação__nil
+        )
+		{
+            Grade* linha_grade = grade_procurar(var_nome(linha), &operadores_grade__2);
+            linha_introduzir_charactére(charactére, operador_linha_n, (Linha*) &linha_grade->elemento);
+			DESBRAGA_MENSAGEM("%c", ((Linha) linha_grade->elemento)[operador_linha_n]);
+
+			operador_linha_n++;
+
+			if (operador__2.tipo == operação__concedido) operador__2.expectação = expectação__concessão;
+		}
     }
 
 fim:
@@ -83,22 +180,38 @@ fim:
 free(pilha.conteúdo);
 free(ficha);
 
-#undef _linha
-#undef _expressão_n
+#undef interpretar_linha__2
+#undef linha__2
+#undef intérprete__2
+#undef intérprete_grade__2
+#undef rastilho__2
+#undef expressão_n__2
+#undef expressões__2
+#undef expressão__2
+#undef expressão_grade__2
+#undef operadores_grade__2
+#undef operadores__2
+#undef operador__2
+#undef recúo__2
 return;
 }
 
 void
 interpretar(Grade** linhas, Grade** intérprete) {
-#define _linhas (*linhas)
-#define _intérprete (*intérprete)
+#if !defined(interpretar__1)
 
-#define _expressões ((Expressão*) _intérprete.filho)
-#define _expressão ((Expressão) _intérprete.filho[0].elemento[_expressão_n - 1])
-#define _expressão_grade _intérprete.filho[0]
-#define _rastilho ((Rastilho*) _intérprete.filho[1].elemento)
+#define interpretar__1
+#define linhas__1                   (*linhas)
+#define intérprete_grade__1         ((*intérprete)[0])
+#define intérprete__1               (*(Intérprete*) intérprete_grade__1.elemento)
+#define expressões__1               (intérprete_grade__1.filho)
+#define expressão__1                ((Expressão) intérprete__1.filho[0].elemento[expressão_n - 1])
+#define expressão_grade__1          intérprete__1.filho[0]
+#define rastilho__1                 ((Rastilho*) intérprete__1.filho[1].elemento)
 
-    if (_intérprete->tipo != lsve_tipo_intérprete) { 
+#endif // #if !defined(interpretar__1)
+
+    if (intérprete_grade__1.tipo != lsve_tipo_intérprete) { 
         DESBRAGA_MENSAGEM("Grade não é do tipo correcto")
         goto fim;
     }
@@ -108,9 +221,11 @@ interpretar(Grade** linhas, Grade** intérprete) {
     expressão_n = 0
     ;
 
-    while(_linhas[linhas_n].índice == linhas_n) {
-        if (_linhas[linhas_n].tipo == tipo_linha) {
-            interpretar_linha(&_linhas[linhas_n], &_intérprete, &expressão_n);
+    while(linhas__1[linhas_n].índice == linhas_n) {
+        if (linhas__1[linhas_n].tipo == tipo_linha) {
+            expressões__1 = memória_re_allocar((expressão_n + 1) * sizeof(Grade), expressões__1);
+
+            interpretar_linha(&linhas__1[linhas_n], &intérprete_grade__1, &expressão_n);
             linhas_n++;
 
             goto fim;
@@ -118,11 +233,13 @@ interpretar(Grade** linhas, Grade** intérprete) {
     }
 
 fim:
-#undef _linhas 
-#undef _intérprete
-
-#undef _expressões
-#undef _expressão
-#undef _rastilho
+#undef interpretar__1
+#undef linhas__1
+#undef intérprete_grade__1
+#undef intérprete__1
+#undef expressões__1
+#undef expressão__1
+#undef expressão_grade__1
+#undef rastilho__1
 return;
 }

@@ -5,9 +5,8 @@
 #include <stdio.h>
 
 #define nil NULL
-
-// 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
-#define Linha char*
+// Nil para estructuras, sem ponteiros.
+#define nil_e {0}
 
 #define LINHA_NIL '\0'
 #define LINHA_SALTA '\n'
@@ -39,7 +38,14 @@ printf("%c", LINHA_SALTA); \
 
 
 
+
+
+
+
+// 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
 typedef void* Objecto;
+// Não se usa typedef aqui, se não se considera como outro tipo.
+typedef char* Linha;
 
 // Construcção de tipo dicotômico.
 typedef enum { fal, vero } Dico;
@@ -47,6 +53,10 @@ typedef enum { fal, vero } Dico;
 //-------------------------
 // DEFINIÇÕES FUNCIONAIS
 //-------------------------
+
+#define var_nome(var) #var
+
+#define definição(prefixo, base, sufixo) prefixo##base##sufixo
 
 #define linha_juntar(a, b) a ## b
 #define linha_juntar_cobra(a, b) a ## _ ## b
@@ -117,15 +127,17 @@ typedef enum { elems_tipo() } Tipo;
 
 typedef struct { elems_lato() } Lato;
 
-typedef struct {
-    struct { elems_lato() };
+typedef struct Grade Grade;
+struct Grade {
+	elems_lato();
+	
+	Linha constatação;
+	int índice;
+	Grade* filho;
+};
 
-    int índice;
-    struct Grade* filho;
-} Grade;
-
-void grade_introduzir(Grade** grade, int índice, Tipo tipo, Dico precisa_libertar, void* elemento);
-Dico grade_é_do_tipo(Tipo tipo, Grade grade);
+void grade_introduzir(Grade** grade, Grade modelo);
+Grade* grade_procurar(Linha constatação, Grade** grade);
 void grade_des_allocar(Grade** grade);
 
 void* memória_allocar(size_t tamanho);

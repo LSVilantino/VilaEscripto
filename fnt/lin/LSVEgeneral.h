@@ -8,16 +8,19 @@
 typedef enum { 
     elems_tipo(lsve_)
     lsve_tipo_grade,
-    lsve_tipo_intérprete
+    lsve_tipo_intérprete,
+    lsve_tipo_expressão,
+    lsve_tipo_operador
 }
 LSVE_Tipo;
 
-typedef struct {
-    int índice;
+typedef struct LSVE_Grade LSVE_Grade;
+struct LSVE_Grade {
+	elems_lato(LSVE_);
 
-    struct { elems_lato(LSVE_) };
-    struct LSVE_Grade* filho;
-} LSVE_Grade;
+    int índice;
+    LSVE_Grade* filho;
+};
 
 typedef enum {
 clave_ficha, // $

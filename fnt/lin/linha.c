@@ -19,9 +19,13 @@ linha_contar(const Linha linha) {
 void
 linha_introduzir_charactére(char charactére, int posição, Linha* linha)
 {
-	(*linha) = memória_re_allocar(posição + 2, (*linha));
-	(*linha)[posição] = charactére;
-	(*linha)[posição + 1] = LINHA_NIL;
+#define linha__1 (*linha)
+
+	linha__1 = memória_re_allocar(posição + 2, linha__1);
+	linha__1[posição] = charactére;
+	linha__1[posição + 1] = LINHA_NIL;
+
+#undef linha__1
 }
 
 void
@@ -92,12 +96,12 @@ linha_contém(Linha comparadôr, const Linha linha) {
 
 Dico
 linha_comparar(Linha comparadôr, const Linha linha) {
-	if (linha == NULL || comparadôr == NULL) return 0;
+	if (linha == NULL || comparadôr == NULL) return fal;
 
 	int linha_t = linha_contar(linha) - 1;
 	int comparadôr_t = linha_contar(comparadôr) - 1;
 
-	if (linha_t < comparadôr_t) return 0;
+	if (linha_t < comparadôr_t) return fal;
 
 	//printf("\n\n(/%s/%s\\)\n\n", linha, comparadôr);
 
@@ -105,13 +109,13 @@ linha_comparar(Linha comparadôr, const Linha linha) {
 	while (linha[n] != LINHA_NIL) {
 		//printf("(/%c―%c\\) ", linha[n], comparadôr[n]);
 		if (comparadôr[n] == linha[n]) {
-			if (n == linha_t) return 1;
+			if (n == linha_t) return vero;
 			n++;
 		}
-		else return 0;
+		else return fal;
 	}
 
-	return 0;
+	return fal;
 }
 
 Linha
