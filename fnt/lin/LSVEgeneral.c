@@ -7,7 +7,7 @@
 #include  <stdlib.h>
 
 Palaclave claves[] = {
-	{ (char*) ((char)EOF), clave_ficheiro_encerro },
+	{ (Linha) ((char)EOF), clave_ficheiro_encerro },
 	{ "%", clave_ficheiro_forçar_encerro },
 	{ "#", clave_ficheiro_comentário },
 	/*{ '(', clave_ficha_abre },
@@ -20,12 +20,13 @@ Palaclave claves[] = {
 	{ ">*", clave_corrêr },
 	{ ">>", clave_lêr_e_avançar },
 	{ ">", clave_lêr },
+	{ 0 }
 };
 
 Palaclave
 clave_têr_por_tipo(Palaclave_Tipo tipo) {
 	int i = 0;
-	while (claves[i].pala[0] != LINHA_NIL) {
+	while (claves[i].pala != 0) {
 		if (claves[i].tipo == tipo) break;
 		i++;
 	}
@@ -33,7 +34,8 @@ clave_têr_por_tipo(Palaclave_Tipo tipo) {
 	return claves[i];
 }
 
-Palaclave_Tipo clave_comparar(char* linha) {
+Palaclave_Tipo 
+clave_comparar(Linha linha) {
 	Palaclave clave;
 
 	int i = 0;

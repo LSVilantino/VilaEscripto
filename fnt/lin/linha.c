@@ -68,21 +68,21 @@ linha_duplicar(Linha linha) {
 }
 
 Dico
-linha_contém(Linha comparadôr, const Linha linha) {
-	int tamanho_comparadôr = 0;
-	while (comparadôr[tamanho_comparadôr] != LINHA_NIL) {
-		tamanho_comparadôr++;
+linha_contém(Linha comparador, const Linha linha) {
+	int tamanho_comparador = 0;
+	while (comparador[tamanho_comparador] != LINHA_NIL) {
+		tamanho_comparador++;
 	}
 
-	tamanho_comparadôr--;
+	tamanho_comparador--;
 
 	int n = 0;
 	int n_comparador = 0;
 	while (linha[n] != LINHA_NIL) {
 		//printf("(%c//%c) ", linha[n], comparador[n_comparador]);
-		if (linha[n] == comparadôr[n_comparador]) {
+		if (linha[n] == comparador[n_comparador]) {
 			//printf("(%d %c/%d %c - %d) ", n, linha[n], n_comparador, comparador[n_comparador], tamanho_comparador);
-			if (n_comparador == tamanho_comparadôr) return 1;
+			if (n_comparador == tamanho_comparador) return 1;
 			n_comparador++;
 		}
 		else {
@@ -95,20 +95,20 @@ linha_contém(Linha comparadôr, const Linha linha) {
 }
 
 Dico
-linha_comparar(Linha comparadôr, const Linha linha) {
-	if (linha == NULL || comparadôr == NULL) return fal;
+linha_comparar(Linha comparador, const Linha linha) {
+	if (linha == NULL || comparador == NULL) return fal;
 
 	int linha_t = linha_contar(linha) - 1;
-	int comparadôr_t = linha_contar(comparadôr) - 1;
+	int comparador_t = linha_contar(comparador) - 1;
 
-	if (linha_t < comparadôr_t) return fal;
+	if (linha_t < comparador_t) return fal;
 
-	//printf("\n\n(/%s/%s\\)\n\n", linha, comparadôr);
+	//printf("\n\n(/%s/%s\\)\n\n", linha, comparador);
 
 	int n = 0;
 	while (linha[n] != LINHA_NIL) {
-		//printf("(/%c―%c\\) ", linha[n], comparadôr[n]);
-		if (comparadôr[n] == linha[n]) {
+		//printf("(/%c―%c\\) ", linha[n], comparador[n]);
+		if (comparador[n] == linha[n]) {
 			if (n == linha_t) return vero;
 			n++;
 		}
@@ -118,15 +118,17 @@ linha_comparar(Linha comparadôr, const Linha linha) {
 	return fal;
 }
 
-Linha
-linha_aparar(Linha linha) {
-	while (*linha == ESPAÇO) linha++;
+void
+linha_aparar(Linha* linha) {
+#define linha__1 (*linha)
 
-	Linha término = linha + linha_contar(linha) - 1; // Posição da linha a partir do sem-espaço.
-	while (término > linha && *término == ESPAÇO || *término == LINHA_SALTA || *término == '\r' || *término == '\t') término--;
+	while (*linha__1 == ESPAÇO) linha__1++;
+
+	Linha término = linha__1 + linha_contar(linha__1) - 1; // Posição da linha a partir do sem-espaço.
+	while (término > linha__1 && *término == ESPAÇO || *término == LINHA_SALTA || *término == '\r' || *término == '\t') término--;
 	término[1] = LINHA_NIL;
 
 	//printf("%s\n", linha);
 
-	return linha;
+#undef linha__1
 }

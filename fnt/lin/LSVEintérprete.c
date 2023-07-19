@@ -1,6 +1,7 @@
 #include "LSVEintérprete.h"
-
 #include "LSVEgeneral.h"
+
+#include "general.h"
 #include "linha.h"
 #include "pilha.h"
 #include "ficheiro.h"
@@ -19,7 +20,7 @@ void operação_re_definir(int operador_n, Grade* expressão, Expectação expec
 #define expressão__3            (*expressão)
 #define operadores__3           (expressão__3.filho)
 #define operador_grade__3       (operadores__3[operador_n])
-#define operador__3             (*(Operação*) operador_grade__3.elemento)
+#define operador__3             (**(Operação**) &operador_grade__3.elemento)
 
 #endif // #if !defined(operação_re_definir__3)
 
@@ -52,8 +53,21 @@ void operação_re_definir(int operador_n, Grade* expressão, Expectação expec
 #undef operação_re_definir__3
 #undef expressão__3
 #undef operadores__3
+#undef operador_grade__3
 #undef operador__3
 }
+
+
+typedef struct {
+	int
+    linha_n,
+    operador_n,
+    operador_linha_n,
+    clave_n,
+    ficha_n,
+    pula
+    ;
+} TF_interpretar;
 
 void 
 interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
@@ -66,17 +80,18 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 #define rastilho__2				(*(Rastilho*) &intérprete__2.filho[1].elemento)
 #define expressão_n__2			(*expressão_n)
 #define expressões__2			(intérprete_grade__2.filho)
-#define expressão__2			((Expressão) intérprete_grade__2.filho[0].elemento[expressão_n__2])
-#define expressão_grade__2		(intérprete_grade__2.filho[expressão_n__2])
+#define expressão__2			((Expressão) expressões__2[0].elemento[expressão_n__2])
+#define expressão_grade__2		(expressões__2[expressão_n__2])
 #define operadores_grade__2		(expressão_grade__2.filho)
-#define operadores__2			(*(Operação**) &expressão_grade__2.filho[operador_n].elemento)
-#define operador__2				((*(Operação**) &expressão_grade__2.filho[operador_n].elemento)[operador_n])
-#define operador_grade__2		(expressão_grade__2.filho[operador_n])
+#define operadores__2			(*(Operação**) &operadores_grade__2[operador_n].elemento)
+#define operador__2				((operadores__2)[0])
+#define operador_grade__2		(operadores_grade__2[operador_n])
+#define operador_linha__2       (*(Linha*) &linha_grade->elemento)
 #define recúo__2                recúo - 1
 
 #endif // #if !defined(interpretar_linha__2)
 
-	int
+    int
     linha_n = 0,
 
     operador_n = 0,
@@ -101,7 +116,7 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
     grade_introduzir(&expressões__2, 
         (Grade) {
-        .índice = 0, 
+        .índice = expressão_n__2,
         .constatação = var_nome(expressão),
         .tipo = lsve_tipo_expressão, 
         .precisa_libertar = vero, 
@@ -109,18 +124,6 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
         }
     );
 
-    expressão_grade__2.filho = nil;
-
-    grade_introduzir(&operadores_grade__2, 
-        (Grade) {
-        .índice = 0, 
-        .constatação = var_nome(operação),
-        .tipo = lsve_tipo_operador, 
-        .precisa_libertar = vero, 
-        .elemento = nil
-        }
-    );
-    
     operação_re_definir(operador_n, &expressão_grade__2, expectação__concedido, operação__concedido, 1);
 
     while(recúo > 1) {
@@ -161,13 +164,173 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // MUDAR AS LINHAS PELO FILHO NA GRADE
+        // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+        Grade* linha_grade = grade_procurar(var_nome(linha), &operadores_grade__2);
+
+
+		/*
+			Ao conceder uma clave, espera-se uma concessão.
+		
+			Se a concessão vier antes da clave, será tratada como clave e a concessão não será reconhecida.
+			Se a concessão vier antes e depois da clave, a primeira concessão fará parte do nome da clave.
+			Se a concessão vier antes, depois da clave, e antes ou depois do valôr, será tratada como valôr
+			e/ou nome da clave.
+		*/
+		if (operador__2.expectação == expectação__concessão) {
+			if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére &&
+				clave_têr_por_tipo(clave_ficha).pala[1] == pilha.conteúdo[recúo - 2])
+			{
+				linha_aparar(&operador_linha__2);
+
+				operador_n++;
+				operação_re_definir(operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 1);
+
+				operador_linha_n = 0;
+				operador__2.expectação = expectação__nil;
+				operador__2.tipo = operação__concessão_objectiva;
+
+				pula = 1;
+				continue;
+			}
+
+			if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére) {
+				linha_aparar(&operador_linha__2);
+
+				operador_n++;
+				operação_re_definir(operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 2);
+
+				operador_linha_n = 0;
+				operador_linha__2[operador_linha_n] = charactére;
+				operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+
+				DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
+
+				if (clave_têr_por_tipo(clave_corrêr).pala[1] == pilha.conteúdo[recúo - 2]) {
+					operador_linha_n++;
+					operador_linha__2[operador_linha_n] = pilha.conteúdo[recúo - 2];
+					operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+
+					operador__2.tipo = operação__concessão_corredora;
+
+					pula = 1;
+
+					DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
+				}
+
+				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 2]) {
+					operador_linha_n++;
+					operador_linha__2[operador_linha_n] = pilha.conteúdo[recúo - 2];
+					operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+
+					operador__2.tipo = operação__concessão_passiva;
+
+					pula = 1;
+
+					DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
+				}
+
+				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 3]) {
+					operador_linha_n++;
+					operador_linha__2[operador_linha_n] = pilha.conteúdo[recúo - 3];
+					operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+
+					operador__2.tipo = operação__concessão_selectiva;
+
+					pula = 2;
+
+					DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
+				}
+			}
+
+			if (operador__2.tipo == operação__concedido) operador__2.expectação = expectação__concedido;
+			else if (operador__2.tipo == operação__concessão_directa ||
+				operador__2.tipo == operação__concessão_corredora ||
+				operador__2.tipo == operação__concessão_passiva ||
+				operador__2.tipo == operação__concessão_selectiva
+				) {
+				linha_aparar(&operador_linha__2);
+				operador_linha_n = 0;
+
+				operador_n++;
+				operação_re_definir(operador_n, &expressão_grade__2, expectação__nil, operação__valôr, 1);
+				continue;
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         if (operador__2.expectação == expectação__concedido ||
             operador__2.expectação == expectação__nil
         )
 		{
-            Grade* linha_grade = grade_procurar(var_nome(linha), &operadores_grade__2);
-            linha_introduzir_charactére(charactére, operador_linha_n, (Linha*) &linha_grade->elemento);
-			DESBRAGA_MENSAGEM("%c", ((Linha) linha_grade->elemento)[operador_linha_n]);
+            linha_introduzir_charactére(charactére, operador_linha_n, &operador_linha__2);
+			DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[operador_linha_n], operador__2.índice);
 
 			operador_linha_n++;
 
@@ -177,8 +340,8 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 fim:
 
-free(pilha.conteúdo);
-free(ficha);
+memória_des_allocar(&pilha.conteúdo);
+memória_des_allocar(&ficha);
 
 #undef interpretar_linha__2
 #undef linha__2
@@ -192,6 +355,8 @@ free(ficha);
 #undef operadores_grade__2
 #undef operadores__2
 #undef operador__2
+#undef operador_grade__2
+#undef operador_linha__2
 #undef recúo__2
 return;
 }

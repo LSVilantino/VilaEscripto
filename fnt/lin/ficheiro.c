@@ -99,7 +99,7 @@ ficheiro_lêr(Linha caminho) {
 
 	// Fecha o ficheiro e libera variáveis.
     fclose(ficheiro);
-    free(pilha.conteúdo);
+    memória_des_allocar(&pilha.conteúdo);
 
     return linhas;
 }

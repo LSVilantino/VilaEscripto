@@ -143,5 +143,6 @@ void grade_des_allocar(Grade** grade);
 void* memória_allocar(size_t tamanho);
 void* memória_preên_allocar(size_t tamanho_allocação, size_t tamanho_tipo);
 void* memória_re_allocar(size_t tamanho, void* p);
+void memória_des_allocar(void** ponteiro);
 
 #endif // !_CABEÇALHO_GENERAL

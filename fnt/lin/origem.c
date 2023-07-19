@@ -46,7 +46,7 @@ int main(int argquan, char** argumentos) {
 
 	if(ficheiroLSVE) {
 		Grade* ficheiroLSVE_linhas = ficheiro_lêr(ficheiroLSVE);
-		//interpretar(ficheiroLSVE_linhas, intérprete);
+		//interpretar(ficheiroLSVE_linhas, grade_intérprete);
 		grade_des_allocar(&ficheiroLSVE_linhas);
 	}
 

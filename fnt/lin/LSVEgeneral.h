@@ -62,10 +62,11 @@ clave_lêr_e_escolher // >>>
 } Palaclave_Tipo;
 
 typedef struct {
-	const char* pala;
+	Linha pala;
 	Palaclave_Tipo tipo;
 } Palaclave;
 
 Palaclave clave_têr_por_tipo(Palaclave_Tipo tipo);
+Palaclave_Tipo clave_comparar(Linha linha);
 
 #endif // !_CABEÇALHO_LSVE_GENERAL

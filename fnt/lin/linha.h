@@ -39,15 +39,15 @@ Linha linha_duplicar(Linha linha);
 /*
 	Valida se uma linha está contida em outra.
 */
-Dico linha_contém(Linha comparadôr, const Linha linha);
+Dico linha_contém(Linha comparador, const Linha linha);
 /*
 	Comparar o conteúdo de duas linhas.
 */
-Dico linha_comparar(Linha comparadôr, const Linha linha);
+Dico linha_comparar(Linha comparador, const Linha linha);
 
 /*
 Remove espaços do início e fim da linha.
 */
-Linha linha_aparar(Linha linha);
+void linha_aparar(Linha* linha);
 
 #endif // !_CABEÇALHO_LINHA
