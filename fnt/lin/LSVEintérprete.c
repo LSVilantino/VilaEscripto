@@ -67,7 +67,31 @@ typedef struct {
     ficha_n,
     pula
     ;
-} TF_interpretar;
+
+	char charactére;
+
+	void (*introduzir_concedido)(TF_Interpretar* tf, Operação* operador, Linha* operador_linha);
+} TF_Interpretar;
+
+void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Operação* operador, Linha* operador_linha) {
+#define tf__4 (*tf)
+#define operador__4 (*operador)
+#define operador_linha__4 (*operador_linha)
+
+	if (operador__4.expectação == expectação__concedido ||
+		operador__4.expectação == expectação__nil
+	)
+	{
+		linha_introduzir_charactére(tf__4.charactére, tf__4.operador_linha_n, &operador_linha__4);
+		DESBRAGA_MENSAGEM("%c, %d", operador_linha__4[tf__4.operador_linha_n], operador__4.índice);
+
+		tf__4.operador_linha_n++;
+
+		if (operador__4.tipo == operação__concedido) operador__4.expectação = expectação__concessão;
+	}
+
+#undef tf__4
+}
 
 void 
 interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
@@ -83,25 +107,28 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 #define expressão__2			((Expressão) expressões__2[0].elemento[expressão_n__2])
 #define expressão_grade__2		(expressões__2[expressão_n__2])
 #define operadores_grade__2		(expressão_grade__2.filho)
-#define operadores__2			(*(Operação**) &operadores_grade__2[operador_n].elemento)
+#define operadores__2			(*(Operação**) &operadores_grade__2[tf.operador_n].elemento)
 #define operador__2				((operadores__2)[0])
-#define operador_grade__2		(operadores_grade__2[operador_n])
+#define operador_grade__2		(operadores_grade__2[tf.operador_n])
 #define operador_linha__2       (*(Linha*) &linha_grade->elemento)
 #define recúo__2                recúo - 1
 
 #endif // #if !defined(interpretar_linha__2)
 
-    int
-    linha_n = 0,
+	Grade* linha_grade = nil;
 
-    operador_n = 0,
-    operador_linha_n = 0,
+	TF_Interpretar tf = {
+		.linha_n = 0,
 
-    clave_n = 0,
-    ficha_n = 0,
+    	.operador_n = 0,
+    	.operador_linha_n = 0,
 
-    pula = 0
-    ;
+    	.clave_n = 0,
+    	.ficha_n = 0,
+
+    	.pula = 0,
+		.introduzir_concedido = interpretar_linha__introduzir_concedido
+	};
 
     Pilha pilha = pilha_construir((Lato[])
     {
@@ -124,7 +151,7 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
         }
     );
 
-    operação_re_definir(operador_n, &expressão_grade__2, expectação__concedido, operação__concedido, 1);
+    operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__concedido, operação__concedido, 1);
 
     while(recúo > 1) {
         /* Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
@@ -132,14 +159,14 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 		*
 		* Se a linha não estiver ao fim, introduz o último charactére à pilha.
 		*/
-		if (linha__2[linha_n] == LINHA_NIL) { recúo--; }
+		if (linha__2[tf.linha_n] == LINHA_NIL) { recúo--; }
 		else {
-			pilha_introduzir(linha__2[linha_n], &pilha);
+			pilha_introduzir(linha__2[tf.linha_n], &pilha);
 			
-            linha_n++;
+            tf.linha_n++;
 		}
         
-		char charactére = pilha.conteúdo[recúo__2];
+		tf.charactére = pilha.conteúdo[recúo__2];
         //DESBRAGA_MENSAGEM("%c", charactére)
 
         /*
@@ -151,10 +178,10 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 		*/
 
 
-		if (charactére == LINHA_NIL) continue;
+		if (tf.charactére == LINHA_NIL) continue;
 
-		if (pula != 0) {
-			pula--;
+		if (tf.pula != 0) {
+			tf.pula--;
 			continue;
 		}
 
@@ -197,7 +224,7 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
         // MUDAR AS LINHAS PELO FILHO NA GRADE
         // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
-        Grade* linha_grade = grade_procurar(var_nome(linha), &operadores_grade__2);
+        linha_grade = grade_procurar(var_nome(linha), &operadores_grade__2);
 
 
 		/*
@@ -209,68 +236,68 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 			e/ou nome da clave.
 		*/
 		if (operador__2.expectação == expectação__concessão) {
-			if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére &&
+			if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.charactére &&
 				clave_têr_por_tipo(clave_ficha).pala[1] == pilha.conteúdo[recúo - 2])
 			{
 				linha_aparar(&operador_linha__2);
 
-				operador_n++;
-				operação_re_definir(operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 1);
+				tf.operador_n++;
+				operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 1);
 
-				operador_linha_n = 0;
+				tf.operador_linha_n = 0;
 				operador__2.expectação = expectação__nil;
 				operador__2.tipo = operação__concessão_objectiva;
 
-				pula = 1;
+				tf.pula = 1;
 				continue;
 			}
 
-			if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == charactére) {
+			if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.charactére) {
 				linha_aparar(&operador_linha__2);
 
-				operador_n++;
-				operação_re_definir(operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 2);
+				tf.operador_n++;
+				operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 2);
 
-				operador_linha_n = 0;
-				operador_linha__2[operador_linha_n] = charactére;
-				operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+				tf.operador_linha_n = 0;
+				operador_linha__2[tf.operador_linha_n] = tf.charactére;
+				operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
 
-				DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
+				DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[tf.operador_linha_n], operador__2.índice);
 
 				if (clave_têr_por_tipo(clave_corrêr).pala[1] == pilha.conteúdo[recúo - 2]) {
-					operador_linha_n++;
-					operador_linha__2[operador_linha_n] = pilha.conteúdo[recúo - 2];
-					operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+					tf.operador_linha_n++;
+					operador_linha__2[tf.operador_linha_n] = pilha.conteúdo[recúo - 2];
+					operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
 
 					operador__2.tipo = operação__concessão_corredora;
 
-					pula = 1;
+					tf.pula = 1;
 
-					DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
+					DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[tf.operador_linha_n], operador__2.índice);
 				}
 
-				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 2]) {
-					operador_linha_n++;
-					operador_linha__2[operador_linha_n] = pilha.conteúdo[recúo - 2];
-					operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+				if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == pilha.conteúdo[recúo - 2]) {
+					tf.operador_linha_n++;
+					operador_linha__2[tf.operador_linha_n] = pilha.conteúdo[recúo - 2];
+					operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
 
 					operador__2.tipo = operação__concessão_passiva;
 
-					pula = 1;
+					tf.pula = 1;
 
-					DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
-				}
+					DESBRAGA_MENSAGEM("%c", operador_linha__2[tf.operador_linha_n]);
 
-				if (clave_têr_por_tipo(clave_lêr).pala[clave_n] == pilha.conteúdo[recúo - 3]) {
-					operador_linha_n++;
-					operador_linha__2[operador_linha_n] = pilha.conteúdo[recúo - 3];
-					operador_linha__2[operador_linha_n + 1] = LINHA_NIL;
+					if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == pilha.conteúdo[recúo - 3]) {
+						tf.operador_linha_n++;
+						operador_linha__2[tf.operador_linha_n] = pilha.conteúdo[recúo - 3];
+						operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
 
-					operador__2.tipo = operação__concessão_selectiva;
+						operador__2.tipo = operação__concessão_selectiva;
 
-					pula = 2;
+						tf.pula = 2;
 
-					DESBRAGA_MENSAGEM("%c", operador_linha__2[operador_linha_n]);
+						DESBRAGA_MENSAGEM("%c", operador_linha__2[tf.operador_linha_n]);
+					}
 				}
 			}
 
@@ -281,10 +308,10 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 				operador__2.tipo == operação__concessão_selectiva
 				) {
 				linha_aparar(&operador_linha__2);
-				operador_linha_n = 0;
+				tf.operador_linha_n = 0;
 
-				operador_n++;
-				operação_re_definir(operador_n, &expressão_grade__2, expectação__nil, operação__valôr, 1);
+				tf.operador_n++;
+				operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__nil, operação__valôr, 1);
 				continue;
 			}
 		}
@@ -322,20 +349,7 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 
 
-
-
-
-        if (operador__2.expectação == expectação__concedido ||
-            operador__2.expectação == expectação__nil
-        )
-		{
-            linha_introduzir_charactére(charactére, operador_linha_n, &operador_linha__2);
-			DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[operador_linha_n], operador__2.índice);
-
-			operador_linha_n++;
-
-			if (operador__2.tipo == operação__concedido) operador__2.expectação = expectação__concessão;
-		}
+		tf.introduzir_concedido(&tf, &operador__2, &operador_linha__2);
     }
 
 fim:
