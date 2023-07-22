@@ -58,7 +58,8 @@ void operação_re_definir(int operador_n, Grade* expressão, Expectação expec
 }
 
 
-typedef struct {
+typedef struct TF_Interpretar TF_Interpretar;
+struct TF_Interpretar{
 	int
     linha_n,
     operador_n,
@@ -68,10 +69,40 @@ typedef struct {
     pula
     ;
 
+	Pilha pilha; int recúo;
+	Linha ficha;
 	char charactére;
 
 	void (*introduzir_concedido)(TF_Interpretar* tf, Operação* operador, Linha* operador_linha);
-} TF_Interpretar;
+	Dico (*verificar_concessão_objectiva)(TF_Interpretar* tf, Grade* expressão_grade, Operação* operador, Linha* operador_linha);
+} ;
+
+Dico interpretar_linha__verificar_concessão_objectiva(TF_Interpretar* tf, Grade* expressão_grade, Operação* operador, Linha* operador_linha) {
+#define tf__5 (*tf)
+#define operador__5 (*operador)
+#define operador_linha__5 (*operador_linha)
+#define expressão_linha__5 (*expressão_grade)
+
+	if (clave_têr_por_tipo(clave_lêr).pala[tf__5.clave_n] == tf__5.charactére &&
+		clave_têr_por_tipo(clave_ficha).pala[1] == tf__5.pilha.conteúdo[tf__5.recúo - 2])
+	{
+		linha_aparar(&operador_linha__5);
+
+		tf__5.operador_n++;
+		operação_re_definir(tf__5.operador_n, &expressão_linha__5, expectação__valôr, operação__concessão_directa, 1);
+
+		tf__5.operador_linha_n = 0;
+		operador__5.expectação = expectação__nil;
+		operador__5.tipo = operação__concessão_objectiva;
+
+		tf__5.pula = 1;
+		return vero;
+	}
+
+	return fal;
+
+#undef tf__5
+}
 
 void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Operação* operador, Linha* operador_linha) {
 #define tf__4 (*tf)
@@ -111,7 +142,7 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 #define operador__2				((operadores__2)[0])
 #define operador_grade__2		(operadores_grade__2[tf.operador_n])
 #define operador_linha__2       (*(Linha*) &linha_grade->elemento)
-#define recúo__2                recúo - 1
+#define recúo__2                tf.recúo - 1
 
 #endif // #if !defined(interpretar_linha__2)
 
@@ -127,17 +158,19 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
     	.ficha_n = 0,
 
     	.pula = 0,
-		.introduzir_concedido = interpretar_linha__introduzir_concedido
+
+		.pilha = pilha_construir((Lato[])
+		{
+			(Lato) { tipo_tamanho, fal, &(int){3} }
+		}),
+
+		.ficha = memória_preên_allocar(1, sizeof(char)),
+
+		.introduzir_concedido = interpretar_linha__introduzir_concedido,
+		.verificar_concessão_objectiva = interpretar_linha__verificar_concessão_objectiva
 	};
 
-    Pilha pilha = pilha_construir((Lato[])
-    {
-        (Lato) { tipo_tamanho, fal, &(int){3} }
-    });
-
-    int recúo = pilha.recúo;
-
-    Linha ficha = memória_preên_allocar(1, sizeof(char));
+    tf.recúo = tf.pilha.recúo;
 
     DESBRAGA_MENSAGEM("LINHA A DESBRAGAR %s", linha__2)
 
@@ -153,20 +186,20 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
     operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__concedido, operação__concedido, 1);
 
-    while(recúo > 1) {
+    while(tf.recúo > 1) {
         /* Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
 		*  o último charactére armazenado.
 		*
 		* Se a linha não estiver ao fim, introduz o último charactére à pilha.
 		*/
-		if (linha__2[tf.linha_n] == LINHA_NIL) { recúo--; }
+		if (linha__2[tf.linha_n] == LINHA_NIL) { tf.recúo--; }
 		else {
-			pilha_introduzir(linha__2[tf.linha_n], &pilha);
+			pilha_introduzir(linha__2[tf.linha_n], &tf.pilha);
 			
             tf.linha_n++;
 		}
         
-		tf.charactére = pilha.conteúdo[recúo__2];
+		tf.charactére = tf.pilha.conteúdo[recúo__2];
         //DESBRAGA_MENSAGEM("%c", charactére)
 
         /*
@@ -236,19 +269,8 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 			e/ou nome da clave.
 		*/
 		if (operador__2.expectação == expectação__concessão) {
-			if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.charactére &&
-				clave_têr_por_tipo(clave_ficha).pala[1] == pilha.conteúdo[recúo - 2])
+			if (tf.verificar_concessão_objectiva(&tf, &expressão_grade__2, &operador__2, &operador_linha__2))
 			{
-				linha_aparar(&operador_linha__2);
-
-				tf.operador_n++;
-				operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 1);
-
-				tf.operador_linha_n = 0;
-				operador__2.expectação = expectação__nil;
-				operador__2.tipo = operação__concessão_objectiva;
-
-				tf.pula = 1;
 				continue;
 			}
 
@@ -264,9 +286,9 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 				DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[tf.operador_linha_n], operador__2.índice);
 
-				if (clave_têr_por_tipo(clave_corrêr).pala[1] == pilha.conteúdo[recúo - 2]) {
+				if (clave_têr_por_tipo(clave_corrêr).pala[1] == tf.pilha.conteúdo[tf.recúo - 2]) {
 					tf.operador_linha_n++;
-					operador_linha__2[tf.operador_linha_n] = pilha.conteúdo[recúo - 2];
+					operador_linha__2[tf.operador_linha_n] = tf.pilha.conteúdo[tf.recúo - 2];
 					operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
 
 					operador__2.tipo = operação__concessão_corredora;
@@ -276,9 +298,9 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 					DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[tf.operador_linha_n], operador__2.índice);
 				}
 
-				if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == pilha.conteúdo[recúo - 2]) {
+				if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.pilha.conteúdo[tf.recúo - 2]) {
 					tf.operador_linha_n++;
-					operador_linha__2[tf.operador_linha_n] = pilha.conteúdo[recúo - 2];
+					operador_linha__2[tf.operador_linha_n] = tf.pilha.conteúdo[tf.recúo - 2];
 					operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
 
 					operador__2.tipo = operação__concessão_passiva;
@@ -287,9 +309,9 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 					DESBRAGA_MENSAGEM("%c", operador_linha__2[tf.operador_linha_n]);
 
-					if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == pilha.conteúdo[recúo - 3]) {
+					if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.pilha.conteúdo[tf.recúo - 3]) {
 						tf.operador_linha_n++;
-						operador_linha__2[tf.operador_linha_n] = pilha.conteúdo[recúo - 3];
+						operador_linha__2[tf.operador_linha_n] = tf.pilha.conteúdo[tf.recúo - 3];
 						operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
 
 						operador__2.tipo = operação__concessão_selectiva;
@@ -354,8 +376,8 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 fim:
 
-memória_des_allocar(&pilha.conteúdo);
-memória_des_allocar(&ficha);
+memória_des_allocar(&tf.pilha.conteúdo);
+memória_des_allocar(&tf.ficha);
 
 #undef interpretar_linha__2
 #undef linha__2
