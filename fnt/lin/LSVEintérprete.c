@@ -429,7 +429,10 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 
 
-
+		if (tf.charactére == LINHA_SALTA || tf.charactére == EOF) {
+			expressão_n__2++;
+			continue;
+		}
 
 
 
@@ -508,8 +511,8 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 fim:
 
-memória_des_allocar(&tf.pilha.conteúdo);
-memória_des_allocar(&tf.ficha);
+memória_des_allocar((void**) &tf.pilha.conteúdo);
+memória_des_allocar((void**) &tf.ficha);
 
 #if 0==0
 
@@ -561,13 +564,15 @@ interpretar(Grade** linhas, Grade** intérprete) {
 
     while(linhas__1[linhas_n].índice == linhas_n) {
         if (linhas__1[linhas_n].tipo == tipo_linha) {
-            expressões__1 = memória_re_allocar((expressão_n + 1) * sizeof(Grade), expressões__1);
+            intérprete_grade__1.filho = memória_re_allocar((expressão_n + 1) * sizeof(Grade), intérprete_grade__1.filho);
 
             interpretar_linha(&linhas__1[linhas_n], &intérprete_grade__1, &expressão_n);
             linhas_n++;
 
-            goto fim;
+			continue;
         }
+        
+		goto fim;
     }
 
 fim:
