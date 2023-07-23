@@ -57,7 +57,6 @@ void operação_re_definir(int operador_n, Grade* expressão, Expectação expec
 #undef operador__3
 }
 
-
 typedef struct TF_Interpretar TF_Interpretar;
 struct TF_Interpretar{
 	int
@@ -73,45 +72,26 @@ struct TF_Interpretar{
 	Linha ficha;
 	char charactére;
 
+	Dico (*clave_verificar_concessão_directa)(TF_Interpretar* tf, Grade* expressão_grade, Linha* operador_linha);
+	Dico (*clave_verificar_concessão_corredora)(TF_Interpretar* tf, Operação* operador, Linha* operador_linha);
+	Dico (*clave_verificar_concessão_objectiva)(TF_Interpretar* tf, Grade* expressão_grade, Linha* operador_linha);
+	Dico (*clave_verificar_concessão_passiva)(TF_Interpretar* tf, Operação* operador, Linha* operador_linha);
+	Dico (*clave_verificar_concessão_selectiva)(TF_Interpretar* tf, Operação* operador, Linha* operador_linha);
 	void (*introduzir_concedido)(TF_Interpretar* tf, Operação* operador, Linha* operador_linha);
-	Dico (*verificar_concessão_objectiva)(TF_Interpretar* tf, Grade* expressão_grade, Operação* operador, Linha* operador_linha);
+
+	void (*operador_aparar_e_re_definir)(TF_Interpretar* tf, Grade* expressão_grade, Linha* operador_linha);
 } ;
 
-Dico interpretar_linha__verificar_concessão_objectiva(TF_Interpretar* tf, Grade* expressão_grade, Operação* operador, Linha* operador_linha) {
-#define tf__5 (*tf)
-#define operador__5 (*operador)
-#define operador_linha__5 (*operador_linha)
-#define expressão_linha__5 (*expressão_grade)
-
-	if (clave_têr_por_tipo(clave_lêr).pala[tf__5.clave_n] == tf__5.charactére &&
-		clave_têr_por_tipo(clave_ficha).pala[1] == tf__5.pilha.conteúdo[tf__5.recúo - 2])
-	{
-		linha_aparar(&operador_linha__5);
-
-		tf__5.operador_n++;
-		operação_re_definir(tf__5.operador_n, &expressão_linha__5, expectação__valôr, operação__concessão_directa, 1);
-
-		tf__5.operador_linha_n = 0;
-		operador__5.expectação = expectação__nil;
-		operador__5.tipo = operação__concessão_objectiva;
-
-		tf__5.pula = 1;
-		return vero;
-	}
-
-	return fal;
-
-#undef tf__5
-}
-
 void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Operação* operador, Linha* operador_linha) {
-#define tf__4 (*tf)
-#define operador__4 (*operador)
-#define operador_linha__4 (*operador_linha)
+#if 0==0
 
-	if (operador__4.expectação == expectação__concedido ||
-		operador__4.expectação == expectação__nil
-	)
+#define tf__4 					(*tf)
+#define operador__4 			(*operador)
+#define operador_linha__4 		(*operador_linha)
+
+#endif // #if 0==0
+
+	if (operador__4.expectação == expectação__concedido || operador__4.expectação == expectação__nil)
 	{
 		linha_introduzir_charactére(tf__4.charactére, tf__4.operador_linha_n, &operador_linha__4);
 		DESBRAGA_MENSAGEM("%c, %d", operador_linha__4[tf__4.operador_linha_n], operador__4.índice);
@@ -121,7 +101,227 @@ void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Operação* ope
 		if (operador__4.tipo == operação__concedido) operador__4.expectação = expectação__concessão;
 	}
 
+#if 0==0
+
 #undef tf__4
+#undef operador__4
+#undef operador_linha__4
+
+#endif // #if 0==0
+}
+
+Dico interpretar_linha__clave_verificar_concessão_directa(TF_Interpretar* tf, Grade* expressão_grade, Linha* operador_linha) {
+#if 0==0
+
+#define tf__6 					(*tf)
+#define expressão_grade__6 		(*expressão_grade)
+#define operadores_grade__6		(expressão_grade__6.filho)
+#define operadores__6			(**(Operação**) &operadores_grade__6[tf__6.operador_n].elemento)
+#define operador__6				((operadores__6))
+#define operador_linha__6 		(*operador_linha)
+
+#endif // #if 0==0
+
+	Dico resultado = fal;
+
+	if (clave_têr_por_tipo(clave_lêr).pala[tf__6.clave_n] == tf__6.charactére) {
+		linha_aparar(&operador_linha__6);
+
+		tf__6.operador_n++;
+		operação_re_definir(tf__6.operador_n, &expressão_grade__6, expectação__valôr, operação__concessão_directa, 2);
+
+		tf__6.operador_linha_n = 0;
+		operador_linha__6[tf__6.operador_linha_n] = tf__6.charactére;
+		operador_linha__6[tf__6.operador_linha_n + 1] = LINHA_NIL;
+
+		DESBRAGA_MENSAGEM("%c, %d", operador_linha__6[tf__6.operador_linha_n], operador__6.índice);
+
+		resultado = vero;
+	}
+
+#if 0==0
+
+#undef tf__6
+#undef expressão_grade__6
+#undef operador__6
+#undef operador_linha__6
+
+#endif // #if 0==0
+
+return resultado;
+}
+
+Dico interpretar_linha__clave_verificar_concessão_corredora(TF_Interpretar* tf, Operação* operador, Linha* operador_linha) {
+#if 0==0
+
+#define tf__7 					(*tf)
+#define operador__7 			(*operador)
+#define operador_linha__7 		(*operador_linha)
+
+#endif // #if 0==0
+
+	Dico resultado = fal;
+
+	if (clave_têr_por_tipo(clave_corrêr).pala[1] == tf__7.pilha.conteúdo[tf__7.recúo - 2]) {
+		tf__7.operador_linha_n++;
+		operador_linha__7[tf__7.operador_linha_n] = tf__7.pilha.conteúdo[tf__7.recúo - 2];
+		operador_linha__7[tf__7.operador_linha_n + 1] = LINHA_NIL;
+
+		operador__7.tipo = operação__concessão_corredora;
+
+		tf__7.pula = 1;
+
+		DESBRAGA_MENSAGEM("%c, %d", operador_linha__7[tf__7.operador_linha_n], operador__7.índice);
+
+		resultado = vero;
+	}
+
+#if 0==0
+
+#undef tf__7
+#undef operador__7
+#undef operador_linha__7
+
+#endif // #if 0==0
+
+return resultado;
+}
+
+Dico interpretar_linha__clave_verificar_concessão_objectiva(TF_Interpretar* tf, Grade* expressão_grade, Linha* operador_linha) {
+#if 0==0
+
+#define tf__5 					(*tf)
+#define expressão_grade__5 		(*expressão_grade)
+#define operadores_grade__5		(expressão_grade__5.filho)
+#define operadores__5			(**(Operação**) &operadores_grade__5[tf__5.operador_n].elemento)
+#define operador__5				((operadores__5))
+#define operador_linha__5 		(*operador_linha)
+
+#endif // #if 0==0
+
+	Dico resultado = fal;
+
+	if (clave_têr_por_tipo(clave_ficha).pala[1] == tf__5.pilha.conteúdo[tf__5.recúo - 2])
+	{
+		linha_aparar(&operador_linha__5);
+
+		tf__5.operador_n++;
+		operação_re_definir(tf__5.operador_n, &expressão_grade__5, expectação__valôr, operação__concessão_directa, 1);
+
+		tf__5.operador_linha_n = 0;
+		operador__5.expectação = expectação__nil;
+		operador__5.tipo = operação__concessão_objectiva;
+
+		tf__5.pula = 1;
+		resultado = vero;
+	}
+
+#if 0==0
+
+#undef tf__5
+#undef expressão_grade__5
+#undef operadores_grade__5
+#undef operadores__5
+#undef operador__5
+#undef operador_linha__5
+
+#endif // #if 0==0
+
+return resultado;
+}
+
+Dico interpretar_linha__clave_verificar_concessão_passiva(TF_Interpretar* tf, Operação* operador, Linha* operador_linha) {
+#if 0==0
+
+#define tf__8 					(*tf)
+#define operador__8				(*operador)
+#define operador_linha__8 		(*operador_linha)
+
+#endif // #if 0==0
+	Dico resultado = fal;
+
+	if (clave_têr_por_tipo(clave_lêr).pala[tf__8.clave_n] == tf__8.pilha.conteúdo[tf__8.recúo - 2]) {
+		tf__8.operador_linha_n++;
+		operador_linha__8[tf__8.operador_linha_n] = tf__8.pilha.conteúdo[tf__8.recúo - 2];
+		operador_linha__8[tf__8.operador_linha_n + 1] = LINHA_NIL;
+
+		operador__8.tipo = operação__concessão_passiva;
+
+		tf__8.pula = 1;
+
+		DESBRAGA_MENSAGEM("%c", operador_linha__8[tf__8.operador_linha_n]);
+
+		resultado = vero;
+	}
+
+
+#if 0==0
+
+#undef tf__8
+#undef operador__8
+#undef operador_linha__8
+
+#endif // #if 0==0
+
+return resultado;
+}
+
+Dico interpretar_linha__clave_verificar_concessão_selectiva(TF_Interpretar* tf, Operação* operador, Linha* operador_linha) {
+#if 0==0
+
+#define tf__9 					(*tf)
+#define operador__9				(*operador)
+#define operador_linha__9 		(*operador_linha)
+
+#endif //#if 0==0
+
+	Dico resultado = fal;
+
+	if (clave_têr_por_tipo(clave_lêr).pala[tf__9.clave_n] == tf__9.pilha.conteúdo[tf__9.recúo - 3]) {
+		tf__9.operador_linha_n++;
+		operador_linha__9[tf__9.operador_linha_n] = tf__9.pilha.conteúdo[tf__9.recúo - 3];
+		operador_linha__9[tf__9.operador_linha_n + 1] = LINHA_NIL;
+
+		operador__9.tipo = operação__concessão_selectiva;
+
+		tf__9.pula = 2;
+
+		DESBRAGA_MENSAGEM("%c", operador_linha__9[tf__9.operador_linha_n]);
+
+		resultado = vero;
+	}
+
+#if 0==0
+
+#undef tf__9
+#undef operador__9
+#undef operador_linha__9
+
+#endif // #if 0==0
+
+return resultado;
+}
+
+void interpretar_linha__operador_aparar_e_re_definir(TF_Interpretar* tf, Grade* expressão_grade, Linha* operador_linha) {
+#define tf__9 					(*tf)
+#define expressão_grade__9 		(*expressão_grade)
+#define operadores_grade__9		(expressão_grade__9.filho)
+#define operadores__9			(**(Operação**) &operadores_grade__9[tf__9.operador_n].elemento)
+#define operador__9				((operadores__9))
+#define operador_linha__9 		(*operador_linha)
+
+	linha_aparar(&operador_linha__9);
+	tf__9.operador_linha_n = 0;
+
+	tf__9.operador_n++;
+	operação_re_definir(tf__9.operador_n, &expressão_grade__9, expectação__nil, operação__valôr, 1);
+
+#undef tf__9
+#undef expressão_grade__9
+#undef operadores_grade__9
+#undef operadores__9
+#undef operador__9
+#undef operador_linha__9
 }
 
 void 
@@ -138,8 +338,8 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 #define expressão__2			((Expressão) expressões__2[0].elemento[expressão_n__2])
 #define expressão_grade__2		(expressões__2[expressão_n__2])
 #define operadores_grade__2		(expressão_grade__2.filho)
-#define operadores__2			(*(Operação**) &operadores_grade__2[tf.operador_n].elemento)
-#define operador__2				((operadores__2)[0])
+#define operadores__2			(**(Operação**) &operadores_grade__2[tf.operador_n].elemento)
+#define operador__2				((operadores__2))
 #define operador_grade__2		(operadores_grade__2[tf.operador_n])
 #define operador_linha__2       (*(Linha*) &linha_grade->elemento)
 #define recúo__2                tf.recúo - 1
@@ -167,7 +367,14 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 		.ficha = memória_preên_allocar(1, sizeof(char)),
 
 		.introduzir_concedido = interpretar_linha__introduzir_concedido,
-		.verificar_concessão_objectiva = interpretar_linha__verificar_concessão_objectiva
+		
+		.clave_verificar_concessão_directa = interpretar_linha__clave_verificar_concessão_directa,
+		.clave_verificar_concessão_corredora = interpretar_linha__clave_verificar_concessão_corredora,
+		.clave_verificar_concessão_objectiva = interpretar_linha__clave_verificar_concessão_objectiva,
+		.clave_verificar_concessão_passiva = interpretar_linha__clave_verificar_concessão_passiva,
+		.clave_verificar_concessão_selectiva = interpretar_linha__clave_verificar_concessão_selectiva,
+
+		.operador_aparar_e_re_definir = interpretar_linha__operador_aparar_e_re_definir
 	};
 
     tf.recúo = tf.pilha.recúo;
@@ -187,10 +394,11 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
     operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__concedido, operação__concedido, 1);
 
     while(tf.recúo > 1) {
-        /* Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
-		*  o último charactére armazenado.
-		*
-		* Se a linha não estiver ao fim, introduz o último charactére à pilha.
+        /* 
+			Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
+			o último charactére armazenado.
+
+			Se a linha não estiver ao fim, introduz o último charactére à pilha.
 		*/
 		if (linha__2[tf.linha_n] == LINHA_NIL) { tf.recúo--; }
 		else {
@@ -254,9 +462,6 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 
 
 
-        // MUDAR AS LINHAS PELO FILHO NA GRADE
-        // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
         linha_grade = grade_procurar(var_nome(linha), &operadores_grade__2);
 
 
@@ -269,106 +474,33 @@ interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n) {
 			e/ou nome da clave.
 		*/
 		if (operador__2.expectação == expectação__concessão) {
-			if (tf.verificar_concessão_objectiva(&tf, &expressão_grade__2, &operador__2, &operador_linha__2))
-			{
-				continue;
-			}
-
-			if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.charactére) {
-				linha_aparar(&operador_linha__2);
-
-				tf.operador_n++;
-				operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__valôr, operação__concessão_directa, 2);
-
-				tf.operador_linha_n = 0;
-				operador_linha__2[tf.operador_linha_n] = tf.charactére;
-				operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
-
-				DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[tf.operador_linha_n], operador__2.índice);
-
-				if (clave_têr_por_tipo(clave_corrêr).pala[1] == tf.pilha.conteúdo[tf.recúo - 2]) {
-					tf.operador_linha_n++;
-					operador_linha__2[tf.operador_linha_n] = tf.pilha.conteúdo[tf.recúo - 2];
-					operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
-
-					operador__2.tipo = operação__concessão_corredora;
-
-					tf.pula = 1;
-
-					DESBRAGA_MENSAGEM("%c, %d", operador_linha__2[tf.operador_linha_n], operador__2.índice);
+			if (tf.clave_verificar_concessão_directa(&tf, &expressão_grade__2, &operador_linha__2)) {				
+				if (tf.clave_verificar_concessão_objectiva(&tf, &expressão_grade__2, &operador_linha__2))
+				{
+					continue;
 				}
 
-				if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.pilha.conteúdo[tf.recúo - 2]) {
-					tf.operador_linha_n++;
-					operador_linha__2[tf.operador_linha_n] = tf.pilha.conteúdo[tf.recúo - 2];
-					operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
+				if (tf.clave_verificar_concessão_corredora(&tf, &operador__2, &operador_linha__2)) {
+					tf.operador_aparar_e_re_definir(&tf, &expressão_grade__2, &operador_linha__2);
+					continue;
+				}
 
-					operador__2.tipo = operação__concessão_passiva;
-
-					tf.pula = 1;
-
-					DESBRAGA_MENSAGEM("%c", operador_linha__2[tf.operador_linha_n]);
-
-					if (clave_têr_por_tipo(clave_lêr).pala[tf.clave_n] == tf.pilha.conteúdo[tf.recúo - 3]) {
-						tf.operador_linha_n++;
-						operador_linha__2[tf.operador_linha_n] = tf.pilha.conteúdo[tf.recúo - 3];
-						operador_linha__2[tf.operador_linha_n + 1] = LINHA_NIL;
-
-						operador__2.tipo = operação__concessão_selectiva;
-
-						tf.pula = 2;
-
-						DESBRAGA_MENSAGEM("%c", operador_linha__2[tf.operador_linha_n]);
+				if (tf.clave_verificar_concessão_passiva(&tf, &operador__2, &operador_linha__2)) {
+					if (tf.clave_verificar_concessão_selectiva(&tf, &operador__2, &operador_linha__2)) {
+						tf.operador_aparar_e_re_definir(&tf, &expressão_grade__2, &operador_linha__2);
+						continue;	
 					}
+
+					tf.operador_aparar_e_re_definir(&tf, &expressão_grade__2, &operador_linha__2);
+					continue;
 				}
-			}
 
-			if (operador__2.tipo == operação__concedido) operador__2.expectação = expectação__concedido;
-			else if (operador__2.tipo == operação__concessão_directa ||
-				operador__2.tipo == operação__concessão_corredora ||
-				operador__2.tipo == operação__concessão_passiva ||
-				operador__2.tipo == operação__concessão_selectiva
-				) {
-				linha_aparar(&operador_linha__2);
-				tf.operador_linha_n = 0;
-
-				tf.operador_n++;
-				operação_re_definir(tf.operador_n, &expressão_grade__2, expectação__nil, operação__valôr, 1);
+				tf.operador_aparar_e_re_definir(&tf, &expressão_grade__2, &operador_linha__2);
 				continue;
 			}
+
+			operador__2.expectação = expectação__concedido;
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 		tf.introduzir_concedido(&tf, &operador__2, &operador_linha__2);
@@ -378,6 +510,8 @@ fim:
 
 memória_des_allocar(&tf.pilha.conteúdo);
 memória_des_allocar(&tf.ficha);
+
+#if 0==0
 
 #undef interpretar_linha__2
 #undef linha__2
@@ -394,6 +528,9 @@ memória_des_allocar(&tf.ficha);
 #undef operador_grade__2
 #undef operador_linha__2
 #undef recúo__2
+
+#endif // #if 0==0
+
 return;
 }
 
@@ -434,6 +571,11 @@ interpretar(Grade** linhas, Grade** intérprete) {
     }
 
 fim:
+
+return;
+
+#if 0==0
+
 #undef interpretar__1
 #undef linhas__1
 #undef intérprete_grade__1
@@ -442,5 +584,6 @@ fim:
 #undef expressão__1
 #undef expressão_grade__1
 #undef rastilho__1
-return;
+
+#endif // #if 0==0
 }

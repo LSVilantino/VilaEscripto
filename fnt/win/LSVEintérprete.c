@@ -15,15 +15,15 @@ LINHA rastilho_definir_linha_de_erro(Rastilho_Tipo tipo) {
 
 	switch (tipo)
 	{
-	case rastilho__carece_concedido: { linha = "Carece concedido/clave, indefinido.\0"; break; }
-	case rastilho__carece_concessão: { linha = "Carece concessão/separador.\0"; break; }
-	case rastilho__carece_concessão_válida: { linha = "A concessão é inválida\0"; break; }
-	case rastilho__carece_ficha_válida: { linha = "A ficha é inválida\0"; break; }
-	case rastilho__carece_valôr: { linha = "Carece valôr à clave\0"; break; }
-	case rastilho__expressão_excedente: { linha = "Existem mais operadores do que o esperado, formatação incorrecta.\0"; break; }
-	case rastilho__encerro_forçado: { linha = "Encerrou-se o ficheiro forçadamente.\0"; break; }
-	case rastilho__comentário: { linha = "Expressão comentada.\0"; break; }
-	case rastilho__nil: { break; }
+	case rastilho__carece_concedido: 				{ linha = "Carece concedido/clave, indefinido."; 									break; }
+	case rastilho__carece_concessão: 				{ linha = "Carece concessão/separador."; 											break; }
+	case rastilho__carece_concessão_válida: 		{ linha = "A concessão é inválida"; 												break; }
+	case rastilho__carece_ficha_válida: 			{ linha = "A ficha é inválida"; 													break; }
+	case rastilho__carece_valôr: 					{ linha = "Carece valôr à clave"; 													break; }
+	case rastilho__expressão_excedente: 			{ linha = "Existem mais operadores do que o esperado, formatação incorrecta."; 		break; }
+	case rastilho__encerro_forçado: 				{ linha = "Encerrou-se o ficheiro forçadamente."; 									break; }
+	case rastilho__comentário: 						{ linha = "Expressão comentada."; 													break; }
+	case rastilho__nil: 							{ 																					break; }
 	default: break;
 	}
 
