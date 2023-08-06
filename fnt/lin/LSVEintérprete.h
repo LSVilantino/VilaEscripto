@@ -64,6 +64,12 @@ typedef struct {
     Linha linha;
 } Operação;
 
+Operação operação_construir_falha();
+Operação operação_daExpressão_têrPorTipo(Operação_Tipo tipo, Grade expressão);
+void operação_re_definir(int operador_n, Grade* expressão, Expectação expectação, Operação_Tipo operação_tipo, size_t linha_t);
+Operação operação_daExpressão_têrPorClave(Linha linha, Grade expressão);
+Dico operação_daExpressão_seTem_PorClave(Linha linha, Grade expressão);
+
 typedef struct {
 	int índice;
 
@@ -72,33 +78,27 @@ typedef struct {
     Linha linha;
 } Expressão;
 
+Expressão expressão_construir_falha();
+Grade expressões_têrPorClave(Linha clave, Grade** expressões);
+
 typedef struct {
     Expressão* expressão;
     Rastilho* rastilho;
 } Intérprete;
 
-Operação operação_construir_falha();
-Operação operação_daExpressão_têrPorTipo(Operação_Tipo tipo, Expressão expressão);
-void operação_re_definir(int operador_n, Grade* expressão, Expectação expectação, Operação_Tipo operação_tipo, size_t linha_t);
-Expressão expressão_construir_falha();
-Operação operação_daExpressão_têrPorClave(Linha linha, Expressão expressão);
-Dico operação_daExpressão_seTem_PorClave(Linha linha, Expressão expressão);
-Expressão expressões_têrPorClave(Linha clave, Expressão* expressões);
 
-/*
-	1 - ponteiro real
-	2 - ponteiro real
-			deve ter o mesmo nome do argumento referente na funcção interpretar, 
-			uma definição é compartilhada.
-	3 - ponteiro real, auto-incremental.
-*/
-void expressão_interpretar(const Grade* linha, Grade** intérprete, int* expressão_n);
 int intérprete_expressões_contar(Grade* intérprete);
 
 /*
-	1 - ponteiro real
-	2 - ponteiro real
+	1. ponteiro real de matriz
+	2. ponteiro real de matriz
 */
 void interpretar(Grade** linhas, Grade** intérprete);
+/*
+	1. ponteiro real
+	2. ponteiro real
+	3. ponteiro real, auto-incremental.
+*/
+void interpretar_linha(const Grade* linha, Grade* intérprete, int* expressão_n);
 
 #endif // !_CABEÇALHO_LSVE_INTÉRPRETE

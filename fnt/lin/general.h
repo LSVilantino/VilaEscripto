@@ -1,21 +1,26 @@
 #ifndef _CABEÇALHO_GENERAL
 #define _CABEÇALHO_GENERAL
 
+// Estes não têm utilidade funccional, servem somente
+// para definir regiões de definições.
+#define DEFINIÇÃO
+#define DES_DEFINIÇÃO
+
 #include <stdlib.h>
 #include <stdio.h>
 
+// --------------------------------------------------
+
 #define nil NULL
 // Nil para estructuras, sem ponteiros.
-#define nil_e {0}
+#define nil_e { 0 }
 
 #define LINHA_NIL '\0'
+
 #define LINHA_SALTA '\n'
 #define ESPAÇO ' '
 #define FICHEIRO_MODO_LEITURA "r"
 #define FICHEIRO_MODO_LEITURA_BINÁRIA "rb"
-
-
-
 
 /*
     construir depois alguns sinais indicadores para
@@ -30,22 +35,11 @@ printf("%c", LINHA_SALTA); \
 //#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
 //#endif
 
+// -------- Não se usa typedef em tipos voláteis. -------------
 
-
-
-
-
-
-
-
-
-
-
-
-// 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
 typedef void* Objecto;
-// Não se usa typedef aqui, se não se considera como outro tipo.
-typedef char* Linha;
+// 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
+#define Linha char*
 
 // Construcção de tipo dicotômico.
 typedef enum { fal, vero } Dico;
@@ -87,10 +81,10 @@ typedef enum { fal, vero } Dico;
 */
 
 #define elems_tipo(nome) \
-    linha_juntar(nome, tipo_charactére), /*char*/               \
-    linha_juntar(nome, tipo_linha),      /*char* ou Linha */    \
-    linha_juntar(nome, tipo_inteiro),    /*int*/                \
-    linha_juntar(nome, tipo_tamanho),    /*size_t*/             \
+    linha_juntar(nome, tipo_charactére), /* char */              \
+    linha_juntar(nome, tipo_linha),      /* char* ou Linha */    \
+    linha_juntar(nome, tipo_inteiro),    /* int */               \
+    linha_juntar(nome, tipo_tamanho),    /* size_t */            \
 
 typedef enum { elems_tipo() } Tipo;
 
@@ -116,7 +110,7 @@ typedef enum { elems_tipo() } Tipo;
     }
 
     Com o uso dos macros, é possível re-definir os campos sem
-    que se tornem muito irreparáveis à larga escala, ou
+    que se tornem muito i-reparáveis à larga escala, ou
     simplesmente para que não se tenha os efeitos de têr que
     replicar os mesmos campos em todos os lugares necessários.
 */

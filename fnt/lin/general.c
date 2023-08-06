@@ -6,81 +6,75 @@
 
 void 
 grade_introduzir(Grade** grade, Grade modelo) {
-#define grade__1 (*grade)
-#define alvo__1 grade__1[modelo.índice]
+#define grade_ (*grade)
+#define alvo_ grade_[modelo.índice]
 
-    grade__1 = memória_re_allocar((modelo.índice + 2) * sizeof(Grade), grade__1);
-    alvo__1.índice = modelo.índice;
-    alvo__1.constatação = modelo.constatação;
-    alvo__1.tipo = modelo.tipo;
-    alvo__1.precisa_libertar = modelo.precisa_libertar;
-    alvo__1.elemento = modelo.elemento;
-    alvo__1.filho = nil;
+    grade_ = memória_re_allocar((modelo.índice + 2) * sizeof(Grade), grade_);
+    alvo_.índice = modelo.índice;
+    alvo_.constatação = modelo.constatação;
+    alvo_.tipo = modelo.tipo;
+    alvo_.precisa_libertar = modelo.precisa_libertar;
+    alvo_.elemento = modelo.elemento;
+    alvo_.filho = nil;
 
-    grade__1[modelo.índice + 1].índice = -1;
+    grade_[modelo.índice + 1].índice = -1;
 
-#undef grade__1
-#undef alvo__1
+#undef grade_
+#undef alvo_
 }
 
 Grade*
 grade_procurar(Linha constatação, Grade** grade) {
-#ifndef grade_procurar__1
+#define grade_ (*grade)
 
-#define grade_procurar__1
-#define grade__1 (*grade)
+    Grade* resultado = &(Grade) { .índice = -1 };
 
-#endif // #ifndef grade_des_allocar
-
-    if(grade__1 != nil) {
+    if(grade_ != nil) {
         int i = 0;
         
-        while(grade__1[i].índice == i) {
-            if(linha_comparar(constatação, grade__1[i].constatação)) { 
-                DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade__1[i].índice, grade__1[i].constatação);
-                return &grade__1[i];
+        while(grade_[i].índice == i) {
+            if(linha_comparar(constatação, grade_[i].constatação)) { 
+                DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade_[i].índice, grade_[i].constatação);
+                resultado = &grade_[i];
+                goto fim;
             }
 
-            DESBRAGA_MENSAGEM("%d", grade__1[i].índice, i);
+            DESBRAGA_MENSAGEM("%d", grade_[i].índice, i);
 
-            Grade* resultado = grade_procurar(constatação, (Grade**) &grade__1[i].filho);
-            if (resultado->índice != -1) {
-                return resultado;
+            Grade* filho = grade_procurar(constatação, (Grade**) &grade_[i].filho);
+            if (filho->índice != -1) {
+                resultado = filho;
+                goto fim;
             }
 
             i++;
         }
     }
 
-#undef grade_procurar__1
-#undef grade__1
+fim: 
 
-    return &(Grade) { .índice = -1 };
+#undef grade_
+
+    return resultado;
 }
 
 void
 grade_des_allocar(Grade** grade) {
-#ifndef grade_des_allocar__1
-
-#define grade_des_allocar__1
-#define grade__1 (*grade)
-
-#endif // #ifndef grade_des_allocar
+#define grade_ (*grade)
 
     int i = 0;
-    while(grade__1[i].índice == i) {
-        DESBRAGA_MENSAGEM("%d - %d", grade__1[i].índice, i);
+    while(grade_[i].índice == i) {
+        DESBRAGA_MENSAGEM("%d - %d", grade_[i].índice, i);
 
-        if (grade__1[i].precisa_libertar == vero) { free(grade__1[i].elemento); }
-        if (grade__1[i].filho != nil) { grade_des_allocar((Grade**) &grade__1[i].filho); }
+        if (grade_[i].precisa_libertar == vero) { free(grade_[i].elemento); }
+        if (grade_[i].filho != nil) { grade_des_allocar((Grade**) &grade_[i].filho); }
 
         i++;
     }
 
-    free(grade__1);
+    free(grade_);
 
-#undef grade_des_allocar__1
-#undef grade__1
+#undef grade_
 }
 
 void*
@@ -118,15 +112,15 @@ memória_re_allocar(size_t tamanho, void* p) {
 
 void
 memória_des_allocar(void** ponteiro) {
-#define ponteiro__1 (*ponteiro)
+#define ponteiro_ (*ponteiro)
 
-    if (!ponteiro__1) {
+    if (!ponteiro_) {
         DESBRAGA_MENSAGEM("Não se deve des-allocar nil.");
         abort();
     }
 
-    free(ponteiro__1);
-    ponteiro__1 = nil;
+    free(ponteiro_);
+    ponteiro_ = nil;
 
-#undef ponteiro__1
+#undef ponteiro_
 }

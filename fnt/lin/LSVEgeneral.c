@@ -10,8 +10,6 @@ Palaclave claves[] = {
 	{ (Linha) ((char)EOF), clave_ficheiro_encerro },
 	{ "%", clave_ficheiro_forçar_encerro },
 	{ "#", clave_ficheiro_comentário },
-	/*{ '(', clave_ficha_abre },
-	{ ')', clave_ficha_fecha },*/
 	{ ">$()>", clave_lêr_avançar_e_procurar },
 	{ "$()", clave_ficha },
 	{ "(", clave_ficha_abre },
