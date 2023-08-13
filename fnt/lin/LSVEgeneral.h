@@ -10,7 +10,8 @@ typedef enum {
     lsve_tipo_grade,
     lsve_tipo_intérprete,
     lsve_tipo_expressão,
-    lsve_tipo_operador
+    lsve_tipo_operador,
+    lsve_tipo_rastilho,
 }
 LSVE_Tipo;
 

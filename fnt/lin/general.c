@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 void 
-grade_introduzir(Grade** grade, Grade modelo) {
+grade_introduzir(Grade* grade[], Grade modelo) {
 #define grade_ (*grade)
 #define alvo_ grade_[modelo.índice]
 
@@ -56,6 +56,18 @@ fim:
 #undef grade_
 
     return resultado;
+}
+
+Grade
+grade_falha() {
+    return (Grade) {
+        .índice = -1,
+        .constatação = LINHA_NIL,
+        .elemento = nil,
+        .tipo = tipo_nil,
+        .filho = nil,
+        .precisa_libertar = fal,
+    };
 }
 
 void

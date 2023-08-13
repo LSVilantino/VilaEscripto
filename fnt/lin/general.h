@@ -15,34 +15,35 @@
 // Nil para estructuras, sem ponteiros.
 #define nil_e { 0 }
 
-#define LINHA_NIL '\0'
-
-#define LINHA_SALTA '\n'
 #define ESPAÇO ' '
+
+#define LINHA_NIL '\0'
+#define LINHA_SALTA '\n'
+
 #define FICHEIRO_MODO_LEITURA "r"
 #define FICHEIRO_MODO_LEITURA_BINÁRIA "rb"
 
-/*
-    construir depois alguns sinais indicadores para
-    controlar o fluxo da aplicação
-*/
+//-------------------------
+// DEFINIÇÕES CONDICIONAIS
+//-------------------------
 
-//#if defined(DESBRAGA) && DESBRAGA > 0
-#define DESBRAGA_MENSAGEM(formato, ...) printf("DESBRAGA ― %s:%d:%s: " \
-formato, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-printf("%c", LINHA_SALTA); \
-//#else
-//#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
-//#endif
+#define se if
+#define ou_se else if
+#define se_não else
 
-// -------- Não se usa typedef em tipos voláteis. -------------
+#define a
+#define de
 
-typedef void* Objecto;
-// 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
-#define Linha char*
+#define igual ==
+#define iqual igual
+#define equal igual
 
-// Construcção de tipo dicotômico.
-typedef enum { fal, vero } Dico;
+#define differente !=
+#define diferente differente
+
+#define e &&
+#define ou |
+
 
 //-------------------------
 // DEFINIÇÕES FUNCIONAIS
@@ -54,6 +55,77 @@ typedef enum { fal, vero } Dico;
 
 #define linha_juntar(a, b) a ## b
 #define linha_juntar_cobra(a, b) a ## _ ## b
+
+/*
+    Exprime os membros de uma estructura. Deve ser usado
+    para extrair o nome de um membro de acordo com a 
+    estructura. 
+
+    Caso use o nome de membros em linhas brutas, 
+    este deve ser usado para que se mantenha rígido
+    o modelo da estructura ao longo do código.
+*/
+#define membros(estructura) ((estructura){0})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+=================IMPORTANTE======================
+    Construir depois alguns sinais indicadores para
+    controlar o fluxo da aplicação
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//#if defined(DESBRAGA) && DESBRAGA > 0
+#define DESBRAGA_MENSAGEM(formato, ...) printf("DESBRAGA ― %s:%d:%s: " \
+formato, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+printf("%c", LINHA_SALTA); \
+//#else
+//#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
+//#endif
+
+//-------------------------
+// DEFINIÇÕES CATEGÓRICAS
+//-------------------------
+
+// -------- Não se usa typedef em tipos voláteis. -------------
+
+typedef void* Objecto;
+// 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
+#define Linha char*
+
+// Construcção de tipo dicotômico.
+typedef enum { fal, vero } Dico;
 
 /*
     reutilização em enumeradores precisam seguir uma ordem
@@ -85,6 +157,7 @@ typedef enum { fal, vero } Dico;
     linha_juntar(nome, tipo_linha),      /* char* ou Linha */    \
     linha_juntar(nome, tipo_inteiro),    /* int */               \
     linha_juntar(nome, tipo_tamanho),    /* size_t */            \
+    linha_juntar(nome, tipo_nil),        /* nil */               \
 
 typedef enum { elems_tipo() } Tipo;
 
@@ -93,7 +166,21 @@ typedef enum { elems_tipo() } Tipo;
 //-------------------------
 
 /*
-    definem-se os elementos em macros, para que possam
+    Em alguns métodos, faz-se uso deste que enumera estructuras
+    marcadas por índices. 
+
+    Ao invés de indicar um específico, pode-se ordenar
+    uma destas opções quando calhar, que, o método que o 
+    especificar como parâmetro pode lidar a têr o objecto 
+    da lista.
+*/
+typedef enum {
+    índice__primeiro = -1,
+    índice__último = -2,
+} Índice;
+
+/*
+    Definem-se os elementos em macros, para que possam
     ser re-utilizados em estructuras.
 
     GCC não suporta declaração de estruturas anônimas
@@ -114,6 +201,7 @@ typedef enum { elems_tipo() } Tipo;
     simplesmente para que não se tenha os efeitos de têr que
     replicar os mesmos campos em todos os lugares necessários.
 */
+
 #define elems_lato(prefixoTipo)                 \
     linha_juntar(prefixoTipo, Tipo) tipo;       \
     Dico precisa_libertar;                      \
@@ -132,6 +220,7 @@ struct Grade {
 
 void grade_introduzir(Grade** grade, Grade modelo);
 Grade* grade_procurar(Linha constatação, Grade** grade);
+Grade grade_falha();
 void grade_des_allocar(Grade** grade);
 
 void* memória_allocar(size_t tamanho);
