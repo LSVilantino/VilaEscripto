@@ -49,12 +49,17 @@
 // DEFINIÇÕES FUNCIONAIS
 //-------------------------
 
-#define var_nome(var) #var
+#define linhar(linha) #linha
+#define linhar_ninhado(linha) linhar(linha)
 
-#define definição(prefixo, base, sufixo) prefixo##base##sufixo
+#define como(var, tipo) ((tipo) var)
+#define void_como(var, tipo) (*(tipo*) var)
 
 #define linha_juntar(a, b) a ## b
 #define linha_juntar_cobra(a, b) a ## _ ## b
+
+#define ficheiro_inclusão(prefixo, nome, sufixo) linhar(prefixo ## nome ## sufixo)
+#define ficheiro_inclusão_externo(prefixo, nome, sufixo) <prefixo ## nome ## sufixo>
 
 /*
     Exprime os membros de uma estructura. Deve ser usado
@@ -65,8 +70,7 @@
     este deve ser usado para que se mantenha rígido
     o modelo da estructura ao longo do código.
 */
-#define membros(estructura) ((estructura){0})
-
+#define estructura_instância(nome) (nome){0}
 
 
 
@@ -107,8 +111,9 @@
 
 
 //#if defined(DESBRAGA) && DESBRAGA > 0
-#define DESBRAGA_MENSAGEM(formato, ...) printf("DESBRAGA ― %s:%d:%s: " \
-formato, __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+#define DESBRAGA_MENSAGEM(formato, ...) \
+printf("DESBRAGA ― %s:%d:%s: " formato, \
+__FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
 printf("%c", LINHA_SALTA); \
 //#else
 //#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
@@ -119,6 +124,10 @@ printf("%c", LINHA_SALTA); \
 //-------------------------
 
 // -------- Não se usa typedef em tipos voláteis. -------------
+/* 
+    Tipos voláteis devem ser definidos, para que possam ser alterados
+    por outros utilizadores.
+*/
 
 typedef void* Objecto;
 // 'linha' (repare o 'L' minúsculo) muitas das vezes é nome de variáveis
@@ -173,10 +182,18 @@ typedef enum { elems_tipo() } Tipo;
     uma destas opções quando calhar, que, o método que o 
     especificar como parâmetro pode lidar a têr o objecto 
     da lista.
+
+    Métodos sem tratamento especial deve usar inteiro, somente.
 */
 typedef enum {
     índice__primeiro = -1,
     índice__último = -2,
+    /*  
+        "Qualquer" que for encontrado, geralmente usado quando
+        em conjunto a outros condicionais, em caso de 
+        identificações repetidas.
+    */
+    índice__qualquer = -3,
 } Índice;
 
 /*
@@ -219,7 +236,7 @@ struct Grade {
 };
 
 void grade_introduzir(Grade** grade, Grade modelo);
-Grade* grade_procurar(Linha constatação, Grade** grade);
+Grade* grade_procurar(Grade* grade[], Linha constatação, Índice índice);
 Grade grade_falha();
 void grade_des_allocar(Grade** grade);
 
@@ -228,4 +245,4 @@ void* memória_preên_allocar(size_t tamanho_allocação, size_t tamanho_tipo);
 void* memória_re_allocar(size_t tamanho, void* p);
 void memória_des_allocar(void** ponteiro);
 
-#endif // !_CABEÇALHO_GENERAL
+#endif // #ifndef _CABEÇALHO_GENERAL

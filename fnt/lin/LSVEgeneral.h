@@ -5,12 +5,14 @@
 
 #include <stdio.h>
 
+#define grade_como(var, tipo) (*(tipo*) (var).elemento)
+
 typedef enum { 
     elems_tipo(lsve_)
     lsve_tipo_grade,
     lsve_tipo_intérprete,
     lsve_tipo_expressão,
-    lsve_tipo_operador,
+    lsve_tipo_operação,
     lsve_tipo_rastilho,
 }
 LSVE_Tipo;

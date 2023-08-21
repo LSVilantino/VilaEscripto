@@ -6,8 +6,8 @@
 
 void 
 grade_introduzir(Grade* grade[], Grade modelo) {
-#define grade_ (*grade)
-#define alvo_ grade_[modelo.índice]
+#define grade_      (*grade)
+#define alvo_       grade_[modelo.índice]
 
     grade_ = memória_re_allocar((modelo.índice + 2) * sizeof(Grade), grade_);
     alvo_.índice = modelo.índice;
@@ -24,16 +24,27 @@ grade_introduzir(Grade* grade[], Grade modelo) {
 }
 
 Grade*
-grade_procurar(Linha constatação, Grade** grade) {
-#define grade_ (*grade)
+grade_procurar(Grade* grade[], Linha constatação, Índice índice) {
+#define grade_      (*grade)
+
+    se (índice iqual índice__último ou índice iqual índice__primeiro) { 
+        DESBRAGA_MENSAGEM("Não se busca pelo primeiro ou último índice neste método!");
+        abort(); 
+    }
+
+    se (grade_ igual nil) { 
+        DESBRAGA_MENSAGEM("A grade é vazía! Problemas podem occorrer se ler isso.");
+        abort();
+    }
 
     Grade* resultado = &(Grade) { .índice = -1 };
 
-    if(grade_ != nil) {
-        int i = 0;
-        
-        while(grade_[i].índice == i) {
-            if(linha_comparar(constatação, grade_[i].constatação)) { 
+    int i = 0;
+
+    // Aqui, retornam-se múltiplos, se tiverem.
+    se (índice iqual índice__qualquer) {
+        while(grade_[i].índice iqual i) {
+            se (linha_comparar(constatação, grade_[i].constatação)) { 
                 DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade_[i].índice, grade_[i].constatação);
                 resultado = &grade_[i];
                 goto fim;
@@ -41,12 +52,33 @@ grade_procurar(Linha constatação, Grade** grade) {
 
             DESBRAGA_MENSAGEM("%d", grade_[i].índice, i);
 
-            Grade* filho = grade_procurar(constatação, (Grade**) &grade_[i].filho);
-            if (filho->índice != -1) {
+            Grade* filho = grade_procurar((Grade**) &grade_[i].filho, constatação, índice);
+            se (filho->índice differente -1) {
                 resultado = filho;
                 goto fim;
             }
 
+            i++;
+        }
+    }
+    se_não {
+        while(grade_[i].índice iqual i) {
+            se (i iqual índice) {
+                se (linha_comparar(constatação, grade_[i].constatação)) { 
+                    DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade_[i].índice, grade_[i].constatação);
+                    resultado = &grade_[i];
+                    goto fim;
+                }
+
+                DESBRAGA_MENSAGEM("%d", grade_[i].índice, i);
+
+                Grade* filho = grade_procurar((Grade**) &grade_[i].filho, constatação, índice);
+                if (filho->índice != -1) {
+                    resultado = filho;
+                    goto fim;
+                }
+            }
+            
             i++;
         }
     }
