@@ -126,7 +126,7 @@ linha_comparar(Linha comparador, const Linha linha) {
 	}
 
 fim:
-	return fal;
+	return resultado;
 }
 
 void

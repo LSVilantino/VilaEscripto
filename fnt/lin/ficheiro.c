@@ -36,7 +36,7 @@ ficheiro_lêr(Linha caminho) {
     grade_introduzir(&linhas, 
         (Grade) {
         .índice = linha_n,
-        .constatação = "linha",
+        .constatação = LINHA_NIL,
         .tipo = tipo_linha,
         .precisa_libertar = vero,
         .elemento = nil,
@@ -80,7 +80,7 @@ ficheiro_lêr(Linha caminho) {
             grade_introduzir(&linhas, 
                 (Grade) {
                 .índice = linha_n,
-                .constatação = "linha",
+                .constatação = LINHA_NIL,
                 .tipo = tipo_linha,
                 .precisa_libertar = vero,
                 .elemento = nil,

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 void 
-grade_introduzir(Grade* grade[], Grade modelo) {
+grade_introduzir(Grade* *grade, Grade modelo) {
 #define grade_      (*grade)
 #define alvo_       grade_[modelo.índice]
 
@@ -17,15 +17,15 @@ grade_introduzir(Grade* grade[], Grade modelo) {
     alvo_.elemento = modelo.elemento;
     alvo_.filho = nil;
 
-    grade_[modelo.índice + 1].índice = -1;
+    grade_[modelo.índice + 1] = grade_falha(nil);
 
 #undef grade_
 #undef alvo_
 }
 
 Grade*
-grade_procurar(Grade* grade[], Linha constatação, Índice índice) {
-#define grade_      (*grade)
+grade_procurar(Grade* grade, Linha constatação, Índice índice) {
+#define grade_      grade
 
     se (índice iqual índice__último ou índice iqual índice__primeiro) { 
         DESBRAGA_MENSAGEM("Não se busca pelo primeiro ou último índice neste método!");
@@ -37,7 +37,7 @@ grade_procurar(Grade* grade[], Linha constatação, Índice índice) {
         abort();
     }
 
-    Grade* resultado = &(Grade) { .índice = -1 };
+    Grade* resultado = nil;
 
     int i = 0;
 
@@ -52,7 +52,11 @@ grade_procurar(Grade* grade[], Linha constatação, Índice índice) {
 
             DESBRAGA_MENSAGEM("%d", grade_[i].índice, i);
 
-            Grade* filho = grade_procurar((Grade**) &grade_[i].filho, constatação, índice);
+            se (grade_[i].filho iqual nil) {
+                goto fim;
+            }
+
+            Grade* filho = grade_procurar(&grade_[i].filho, constatação, índice);
             se (filho->índice differente -1) {
                 resultado = filho;
                 goto fim;
@@ -72,8 +76,12 @@ grade_procurar(Grade* grade[], Linha constatação, Índice índice) {
 
                 DESBRAGA_MENSAGEM("%d", grade_[i].índice, i);
 
-                Grade* filho = grade_procurar((Grade**) &grade_[i].filho, constatação, índice);
-                if (filho->índice != -1) {
+                se (grade_[i].filho iqual nil) {
+                    goto fim;
+                }
+
+                Grade* filho = grade_procurar(&grade_[i].filho, constatação, índice);
+                if (filho->índice differente -1) {
                     resultado = filho;
                     goto fim;
                 }
@@ -85,16 +93,19 @@ grade_procurar(Grade* grade[], Linha constatação, Índice índice) {
 
 fim: 
 
-#undef grade_
-
     return resultado;
+
+#undef grade_
 }
 
 Grade
-grade_falha() {
+grade_falha(Linha constatação) {
+
+    if (constatação iqual nil) constatação = LINHA_NIL;
+
     return (Grade) {
         .índice = -1,
-        .constatação = LINHA_NIL,
+        .constatação = constatação,
         .elemento = nil,
         .tipo = tipo_nil,
         .filho = nil,

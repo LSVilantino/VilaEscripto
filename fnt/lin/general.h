@@ -53,7 +53,7 @@
 #define linhar_ninhado(linha) linhar(linha)
 
 #define como(var, tipo) ((tipo) var)
-#define void_como(var, tipo) (*(tipo*) var)
+#define void_como(var, tipo) (*(tipo*) &var)
 
 #define linha_juntar(a, b) a ## b
 #define linha_juntar_cobra(a, b) a ## _ ## b
@@ -70,7 +70,7 @@
     este deve ser usado para que se mantenha rígido
     o modelo da estructura ao longo do código.
 */
-#define estructura_instância(nome) (nome){0}
+#define estructura_instância(nome) ((nome){0})
 
 
 
@@ -235,14 +235,14 @@ struct Grade {
 	Grade* filho;
 };
 
-void grade_introduzir(Grade** grade, Grade modelo);
-Grade* grade_procurar(Grade* grade[], Linha constatação, Índice índice);
-Grade grade_falha();
-void grade_des_allocar(Grade** grade);
+void grade_introduzir(Grade* *grade, Grade modelo);
+Grade* grade_procurar(Grade* grade, Linha constatação, Índice índice);
+Grade grade_falha(Linha constatação);
+void grade_des_allocar(Grade* *grade);
 
 void* memória_allocar(size_t tamanho);
 void* memória_preên_allocar(size_t tamanho_allocação, size_t tamanho_tipo);
 void* memória_re_allocar(size_t tamanho, void* p);
-void memória_des_allocar(void** ponteiro);
+void memória_des_allocar(void* *ponteiro);
 
 #endif // #ifndef _CABEÇALHO_GENERAL
