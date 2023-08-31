@@ -24,10 +24,10 @@ void pilha_introduzir(char charac, Pilha* pilha) {
     char* cópia = linha_duplicar(pilha->conteúdo);
 
     pilha->conteúdo[0] = charac;
-    cópia[pilha->tamanho_actual] = LINHA_NIL;
+    cópia[pilha->tamanho_actual] = linha_nil;
     if (pilha->tamanho_actual != pilha->recúo) pilha->tamanho_actual++;
 
-    pilha->conteúdo[pilha->recúo] = LINHA_NIL;
+    pilha->conteúdo[pilha->recúo] = linha_nil;
     
     for (int i = pilha->tamanho_actual - 1; i > 0; i--) pilha->conteúdo[i] = cópia[i - 1];
 

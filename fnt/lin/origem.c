@@ -28,31 +28,37 @@ int main(int argquan, Linha* argumentos) {
 		if (argumentos[1]) { ficheiroLSVE = argumentos[1]; }
 	}
 
-	Grade intérprete_grade = (Grade) {
+	Grade intérprete_grade = (Grade){
 		.índice = 0,
-		.constatação = linhar_ninhado(estructura_instância(Intérprete)),
+		.constatação = linhar_(estructura_instância(Intérprete)),
 		.tipo = lsve_tipo_intérprete,
-		.precisa_libertar = vero,
-		.filho = memória_allocar(sizeof(Grade))
+		.elemento = nil,
+		.elemento_precisa_libertar = fal,
+		.filho = nil,
+		.filho_precisa_libertar = fal,
 	};
 
 	grade_introduzir(&intérprete_grade.filho, 
-		(Grade) {
+		&(Grade) {
 		.índice = 0,
-		.constatação = linhar_ninhado(estructura_instância(Intérprete).expressão),
+		.constatação = linhar_(estructura_instância(Intérprete).expressão),
 		.tipo = lsve_tipo_expressão,
-		.precisa_libertar = vero,
-		.filho = memória_allocar(sizeof(Grade))
+		.elemento = nil,
+		.elemento_precisa_libertar = fal,
+		.filho = memória_allocar(sizeof(Grade)),
+		.filho_precisa_libertar = vero,
 		}
 	);
 
 	grade_introduzir(&intérprete_grade.filho, 
-		(Grade) {
+		&(Grade) {
 		.índice = 1,
-		.constatação = linhar_ninhado(estructura_instância(Intérprete).rastilho),
+		.constatação = linhar_(estructura_instância(Intérprete).rastilho),
 		.tipo = lsve_tipo_rastilho,
-		.precisa_libertar = vero,
-		.filho = memória_allocar(sizeof(Grade))
+		.elemento = nil,
+		.elemento_precisa_libertar = fal,
+		.filho = memória_allocar(sizeof(Grade)),
+		.filho_precisa_libertar = vero,
 		}
 	);
 

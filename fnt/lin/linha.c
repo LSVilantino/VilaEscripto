@@ -5,7 +5,7 @@
 
 void 
 linha_arrancar(size_t tamanho, Linha linha) {
-	for(int i = 0; i < tamanho; i++) { linha[i] = LINHA_NIL; }
+	for(int i = 0; i < tamanho; i++) { linha[i] = linha_nil; }
 }
 
 int
@@ -23,7 +23,7 @@ linha_introduzir_charactére(char charactére, int posição, Linha* linha)
 
 	linha_ = memória_re_allocar(posição + 2, linha_);
 	linha_[posição] = charactére;
-	linha_[posição + 1] = LINHA_NIL;
+	linha_[posição + 1] = linha_nil;
 
 #undef linha_
 }
@@ -42,7 +42,7 @@ linha_agregar_linha(Linha linhaIntroduzida, int* posição, Linha* linha)
 		(*linha)[(*posição)++] = linhaIntroduzida[linhaIntroduzida_n++];
 	}
 
-	(*linha)[linha_ttl] = LINHA_NIL;
+	(*linha)[linha_ttl] = linha_nil;
 }
 
 void
@@ -62,7 +62,7 @@ linha_duplicar(Linha linha) {
 		duplicata[i] = linha[i];
 	}
 
-	duplicata[tamanho] = LINHA_NIL;
+	duplicata[tamanho] = linha_nil;
 
     return duplicata;
 }
@@ -70,7 +70,7 @@ linha_duplicar(Linha linha) {
 Dico
 linha_contém(Linha comparador, const Linha linha) {
 	int tamanho_comparador = 0;
-	while (comparador[tamanho_comparador] != LINHA_NIL) {
+	while (comparador[tamanho_comparador] != linha_nil) {
 		tamanho_comparador++;
 	}
 
@@ -78,9 +78,9 @@ linha_contém(Linha comparador, const Linha linha) {
 
 	int n = 0;
 	int n_comparador = 0;
-	while (linha[n] != LINHA_NIL) {
-		if (linha[n] == comparador[n_comparador]) {
-			if (n_comparador == tamanho_comparador) return 1;
+	while (linha[n] != linha_nil) {
+		if (linha[n] iqual comparador[n_comparador]) {
+			if (n_comparador iqual tamanho_comparador) return 1;
 			n_comparador++;
 		}
 		else {
@@ -96,7 +96,7 @@ Dico
 linha_comparar(Linha comparador, const Linha linha) {
 	Dico resultado = fal;
 
-	if (linha == nil || comparador == nil) {
+	if (linha iqual nil || comparador iqual nil) {
 		resultado = fal; 
 		goto fim;
 	}
@@ -110,9 +110,9 @@ linha_comparar(Linha comparador, const Linha linha) {
 	}
 
 	int n = 0; 
-	while (linha[n] != LINHA_NIL) {
-		if (comparador[n] == linha[n]) {
-			if (n == linha_t) {
+	while (linha[n] != linha_nil) {
+		if (comparador[n] iqual linha[n]) {
+			if (n iqual linha_t) {
 				resultado = vero;
 				goto fim;
 			}
@@ -133,11 +133,11 @@ void
 linha_aparar(Linha* linha) {
 #define linha_ (*linha)
 
-	while (*linha_ == ESPAÇO) linha_++;
+	while (*linha_ iqual espaço) linha_++;
 
 	Linha término = linha_ + linha_contar(linha_) - 1; // Posição da linha a partir do sem-espaço.
-	while (término > linha_ && *término == ESPAÇO || *término == LINHA_SALTA) término--;
-	término[1] = LINHA_NIL;
+	while (término > linha_ e *término iqual espaço ou *término iqual linha_salta) término--;
+	término[1] = linha_nil;
 
 	//printf("%s\n", linha);
 
