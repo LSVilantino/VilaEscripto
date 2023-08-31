@@ -1,8 +1,10 @@
 #ifndef _CABEÇALHO_GENERAL
 #define _CABEÇALHO_GENERAL
 
-// Estes não têm utilidade funccional, servem somente
-// para definir regiões de definições.
+/*
+    Estes não têm utilidade funccional, servem somente
+    para definir regiões de definições.
+*/
 #define DEFINIÇÃO
 #define DES_DEFINIÇÃO
 
@@ -11,55 +13,77 @@
 
 // --------------------------------------------------
 
-#define nil NULL
-// Nil para estructuras, sem ponteiros.
-#define nil_e { 0 }
-
-#define ESPAÇO ' '
-
-#define LINHA_NIL '\0'
-#define LINHA_SALTA '\n'
-
-#define FICHEIRO_MODO_LEITURA "r"
-#define FICHEIRO_MODO_LEITURA_BINÁRIA "rb"
-
 //-------------------------
 // DEFINIÇÕES CONDICIONAIS
 //-------------------------
+
+// Utilizado em matrices, qualquer valôr negativo indica invalidéz.
+#define inválido (-1)
 
 #define se if
 #define ou_se else if
 #define se_não else
 
-#define a
-#define de
+#define enquanto while
 
-#define igual ==
-#define iqual igual
-#define equal igual
+#define equal ==
+#define igual equal
+#define iqual equal
 
 #define differente !=
 #define diferente differente
+#define diff differente
+#define dif differente
 
 #define e &&
-#define ou |
+#define ou ||
 
+// Auxiliares de linguagem
+#define a
+#define de
+#define fôr
 
 //-------------------------
-// DEFINIÇÕES FUNCIONAIS
+// DEFINIÇÕES UTILITÁRIAS
 //-------------------------
+
+/*
+    Usado para especificar referências em definições de funcções.
+    Às vezes pode se confundir se a definição de uma funcção se
+    refere a uma matrice, ou a uma referência
+*/
+#define ref *
+
+// Nil para ponteiros.
+#define nil ((void*)0)
+// Nil para estructuras, sem ponteiros.
+#define nil_e { 0 }
 
 #define linhar(linha) #linha
-#define linhar_ninhado(linha) linhar(linha)
+/*
+    Linhar, mas ninhado. Útil quando se linha chamadas.
+*/
+#define linhar_(linha) linhar(linha)
 
-#define como(var, tipo) ((tipo) var)
-#define void_como(var, tipo) (*(tipo*) &var)
+#define juntar(a, b) a ## b
+#define juntar__cobra(a, b) a ## _ ## b
 
-#define linha_juntar(a, b) a ## b
-#define linha_juntar_cobra(a, b) a ## _ ## b
+#define espaço ' '
+
+#define linha_nil '\0'
+#define linha_salta '\n'
+
+#define cabeçalho linhar(.h)
+
+#define ficheiro_fim inválido
+#define ficheiro_modo_leitura "r"
+#define ficheiro_modo_leitura_binária "rb"
 
 #define ficheiro_inclusão(prefixo, nome, sufixo) linhar(prefixo ## nome ## sufixo)
 #define ficheiro_inclusão_externo(prefixo, nome, sufixo) <prefixo ## nome ## sufixo>
+
+#define como(var, tipo) ((tipo) var)
+#define void_como(var, tipo) (*(tipo*) &var)
 
 /*
     Exprime os membros de uma estructura. Deve ser usado
@@ -70,7 +94,7 @@
     este deve ser usado para que se mantenha rígido
     o modelo da estructura ao longo do código.
 */
-#define estructura_instância(nome) ((nome){0})
+#define estructura_instância(estructura) ((estructura){0})
 
 
 
@@ -91,7 +115,8 @@
 
 
 /*
-=================IMPORTANTE======================
+    IMPORTANTE
+
     Construir depois alguns sinais indicadores para
     controlar o fluxo da aplicação
 */
@@ -107,14 +132,16 @@
 
 
 
-
+//-------------------------
+// DEFINIÇÕES FUNCCIONAIS
+//-------------------------
 
 
 //#if defined(DESBRAGA) && DESBRAGA > 0
 #define DESBRAGA_MENSAGEM(formato, ...) \
 printf("DESBRAGA ― %s:%d:%s: " formato, \
 __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-printf("%c", LINHA_SALTA); \
+printf("%c", linha_salta) \
 //#else
 //#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
 //#endif
@@ -162,11 +189,11 @@ typedef enum { fal, vero } Dico;
 */
 
 #define elems_tipo(nome) \
-    linha_juntar(nome, tipo_charactére), /* char */              \
-    linha_juntar(nome, tipo_linha),      /* char* ou Linha */    \
-    linha_juntar(nome, tipo_inteiro),    /* int */               \
-    linha_juntar(nome, tipo_tamanho),    /* size_t */            \
-    linha_juntar(nome, tipo_nil),        /* nil */               \
+    juntar(nome, tipo_charactére), /* char */              \
+    juntar(nome, tipo_linha),      /* char* ou Linha */    \
+    juntar(nome, tipo_inteiro),    /* int */               \
+    juntar(nome, tipo_tamanho),    /* size_t */            \
+    juntar(nome, tipo_nil),        /* nil */               \
 
 typedef enum { elems_tipo() } Tipo;
 
@@ -220,29 +247,31 @@ typedef enum {
 */
 
 #define elems_lato(prefixoTipo)                 \
-    linha_juntar(prefixoTipo, Tipo) tipo;       \
-    Dico precisa_libertar;                      \
+    juntar(prefixoTipo, Tipo) tipo;             \
+    Dico elemento_precisa_libertar;             \
     Objecto elemento;                           \
 
 typedef struct { elems_lato() } Lato;
 
 typedef struct Grade Grade;
 struct Grade {
-	elems_lato();
+	elems_lato()
 	
 	Linha constatação;
 	int índice;
+
+    Dico filho_precisa_libertar;
 	Grade* filho;
 };
 
-void grade_introduzir(Grade* *grade, Grade modelo);
+void grade_introduzir(Grade* ref grade, Grade ref modelo);
 Grade* grade_procurar(Grade* grade, Linha constatação, Índice índice);
 Grade grade_falha(Linha constatação);
-void grade_des_allocar(Grade* *grade);
+void grade_des_allocar(Grade* ref grade);
 
 void* memória_allocar(size_t tamanho);
 void* memória_preên_allocar(size_t tamanho_allocação, size_t tamanho_tipo);
 void* memória_re_allocar(size_t tamanho, void* p);
-void memória_des_allocar(void* *ponteiro);
+void memória_des_allocar(void* ref ponteiro);
 
 #endif // #ifndef _CABEÇALHO_GENERAL
