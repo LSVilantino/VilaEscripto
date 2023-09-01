@@ -55,7 +55,8 @@ operação_re_definir(int operação_n, Grade* expressão, Expectação expecta�
 		}
 	);
 
-	((Operação*) operações->filho[operação_n].elemento)[0] = (Operação) {
+	Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), operação_n);
+	void_como(operação->elemento, Operação*)[0] = (Operação) {
 		.índice = operação_n,
 		.tipo = operação_tipo,
 		.expectação = expectação,
@@ -63,7 +64,7 @@ operação_re_definir(int operação_n, Grade* expressão, Expectação expecta�
 
 	int índice = 0;
 
-	grade_introduzir(&operações->filho[operação_n].filho,
+	grade_introduzir(&operação->filho,
 		&(Grade) {
 		.índice = índice,
 		.constatação = linhar_(estructura_instância(Operação).linha),
@@ -145,46 +146,33 @@ expressão_operação_têr_por_tipo(Grade expressão, Operação_Tipo tipo) {
 
 Grade
 expressão_falha() {
-	Grade expressãoFalha = grade_falha(linhar_(estructura_instância(Expressão)));
-	operação_re_definir(0, &expressãoFalha, expectação__nil, operação__nil, 1);
-
-	Grade operaçãoFalha = grade_falha(linhar_(estructura_instância(Expressão).operação));
-	grade_introduzir(&expressãoFalha.filho, &operaçãoFalha);
-
-	return expressãoFalha;
+	return grade_falha(linhar_(estructura_instância(Expressão)));
 }
 
 Dico interpretar_linha__clave_verificar_encerro_forçado(TF_Interpretar* tf, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
 #define tf_						(*tf)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
 #define expressão_n_			(*tf_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define operação_				void_como(operação->elemento, Operação*)
+#define operação_linha_       	void_como(operação_linha->elemento, Linha)
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
 	if (clave_têr_por_tipo(clave_ficheiro_forçar_encerro).pala[0] iqual tf_.charactére) {
-		Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+		Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+		Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
+		Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
+		Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), tf_.operação_n);
+		Grade* operação_linha = grade_procurar(operação, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		expressão_grade_ = expressão_falha();
-		tf_.intérprete_rastilho_definir(&tf_, &expressão_grade_, rastilho__encerro_forçado);
+		*expressão = expressão_falha();
+		tf_.intérprete_rastilho_definir(&tf_, intérprete, rastilho__encerro_forçado);
 		operação_linha_ = linha_nil;
 
-		expressão_grade_.índice = expressão_n_;
+		expressão->índice = expressão_n_;
 		expressão_n_++;
 
 		resultado = vero;
@@ -195,20 +183,9 @@ Dico interpretar_linha__clave_verificar_encerro_forçado(TF_Interpretar* tf, Gra
 #if defined(DES_DEFINIÇÃO)
 
 #undef tf_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
 #undef expressão_n_
-#undef expressões_grade_
-#undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
 #undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
 
@@ -295,7 +272,7 @@ void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Grade* intérpr
 		Grade* operação_linha = grade_procurar(operação, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
 		linha_introduzir_charactére(tf_.charactére, tf_.operação_linha_n, &operação_linha_);
-		DESBRAGA_MENSAGEM("%c, %d", operação_linha_[tf_.operação_linha_n], operação_->índice);
+		DESBRAGA_MENSAGEM("%c – %d", operação_linha_[tf_.operação_linha_n], tf_.operação_linha_n);
 
 		tf_.operação_linha_n++;
 
@@ -1281,11 +1258,12 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 
 			Reporta rastilho.
 		*/
-		/*
 		if (tf.clave_verificar_encerro_forçado(&tf, &intérprete_grade_)) {
+			DESBRAGA_MENSAGEM();
+			DESBRAGA_MENSAGEM("ENCERRO FORÇADO");
+			DESBRAGA_MENSAGEM();
 			break;
 		}
-		*/
 
 		/*
 			Se um comentário for encontrado, ignora a linha.
