@@ -88,8 +88,8 @@ typedef struct {
     Rastilho* rastilho;
 } Intérprete;
 
-typedef struct TF_Interpretar TF_Interpretar;
-struct TF_Interpretar {
+typedef struct EF_Interpretar EF_Interpretar;
+struct EF_Interpretar {
 	int
 	ref expressão_n,
     operação_n,
@@ -104,29 +104,29 @@ struct TF_Interpretar {
 	Pilha pilha; int recúo;
 	Linha ficha; char charactére;
 
-	void (*intérprete_rastilho_definir)(TF_Interpretar ref tf, Grade ref intérprete, Rastilho_Tipo rastilho_tipo);
+	void (*intérprete_rastilho_definir)(EF_Interpretar ref tf, Grade ref intérprete, Rastilho_Tipo rastilho_tipo);
 
-	Dico (*clave_verificar_encerro_forçado)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*clave_verificar_comentário)(TF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*clave_verificar_encerro_forçado)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*clave_verificar_comentário)(EF_Interpretar ref tf, Grade ref intérprete);
 
-	Dico (*clave_verificar_concessão_directa)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*clave_verificar_concessão_corredora)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*clave_verificar_concessão_objectiva)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*clave_verificar_concessão_passiva)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*clave_verificar_concessão_selectiva)(TF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*clave_verificar_concessão_directa)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*clave_verificar_concessão_corredora)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*clave_verificar_concessão_objectiva)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*clave_verificar_concessão_passiva)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*clave_verificar_concessão_selectiva)(EF_Interpretar ref tf, Grade ref intérprete);
 
-	Dico (*expressão_verificar_concessão_corredora)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*expressão_verificar_concessão_passiva)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*expressão_verificar_concessão_objectiva)(TF_Interpretar ref tf, Grade ref intérprete);
-	Dico (*expressão_verificar_concessão_selectiva)(TF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*expressão_verificar_concessão_corredora)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*expressão_verificar_concessão_passiva)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*expressão_verificar_concessão_objectiva)(EF_Interpretar ref tf, Grade ref intérprete);
+	Dico (*expressão_verificar_concessão_selectiva)(EF_Interpretar ref tf, Grade ref intérprete);
 
-	void (*introduzir_concedido)(TF_Interpretar ref tf, Grade ref intérprete);
+	void (*introduzir_concedido)(EF_Interpretar ref tf, Grade ref intérprete);
 
-	void (*operação_aparar_e_re_definir)(TF_Interpretar ref tf, Grade ref intérprete);
+	void (*operação_aparar_e_re_definir)(EF_Interpretar ref tf, Grade ref intérprete);
 };
 
-void intérprete_agregar(TF_Interpretar ref tf, Grade ref intérprete, Grade* expressões, int posição);
-Grade intérprete_confeccionar(TF_Interpretar ref tf, Grade ref intérprete, Grade caminho);
+void intérprete_agregar(EF_Interpretar ref tf, Grade ref intérprete, Grade* expressões, int posição);
+Grade intérprete_confeccionar(EF_Interpretar ref tf, Grade ref intérprete, Grade caminho);
 int intérprete_expressões_contar(const Grade* intérprete);
 void interpretar_linha(Grade ref linha, Grade ref intérprete, int ref expressão_n);
 void interpretar(Grade* ref linhas, Grade *intérprete);

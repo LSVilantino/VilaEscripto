@@ -62,17 +62,15 @@ operação_re_definir(int operação_n, Grade* expressão, Expectação expecta�
 		.expectação = expectação,
 	};
 
-	int índice = 0;
-
 	grade_introduzir(&operação->filho,
 		&(Grade) {
-		.índice = índice,
+		.índice = 0,
 		.constatação = linhar_(estructura_instância(Operação).linha),
 		.tipo = lsve_tipo_linha,
-		.elemento_precisa_libertar = vero,
 		.elemento = memória_allocar(linha_t),
-		.filho_precisa_libertar = fal,
+		.elemento_precisa_libertar = vero,
 		.filho = nil,
+		.filho_precisa_libertar = fal,
 		}
 	);
 
@@ -149,11 +147,11 @@ expressão_falha() {
 	return grade_falha(linhar_(estructura_instância(Expressão)));
 }
 
-Dico interpretar_linha__clave_verificar_encerro_forçado(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__clave_verificar_encerro_forçado(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
-#define expressão_n_			(*tf_.expressão_n)
+#define ef_						(*ef)
+#define expressão_n_			(*ef_.expressão_n)
 #define operação_				void_como(operação->elemento, Operação*)
 #define operação_linha_       	void_como(operação_linha->elemento, Linha)
 
@@ -161,15 +159,15 @@ Dico interpretar_linha__clave_verificar_encerro_forçado(TF_Interpretar* tf, Gra
 
 	Dico resultado = fal;
 
-	if (clave_têr_por_tipo(clave_ficheiro_forçar_encerro).pala[0] iqual tf_.charactére) {
+	if (clave_têr_por_tipo(clave_ficheiro_forçar_encerro).pala[0] iqual ef_.charactére) {
 		Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 		Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
 		Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
-		Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), tf_.operação_n);
+		Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef_.operação_n);
 		Grade* operação_linha = grade_procurar(operação, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
 		*expressão = expressão_falha();
-		tf_.intérprete_rastilho_definir(&tf_, intérprete, rastilho__encerro_forçado);
+		ef_.intérprete_rastilho_definir(&ef_, intérprete, rastilho__encerro_forçado);
 		operação_linha_ = linha_nil;
 
 		expressão->índice = expressão_n_;
@@ -182,7 +180,7 @@ Dico interpretar_linha__clave_verificar_encerro_forçado(TF_Interpretar* tf, Gra
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef expressão_n_
 #undef operação_
 #undef operação_linha_
@@ -191,39 +189,32 @@ Dico interpretar_linha__clave_verificar_encerro_forçado(TF_Interpretar* tf, Gra
 
 }
 
-Dico interpretar_linha__clave_verificar_comentário(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__clave_verificar_comentário(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define ef_						(*ef)
+#define expressão_n_			(*ef_.expressão_n)
+#define expressão_				void_como(expressão->elemento, Expressão*)
+#define operação_				void_como(operação->elemento, Operação*)
+#define operação_linha_       	void_como(operação_linha->elemento, Linha)
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
+	se (clave_têr_por_tipo(clave_ficheiro_comentário).pala[0] iqual ef_.charactére) {
+		Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+		Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
+		Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
+		Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef_.operação_n);
+		Grade* operação_linha = grade_procurar(operação, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-	if (clave_têr_por_tipo(clave_ficheiro_comentário).pala[0] iqual tf_.charactére) {
-		Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
-
-		expressão_grade_ = expressão_falha();
-		tf->intérprete_rastilho_definir(&tf_, &expressão_grade_, rastilho__comentário);
-		operação_.tipo = operação__concedido;
+		*expressão = expressão_falha();
+		ef->intérprete_rastilho_definir(&ef_, intérprete, rastilho__comentário);
+		operação_->tipo = operação__concedido;
 		operação_linha_ = linha_nil;
 
-		expressão_grade_.índice = expressão_n_;
+		expressão->índice = expressão_n_;
 		expressão_n_++;
 
 		resultado = vero;
@@ -233,30 +224,20 @@ Dico interpretar_linha__clave_verificar_comentário(TF_Interpretar* tf, Grade* i
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
+#undef ef_
 #undef expressão_n_
-#undef expressões_grade_
 #undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
 #undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
 }
 
-void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Grade* intérprete) {
+void interpretar_linha__introduzir_concedido(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
-#define expressão_n_			(*tf_.expressão_n)
+#define ef_						(*ef)
+#define expressão_n_			(*ef_.expressão_n)
 #define operação_				void_como(operação->elemento, Operação*)
 #define operação_linha_       	void_como(operação_linha->elemento, Linha)
 
@@ -265,23 +246,23 @@ void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Grade* intérpr
 	Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 	Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
 	Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
-	Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), tf_.operação_n);
+	Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef_.operação_n);
 	
 	se (operação_->expectação iqual expectação__concedido ou operação_->expectação iqual expectação__nil)
 	{
-		Grade* operação_linha = grade_procurar(operação, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+		Grade* operação_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		linha_introduzir_charactére(tf_.charactére, tf_.operação_linha_n, &operação_linha_);
-		DESBRAGA_MENSAGEM("%c – %d", operação_linha_[tf_.operação_linha_n], tf_.operação_linha_n);
+		linha_introduzir_charactére(ef_.charactére, ef_.operação_linha_n, &operação_linha_);
+		DESBRAGA_MENSAGEM("%c – %d", operação_linha_[ef_.operação_linha_n], ef_.operação_linha_n);
 
-		tf_.operação_linha_n++;
+		ef_.operação_linha_n++;
 
 		se (operação_->tipo iqual operação__concedido) operação_->expectação = expectação__concessão;
 	}
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef expressão_n_
 #undef operação_
 #undef operação_linha_
@@ -289,111 +270,96 @@ void interpretar_linha__introduzir_concedido(TF_Interpretar* tf, Grade* intérpr
 #endif // #if defined(DES_DEFINIÇÃO)
 }
 
-Dico interpretar_linha__clave_verificar_concessão_directa(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__clave_verificar_concessão_directa(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define ef_						(*ef)
+#define expressão_n_			(*ef_.expressão_n)
+#define operação_				void_como(operação->elemento, Operação*)
+#define operação_linha_       	void_como(operação_linha->elemento, Linha)
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	if (clave_têr_por_tipo(clave_lêr).pala[tf_.clave_n] iqual tf_.charactére) {
-		Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+	se (clave_têr_por_tipo(clave_lêr).pala[ef_.clave_n] iqual ef_.charactére) {
+		Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+		Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
+		Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
+		Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef_.operação_n);
+		Grade* operação_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
 		linha_aparar(&operação_linha_);
 
-		tf_.operação_n++;
-		operação_re_definir(tf_.operação_n, &expressão_grade_, expectação__valôr, operação__concessão_directa, 2);
+		ef_.operação_n++;
+		operação_re_definir(ef_.operação_n, expressão, expectação__valôr, operação__concessão_directa, sizeof(char) * 2);
 
-		tf_.operação_linha_n = 0;
-		operação_linha_[tf_.operação_linha_n] = tf_.charactére;
-		operação_linha_[tf_.operação_linha_n + 1] = linha_nil;
+		operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef_.operação_n);
+		operação_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+		
+		ef_.operação_linha_n = 0;
+		operação_linha_[ef_.operação_linha_n] = ef_.charactére;
+		operação_linha_[ef_.operação_linha_n + 1] = linha_nil;
 
-		DESBRAGA_MENSAGEM("%c, %d", operação_linha_[tf_.operação_linha_n], operação_.índice);
+		DESBRAGA_MENSAGEM("OPERAÇÃO LINHA %c, %d", operação_linha_[ef_.operação_linha_n], operação_->índice);
 
 		resultado = vero;
 	}
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
+#undef ef_
 #undef expressão_n_
-#undef expressões_grade_
-#undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
 #undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
 
 	return resultado;
 }
 
-Dico interpretar_linha__clave_verificar_concessão_corredora(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__clave_verificar_concessão_corredora(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	if (clave_têr_por_tipo(clave_corrêr).pala[1] iqual tf_.pilha.conteúdo[tf_.recúo - 2]) {
+	if (clave_têr_por_tipo(clave_corrêr).pala[1] iqual ef_.pilha.conteúdo[ef_.recúo - 2]) {
 		Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		tf_.operação_linha_n++;
-		operação_linha_[tf_.operação_linha_n] = tf_.pilha.conteúdo[tf_.recúo - 2];
-		operação_linha_[tf_.operação_linha_n + 1] = linha_nil;
+		ef_.operação_linha_n++;
+		operação_linha_[ef_.operação_linha_n] = ef_.pilha.conteúdo[ef_.recúo - 2];
+		operação_linha_[ef_.operação_linha_n + 1] = linha_nil;
 
 		operação_.tipo = operação__concessão_corredora;
 
-		tf_.pula = 1;
+		ef_.pula = 1;
 
-		DESBRAGA_MENSAGEM("%c, %d", operação_linha_[tf_.operação_linha_n], operação_.índice);
+		DESBRAGA_MENSAGEM("%c, %d", operação_linha_[ef_.operação_linha_n], operação_.índice);
 
 		resultado = vero;
 	}
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -414,46 +380,46 @@ Dico interpretar_linha__clave_verificar_concessão_corredora(TF_Interpretar* tf,
 	return resultado;
 }
 
-Dico interpretar_linha__clave_verificar_concessão_objectiva(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__clave_verificar_concessão_objectiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 	Dico resultado = fal;
 
-	if (clave_têr_por_tipo(clave_ficha).pala[1] iqual tf_.pilha.conteúdo[tf_.recúo - 2]) {
+	if (clave_têr_por_tipo(clave_ficha).pala[1] iqual ef_.pilha.conteúdo[ef_.recúo - 2]) {
 		Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 		linha_aparar(&operação_linha_);
 
-		tf_.operação_n++;
-		operação_re_definir(tf_.operação_n, &expressão_grade_, expectação__valôr, operação__concessão_directa, 1);
+		ef_.operação_n++;
+		operação_re_definir(ef_.operação_n, &expressão_grade_, expectação__valôr, operação__concessão_directa, 1);
 
-		tf_.operação_linha_n = 0;
+		ef_.operação_linha_n = 0;
 		operação_.expectação = expectação__nil;
 		operação_.tipo = operação__concessão_objectiva;
 
-		tf_.pula = 1;
+		ef_.pula = 1;
 		resultado = vero;
 	}
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -474,41 +440,41 @@ Dico interpretar_linha__clave_verificar_concessão_objectiva(TF_Interpretar* tf,
 	return resultado;
 }
 
-Dico interpretar_linha__clave_verificar_concessão_passiva(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__clave_verificar_concessão_passiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	if (clave_têr_por_tipo(clave_lêr).pala[tf_.clave_n] iqual tf_.pilha.conteúdo[tf_.recúo - 2]) {
+	if (clave_têr_por_tipo(clave_lêr).pala[ef_.clave_n] iqual ef_.pilha.conteúdo[ef_.recúo - 2]) {
 		Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		tf_.operação_linha_n++;
-		operação_linha_[tf_.operação_linha_n] = tf_.pilha.conteúdo[tf_.recúo - 2];
-		operação_linha_[tf_.operação_linha_n + 1] = linha_nil;
+		ef_.operação_linha_n++;
+		operação_linha_[ef_.operação_linha_n] = ef_.pilha.conteúdo[ef_.recúo - 2];
+		operação_linha_[ef_.operação_linha_n + 1] = linha_nil;
 
 		operação_.tipo = operação__concessão_passiva;
 
-		tf_.pula = 1;
+		ef_.pula = 1;
 
-		DESBRAGA_MENSAGEM("%c", operação_linha_[tf_.operação_linha_n]);
+		DESBRAGA_MENSAGEM("%c", operação_linha_[ef_.operação_linha_n]);
 
 		resultado = vero;
 	}
@@ -516,7 +482,7 @@ Dico interpretar_linha__clave_verificar_concessão_passiva(TF_Interpretar* tf, G
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -537,48 +503,48 @@ Dico interpretar_linha__clave_verificar_concessão_passiva(TF_Interpretar* tf, G
 	return resultado;
 }
 
-Dico interpretar_linha__clave_verificar_concessão_selectiva(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__clave_verificar_concessão_selectiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	if (clave_têr_por_tipo(clave_lêr).pala[tf_.clave_n] iqual tf_.pilha.conteúdo[tf_.recúo - 3]) {
+	if (clave_têr_por_tipo(clave_lêr).pala[ef_.clave_n] iqual ef_.pilha.conteúdo[ef_.recúo - 3]) {
 		Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		tf_.operação_linha_n++;
-		operação_linha_[tf_.operação_linha_n] = tf_.pilha.conteúdo[tf_.recúo - 3];
-		operação_linha_[tf_.operação_linha_n + 1] = linha_nil;
+		ef_.operação_linha_n++;
+		operação_linha_[ef_.operação_linha_n] = ef_.pilha.conteúdo[ef_.recúo - 3];
+		operação_linha_[ef_.operação_linha_n + 1] = linha_nil;
 
 		operação_.tipo = operação__concessão_selectiva;
 
-		tf_.pula = 2;
+		ef_.pula = 2;
 
-		DESBRAGA_MENSAGEM("%c", operação_linha_[tf_.operação_linha_n]);
+		DESBRAGA_MENSAGEM("%c", operação_linha_[ef_.operação_linha_n]);
 
 		resultado = vero;
 	}
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -598,24 +564,24 @@ Dico interpretar_linha__clave_verificar_concessão_selectiva(TF_Interpretar* tf,
 	return resultado;
 }
 
-Dico interpretar_linha__expressão_verificar_concessão_corredora(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__expressão_verificar_concessão_corredora(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -634,7 +600,7 @@ Dico interpretar_linha__expressão_verificar_concessão_corredora(TF_Interpretar
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -654,24 +620,24 @@ Dico interpretar_linha__expressão_verificar_concessão_corredora(TF_Interpretar
 	return resultado;
 }
 
-Dico interpretar_linha__expressão_verificar_concessão_passiva(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__expressão_verificar_concessão_passiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -685,11 +651,11 @@ Dico interpretar_linha__expressão_verificar_concessão_passiva(TF_Interpretar* 
 		Grade* intérprete_cópia_expressões = grade_procurar(intérprete_cópia.filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 		intérprete_cópia_expressões = nil;
 
-		Grade intérprete_agregado = intérprete_confeccionar(&tf_, &intérprete_grade_, caminho);
+		Grade intérprete_agregado = intérprete_confeccionar(&ef_, &intérprete_grade_, caminho);
 
 		expressão_n_++;
 
-		intérprete_agregar(&tf_, &intérprete_agregado, expressões_grade_, expressão_n_);
+		intérprete_agregar(&ef_, &intérprete_agregado, expressões_grade_, expressão_n_);
 		grade_des_allocar(&intérprete_agregado.filho);
 
 		resultado = vero;
@@ -697,7 +663,7 @@ Dico interpretar_linha__expressão_verificar_concessão_passiva(TF_Interpretar* 
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -718,24 +684,24 @@ Dico interpretar_linha__expressão_verificar_concessão_passiva(TF_Interpretar* 
 	return resultado;
 }
 
-Dico interpretar_linha__expressão_verificar_concessão_objectiva(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__expressão_verificar_concessão_objectiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -747,7 +713,7 @@ Dico interpretar_linha__expressão_verificar_concessão_objectiva(TF_Interpretar
 		Grade* operação_valôr_linha = grade_procurar(operações_grade_[expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr).índice].filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
 		Grade caminho = expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr);
-		Grade intérprete_agregado = intérprete_confeccionar(&tf_, &intérprete_grade_, caminho);
+		Grade intérprete_agregado = intérprete_confeccionar(&ef_, &intérprete_grade_, caminho);
 		Grade* expressões = grade_procurar(intérprete_agregado.filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 
 		Grade expressão_seleccionada = expressão_têr_por_ficha(expressões->filho, void_como(operação_linha->elemento, Linha));
@@ -765,7 +731,7 @@ Dico interpretar_linha__expressão_verificar_concessão_objectiva(TF_Interpretar
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -786,24 +752,24 @@ Dico interpretar_linha__expressão_verificar_concessão_objectiva(TF_Interpretar
 	return resultado;
 }
 
-Dico interpretar_linha__expressão_verificar_concessão_selectiva(TF_Interpretar* tf, Grade* intérprete) {
+Dico interpretar_linha__expressão_verificar_concessão_selectiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -818,7 +784,7 @@ Dico interpretar_linha__expressão_verificar_concessão_selectiva(TF_Interpretar
 		Grade* operação_valôr_linha = grade_procurar(operações_grade_[expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr).índice].filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
 		Grade caminho = expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr);
-		Grade intérprete_agregado = intérprete_confeccionar(&tf_, &intérprete_cópia, caminho);
+		Grade intérprete_agregado = intérprete_confeccionar(&ef_, &intérprete_cópia, caminho);
 		Grade* expressões = grade_procurar(intérprete_agregado.filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 
 		Grade operaçãoSeleccionada = lsve_consola_construir_menu(expressões->filho);
@@ -839,7 +805,7 @@ Dico interpretar_linha__expressão_verificar_concessão_selectiva(TF_Interpretar
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -860,74 +826,57 @@ Dico interpretar_linha__expressão_verificar_concessão_selectiva(TF_Interpretar
 	return resultado;
 }
 
-void interpretar_linha__operação_aparar_e_re_definir(TF_Interpretar* tf, Grade* intérprete) {
+void interpretar_linha__operação_aparar_e_re_definir(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define ef_						(*ef)
+#define expressão_n_			(*ef_.expressão_n)
+#define operação_				void_como(operação->elemento, Operação*)
+#define operação_linha_       	void_como(operação_linha->elemento, Linha)
 
 #endif // #if defined(DEFINIÇÃO)
 
-	Grade* operação_linha_grade = grade_procurar(operações_grade_, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+	Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+	Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
+	Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
+	Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef_.operação_n);
+	Grade* operação_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
 	linha_aparar(&operação_linha_);
-	tf_.operação_linha_n = 0;
 
-	tf_.operação_n++;
-	operação_re_definir(tf_.operação_n, &expressão_grade_, expectação__nil, operação__valôr, 1);
+
+	ef_.operação_linha_n = 0;
+	ef_.operação_n++;
+	operação_re_definir(ef_.operação_n, expressão, expectação__nil, operação__valôr, sizeof(char) * 2);
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
+#undef ef_
 #undef expressão_n_
-#undef expressões_grade_
-#undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
 #undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
 }
 
-void interpretar_linha__intérprete_rastilho_definir(TF_Interpretar* tf, Grade* intérprete, Rastilho_Tipo rastilho_tipo) {
+void interpretar_linha__intérprete_rastilho_definir(EF_Interpretar* ef, Grade* intérprete, Rastilho_Tipo rastilho_tipo) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -947,7 +896,7 @@ void interpretar_linha__intérprete_rastilho_definir(TF_Interpretar* tf, Grade* 
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -966,24 +915,24 @@ void interpretar_linha__intérprete_rastilho_definir(TF_Interpretar* tf, Grade* 
 #endif // #if defined(DES_DEFINIÇÃO)
 }
 
-void intérprete_agregar(TF_Interpretar* tf, Grade* intérprete, Grade *expressões, int posição) {
+void intérprete_agregar(EF_Interpretar* ef, Grade* intérprete, Grade *expressões, int posição) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -1000,7 +949,7 @@ void intérprete_agregar(TF_Interpretar* tf, Grade* intérprete, Grade *express�
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -1019,24 +968,24 @@ void intérprete_agregar(TF_Interpretar* tf, Grade* intérprete, Grade *express�
 #endif // #if defined(DES_DEFINIÇÃO)
 }
 
-Grade intérprete_confeccionar(TF_Interpretar* tf, Grade* intérprete, Grade caminho) {
+Grade intérprete_confeccionar(EF_Interpretar* ef, Grade* intérprete, Grade caminho) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -1078,14 +1027,14 @@ Grade intérprete_confeccionar(TF_Interpretar* tf, Grade* intérprete, Grade cam
 
 	*grade_procurar(expressões, linhar_(estructura_instância(Expressão)), 0) = grade_falha(linhar_(estructura_instância(Expressão)));
 
-	intérprete_agregar(&tf_, &intérprete_confeccionado, expressões_grade_, 0);
+	intérprete_agregar(&ef_, &intérprete_confeccionado, expressões_grade_, 0);
 	interpretar(&ficheiro_linhas, &intérprete_grade_);
 
 	return intérprete_confeccionado;
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef intérprete_grade_
 #undef intérprete_
 #undef rastilhos_
@@ -1112,23 +1061,23 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[tf.rastilho_n].elemento)
-#define expressão_n_			(*tf.expressão_n)
+#define rastilho_				(**(Rastilho**) &rastilhos_[ef.rastilho_n].elemento)
+#define expressão_n_			(*ef.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf.operação_n])
-#define operação_				(void_como(operação->elemento, Operação))
-#define operação_grade_			(operações_grade_[tf.operação_n])
+#define operações_				(operações_grade_[ef.operação_n])
+#define operação_				(void_como(operação->elemento, Operação*))
+#define operação_grade_			(operações_grade_[ef.operação_n])
 #define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
 #define ficha_valôr_linha_		(*(Linha*) &valôrDaFicha_linha_grade->elemento)
-#define recúo_                	(tf.recúo - 1)
+#define recúo_                	(ef.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 	Grade* operação_linha_grade = nil;
 
-	TF_Interpretar tf = {
+	EF_Interpretar ef = {
 		.expressão_n = expressão_n,
     	.operação_n = 0,
     	.operação_linha_n = 0,
@@ -1166,7 +1115,7 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 		.operação_aparar_e_re_definir = interpretar_linha__operação_aparar_e_re_definir,
 	};
 
-    tf.recúo = tf.pilha.recúo;
+    ef.recúo = ef.pilha.recúo;
 
 	DESBRAGA_MENSAGEM("LINHA A DESBRAGAR %s", linha_);
 
@@ -1211,31 +1160,31 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
         }
     );
 
-    operação_re_definir(tf.operação_n, expressão, expectação__concedido, operação__concedido, sizeof(char));
+    operação_re_definir(ef.operação_n, expressão, expectação__concedido, operação__concedido, sizeof(char));
 
 	Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
-	Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), tf.operação_n);
+	Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef.operação_n);
 	Grade* operação_linha = grade_procurar(operação, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
 	DESBRAGA_MENSAGEM("%s", operações->constatação);
 	DESBRAGA_MENSAGEM("%s", operação->constatação);
 	DESBRAGA_MENSAGEM("%s", operação_linha->constatação);
 
-    while(tf.recúo > 1) {
+    while(ef.recúo > 1) {
         /*
 			Ao fim da linha, diminui - se o recúo da pilha, até chegar à ponta,
 			o último charactére armazenado.
 
 			Se a linha não estiver ao fim, introduz o último charactére à pilha.
 		*/
-		if (linha_[tf.linha_n] iqual linha_nil) { tf.recúo--; }
+		if (linha_[ef.linha_n] iqual linha_nil) { ef.recúo--; }
 		else {
-			pilha_introduzir(linha_[tf.linha_n], &tf.pilha);
+			pilha_introduzir(linha_[ef.linha_n], &ef.pilha);
 
-            tf.linha_n++;
+            ef.linha_n++;
 		}
 
-		tf.charactére = tf.pilha.conteúdo[recúo_];
+		ef.charactére = ef.pilha.conteúdo[recúo_];
         //DESBRAGA_MENSAGEM("%c", charactére)
 
         /*
@@ -1247,9 +1196,9 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 		*/
 
 
-		if (tf.charactére iqual linha_nil) continue;
-		if (tf.pula differente 0) {
-			tf.pula--;
+		if (ef.charactére iqual linha_nil) continue;
+		if (ef.pula differente 0) {
+			ef.pula--;
 			continue;
 		}
 
@@ -1258,7 +1207,7 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 
 			Reporta rastilho.
 		*/
-		if (tf.clave_verificar_encerro_forçado(&tf, &intérprete_grade_)) {
+		if (ef.clave_verificar_encerro_forçado(&ef, &intérprete_grade_)) {
 			DESBRAGA_MENSAGEM();
 			DESBRAGA_MENSAGEM("ENCERRO FORÇADO");
 			DESBRAGA_MENSAGEM();
@@ -1271,21 +1220,19 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 			Reporta rastilho.
 		*/
 
-		/*
-		if (tf.clave_verificar_comentário(&tf, &intérprete_grade_)) {
+		if (ef.clave_verificar_comentário(&ef, &intérprete_grade_)) {
 			break;
 		}
-		*/
 
 		/*
-		if (clave_têr_por_tipo(clave_ficha).pala[0] iqual tf.charactére) {
+		if (clave_têr_por_tipo(clave_ficha).pala[0] iqual ef.charactére) {
 			operação_.expectação = expectação__ficha_abre;
 			continue;
 		}
 		*/
 
 		/*
-		if (clave_têr_por_tipo(clave_ficha).pala[1] iqual tf.charactére e operação_.expectação iqual expectação__ficha_abre)
+		if (clave_têr_por_tipo(clave_ficha).pala[1] iqual ef.charactére e operação_.expectação iqual expectação__ficha_abre)
 		{
 			operação_.expectação = expectação__ficha_fecha;
 			continue;
@@ -1295,31 +1242,31 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 		// Leitura da ficha
 		/*
 		if (operação_.expectação iqual expectação__ficha_fecha) {
-			if (clave_têr_por_tipo(clave_ficha).pala[2] iqual tf.charactére) {
+			if (clave_têr_por_tipo(clave_ficha).pala[2] iqual ef.charactére) {
 				// Uma vez lida a clave da ficha, obtém-se seu valôr.
-				Grade valôrDaFicha = expressão_operação_têr_por_tipo(expressão_têr_por_ficha(expressões_grade_, tf.ficha), operação__valôr);
+				Grade valôrDaFicha = expressão_operação_têr_por_tipo(expressão_têr_por_ficha(expressões_grade_, ef.ficha), operação__valôr);
 
 				if (valôrDaFicha.índice iqual -1) {
-					tf.intérprete_rastilho_definir(&tf, &intérprete_grade_, rastilho__carece_ficha_válida);
+					ef.intérprete_rastilho_definir(&ef, &intérprete_grade_, rastilho__carece_ficha_válida);
 					expressão_.índice = expressão_n_++;
 					abort();
 					break;
 				}
 
 				Grade* valôrDaFicha_linha_grade = grade_procurar(valôrDaFicha.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
-				linha_agregar_linha(ficha_valôr_linha_, &tf.operação_linha_n, &operação_linha_);
+				linha_agregar_linha(ficha_valôr_linha_, &ef.operação_linha_n, &operação_linha_);
 
-				memória_des_allocar((void**) &tf.ficha);
-				tf.ficha = memória_allocar(sizeof(char) * 2);
-				tf.ficha[0] = linha_nil;
-				tf.ficha_n = 0;
+				memória_des_allocar((void**) &ef.ficha);
+				ef.ficha = memória_allocar(sizeof(char) * 2);
+				ef.ficha[0] = linha_nil;
+				ef.ficha_n = 0;
 
 				operação_.expectação = expectação__nil;
 				continue;
 			}
 
-			linha_introduzir_charactére(tf.charactére, tf.ficha_n, &tf.ficha);
-			tf.ficha_n++;
+			linha_introduzir_charactére(ef.charactére, ef.ficha_n, &ef.ficha);
+			ef.ficha_n++;
 			continue;
 		}
 		*/
@@ -1327,22 +1274,22 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 		//
 		/*
 		if (operação_.tipo iqual operação__concessão_objectiva e
-		clave_têr_por_tipo(clave_ficha).pala[2] iqual tf.charactére)
+		clave_têr_por_tipo(clave_ficha).pala[2] iqual ef.charactére)
 		{
-			if (clave_têr_por_tipo(clave_lêr).pala[0] iqual tf.pilha.conteúdo[tf.recúo - 2]) {
+			if (clave_têr_por_tipo(clave_lêr).pala[0] iqual ef.pilha.conteúdo[ef.recúo - 2]) {
 				linha_aparar(&operação_.linha);
 
-				tf.operação_linha_n = 0;
-				tf.operação_n++;
+				ef.operação_linha_n = 0;
+				ef.operação_n++;
 
-				operação_re_definir(tf.operação_n, &expressão_grade_, expectação__nil, operação__valôr, 1);
+				operação_re_definir(ef.operação_n, &expressão_grade_, expectação__nil, operação__valôr, 1);
 
-				tf.pula = 1;
+				ef.pula = 1;
 				continue;
 			}
 			else
 			{
-				tf.intérprete_rastilho_definir(&tf, &intérprete_grade_, rastilho__carece_concessão_válida);
+				ef.intérprete_rastilho_definir(&ef, &intérprete_grade_, rastilho__carece_concessão_válida);
 				expressão_n_++;
 				break;
 			}
@@ -1355,42 +1302,42 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 		*/
 
 		/*
-		if (tf.charactére iqual linha_salta ou tf.charactére iqual EOF) {
+		if (ef.charactére iqual linha_salta ou ef.charactére iqual EOF) {
 			expressão_grade_.índice = expressão_n_;
 			linha_aparar(&operação_linha_);
 
-			if (tf.operação_n iqual 0 e operação_linha_[tf.operação_linha_n] differente linha_nil) {
-				tf.intérprete_rastilho_definir(&tf, &intérprete_grade_, rastilho__carece_concessão);
+			if (ef.operação_n iqual 0 e operação_linha_[ef.operação_linha_n] differente linha_nil) {
+				ef.intérprete_rastilho_definir(&ef, &intérprete_grade_, rastilho__carece_concessão);
 			}
-			else if (tf.operação_n iqual 0 e operação_linha_[tf.operação_linha_n] iqual linha_nil) {
+			else if (ef.operação_n iqual 0 e operação_linha_[ef.operação_linha_n] iqual linha_nil) {
 				// Se a linha estiver vazia, inteiramente, não mostra mensagens, é irritante.
 				expressão_grade_ = expressão_falha();
-				tf.intérprete_rastilho_definir(&tf, &intérprete_grade_, rastilho__nil);
+				ef.intérprete_rastilho_definir(&ef, &intérprete_grade_, rastilho__nil);
 				DESBRAGA_MENSAGEM("\n");
 				break;
 			}
 
-			if (tf.operação_n iqual 1) {
-				tf.intérprete_rastilho_definir(&tf, &intérprete_grade_, rastilho__carece_valôr);
+			if (ef.operação_n iqual 1) {
+				ef.intérprete_rastilho_definir(&ef, &intérprete_grade_, rastilho__carece_valôr);
 			}
-			if (tf.operação_n iqual 2) {
-				tf.intérprete_rastilho_definir(&tf, &intérprete_grade_, rastilho__nil);
+			if (ef.operação_n iqual 2) {
+				ef.intérprete_rastilho_definir(&ef, &intérprete_grade_, rastilho__nil);
 			}
 
 			// Todos as operações que precisam dos valôres completos são validados após o registro de toda a linha.
-			if (tf.expressão_verificar_concessão_corredora(&tf, &intérprete_grade_)) {
+			if (ef.expressão_verificar_concessão_corredora(&ef, &intérprete_grade_)) {
 				continue;
 			}
 
-			if (tf.expressão_verificar_concessão_passiva(&tf, &intérprete_grade_)) {
+			if (ef.expressão_verificar_concessão_passiva(&ef, &intérprete_grade_)) {
 				continue;
 			}
 
-			if (tf.expressão_verificar_concessão_objectiva(&tf, &intérprete_grade_)) {
+			if (ef.expressão_verificar_concessão_objectiva(&ef, &intérprete_grade_)) {
 				continue;
 			}
 
-			if (tf.expressão_verificar_concessão_selectiva(&tf, &intérprete_grade_)) {
+			if (ef.expressão_verificar_concessão_selectiva(&ef, &intérprete_grade_)) {
 				continue;
 			}
 
@@ -1408,43 +1355,56 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 			Se a concessão vier antes, depois da clave, e antes ou depois do valôr, será tratada como valôr
 			e/ou nome da clave.
 		*/
-		/*
-		if (operação_.expectação iqual expectação__concessão) {
-			if (tf.clave_verificar_concessão_directa(&tf, &intérprete_grade_)) {
-				if (tf.clave_verificar_concessão_objectiva(&tf, &intérprete_grade_)) {
+		se (operação_->expectação iqual expectação__concessão) {
+			se (ef.clave_verificar_concessão_directa(&ef, &intérprete_grade_)) {
+
+				DESBRAGA_MENSAGEM();
+				DESBRAGA_MENSAGEM("CONCESSÃO DIRECTA");
+				DESBRAGA_MENSAGEM();
+
+				/*
+				if (ef.clave_verificar_concessão_objectiva(&ef, &intérprete_grade_)) {
+					DESBRAGA_MENSAGEM();
+					DESBRAGA_MENSAGEM("CONCESSÃO OBJECTIVA");
+					DESBRAGA_MENSAGEM();
 
 					continue;
 				}
 
-				if (tf.clave_verificar_concessão_corredora(&tf, &intérprete_grade_)) {
-					tf.operação_aparar_e_re_definir(&tf, &intérprete_grade_);
+				if (ef.clave_verificar_concessão_corredora(&ef, &intérprete_grade_)) {
+					ef.operação_aparar_e_re_definir(&ef, &intérprete_grade_);
 					continue;
 				}
 
-				if (tf.clave_verificar_concessão_passiva(&tf, &intérprete_grade_)) {
-					if (tf.clave_verificar_concessão_selectiva(&tf, &intérprete_grade_)) {
-						tf.operação_aparar_e_re_definir(&tf, &intérprete_grade_);
+				if (ef.clave_verificar_concessão_passiva(&ef, &intérprete_grade_)) {
+					if (ef.clave_verificar_concessão_selectiva(&ef, &intérprete_grade_)) {
+						ef.operação_aparar_e_re_definir(&ef, &intérprete_grade_);
 						continue;
 					}
 
-					tf.operação_aparar_e_re_definir(&tf, &intérprete_grade_);
+					ef.operação_aparar_e_re_definir(&ef, &intérprete_grade_);
 					continue;
 				}
+				*/
 
-				tf.operação_aparar_e_re_definir(&tf, &intérprete_grade_);
+				ef.operação_aparar_e_re_definir(&ef, intérprete);
+				operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef.operação_n);
+				operação_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+
 				continue;
 			}
 
-			operação_.expectação = expectação__concedido;
+			operação_->expectação = expectação__concedido;
 		}
-		*/
-		tf.introduzir_concedido(&tf, &intérprete_grade_);
+
+		ef.introduzir_concedido(&ef, &intérprete_grade_);
+		DESBRAGA_MENSAGEM("%d", ef.operação_n);
     }
 
 fim:
 
-	memória_des_allocar(&tf.pilha.conteúdo);
-	memória_des_allocar(&tf.ficha);
+	memória_des_allocar(&ef.pilha.conteúdo);
+	memória_des_allocar(&ef.ficha);
 	abort();
 	return;
 
@@ -1474,24 +1434,24 @@ void
 interpretar(Grade* ref linhas, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define tf_						(*tf)
+#define ef_						(*ef)
 #define linha_					((Linha) (*linha).elemento)
 #define linhas_                 (*linhas)
 #define intérprete_grade_		(*intérprete)
 #define intérprete_				(*((Intérprete*) intérprete_grade_.elemento))
 #define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(*(Rastilho*) rastilhos_[tf_.rastilho_n].elemento)
-#define expressão_n_			(*tf_.expressão_n)
+#define rastilho_				(*(Rastilho*) rastilhos_[ef_.rastilho_n].elemento)
+#define expressão_n_			(*ef_.expressão_n)
 #define expressões_grade_		(intérprete_grade_.filho[0].filho)
 #define expressão_				(*(Expressão*) expressões_grade_[expressão_n_].elemento)
 #define expressão_grade_		(expressões_grade_[expressão_n_])
 #define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[tf_.operação_n])
+#define operações_				(operações_grade_[ef_.operação_n])
 #define operação_				(*(Operação*) operações_.elemento)
-#define operação_grade_			(operações_grade_[tf_.operação_n])
+#define operação_grade_			(operações_grade_[ef_.operação_n])
 #define operação_linha_       	((Linha) operação_linha_grade->elemento)
 #define ficha_valôr_linha_		((Linha) valôrDaFicha_linha_grade->elemento)
-#define recúo_                	(tf_.recúo - 1)
+#define recúo_                	(ef_.recúo - 1)
 
 #endif // #if defined(DEFINIÇÃO)
 
@@ -1520,7 +1480,7 @@ fim:
 
 #if defined(DES_DEFINIÇÃO)
 
-#undef tf_
+#undef ef_
 #undef linha_
 #undef linhas_
 #undef intérprete_
