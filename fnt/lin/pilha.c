@@ -4,10 +4,11 @@
 #include <stdint.h>
 #include <string.h>
 
-Pilha pilha_construir(Lato elementos[]) {
+Pilha 
+pilha_construir(Lato elementos[]) {
     Pilha pilha;
 
-    if (elementos[0].tipo == tipo_tamanho) {
+    se (elementos[0].tipo iqual tipo_tamanho) {
         int* tamanho = (int*) elementos[0].elemento;
         pilha.recúo = *tamanho;
 
@@ -17,15 +18,16 @@ Pilha pilha_construir(Lato elementos[]) {
         pilha.conteúdo = memória_preên_allocar(*tamanho, 1);
     }
 
-    return pilha;
+    devolve pilha;
 }
 
-void pilha_introduzir(char charac, Pilha* pilha) {
+void 
+pilha_introduzir(char charac, Pilha* pilha) {
     char* cópia = linha_duplicar(pilha->conteúdo);
 
     pilha->conteúdo[0] = charac;
     cópia[pilha->tamanho_actual] = linha_nil;
-    if (pilha->tamanho_actual != pilha->recúo) pilha->tamanho_actual++;
+    se (pilha->tamanho_actual differente pilha->recúo) pilha->tamanho_actual++;
 
     pilha->conteúdo[pilha->recúo] = linha_nil;
     

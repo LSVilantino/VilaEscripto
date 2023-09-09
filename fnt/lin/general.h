@@ -17,6 +17,9 @@
 // DEFINIÇÕES CONDICIONAIS
 //-------------------------
 
+#define devolve return
+#define retorna devolve
+
 // Utilizado em matrices, qualquer valôr negativo indica invalidéz.
 #define inválido (-1)
 
@@ -25,6 +28,14 @@
 #define se_não else
 
 #define enquanto while
+#define para for
+
+#define seguir continue
+#define prosseguir seguir
+#define continuar seguir
+
+#define quebrar break
+#define encerrar quebrar
 
 #define equal ==
 #define igual equal
@@ -38,10 +49,16 @@
 #define e &&
 #define ou ||
 
+#define maior >
+#define menor <
+#define maior_que maior
+#define menor_que menor
+
 // Auxiliares de linguagem
 #define a
 #define de
 #define fôr
+#define que
 
 //-------------------------
 // DEFINIÇÕES UTILITÁRIAS
@@ -72,6 +89,7 @@
 
 #define linha_nil '\0'
 #define linha_salta '\n'
+#define linha_salta_ "\n"
 
 #define cabeçalho linhar(.h)
 
@@ -136,15 +154,27 @@
 // DEFINIÇÕES FUNCCIONAIS
 //-------------------------
 
-
 //#if defined(DESBRAGA) && DESBRAGA > 0
+
+#define LINHA_SALTAR() printf("%c", linha_salta); \
+
 #define DESBRAGA_MENSAGEM(formato, ...) \
 printf("DESBRAGA ― %s:%d:%s: " formato, \
 __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-printf("%c", linha_salta) \
+LINHA_SALTAR() \
+
+#define DESBRAGA_TÓPICO(formato, ...) \
+LINHA_SALTAR() \
+printf("DESBRAGA ― %s:%d:%s: " formato, \
+__FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
+LINHA_SALTAR() \
+LINHA_SALTAR() \
+
 //#else
 //#define DESBRAGA_MENSAGEM(formato, ...) /* Faz nada em modo público */
 //#endif
+
+
 
 //-------------------------
 // DEFINIÇÕES CATEGÓRICAS

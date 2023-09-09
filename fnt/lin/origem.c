@@ -14,21 +14,21 @@
 
 int argumentos_requiridos = 3;
 
-int main(int argquan, Linha* argumentos) {
+int main(int arg_quantidade, Linha* argumentos) {
 	Linha ficheiroDesbraga = nil;
 	Linha ficheiroLSVE = nil;
 
-	if (argquan > argumentos_requiridos) { abort(); }
+	if (arg_quantidade > argumentos_requiridos) { abort(); }
 
-	if (argquan == argumentos_requiridos) {
+	if (arg_quantidade == argumentos_requiridos) {
 		if (argumentos[2]) { ficheiroDesbraga = argumentos[2]; }
 		if (argumentos[1]) { ficheiroLSVE = argumentos[1]; }
 	}
-	else if (argquan < 3) {
+	else if (arg_quantidade < 3) {
 		if (argumentos[1]) { ficheiroLSVE = argumentos[1]; }
 	}
 
-	Grade intérprete_grade = (Grade){
+	Grade intérprete = (Grade){
 		.índice = 0,
 		.constatação = linhar_(estructura_instância(Intérprete)),
 		.tipo = lsve_tipo_intérprete,
@@ -38,7 +38,7 @@ int main(int argquan, Linha* argumentos) {
 		.filho_precisa_libertar = fal,
 	};
 
-	grade_introduzir(&intérprete_grade.filho, 
+	grade_introduzir(&intérprete.filho, 
 		&(Grade) {
 		.índice = 0,
 		.constatação = linhar_(estructura_instância(Intérprete).expressão),
@@ -50,7 +50,7 @@ int main(int argquan, Linha* argumentos) {
 		}
 	);
 
-	grade_introduzir(&intérprete_grade.filho, 
+	grade_introduzir(&intérprete.filho, 
 		&(Grade) {
 		.índice = 1,
 		.constatação = linhar_(estructura_instância(Intérprete).rastilho),
@@ -64,13 +64,15 @@ int main(int argquan, Linha* argumentos) {
 
 	if(ficheiroDesbraga) {
 		Grade* ficheiroDesbraga_linhas = ficheiro_lêr(ficheiroDesbraga);
-		interpretar(&ficheiroDesbraga_linhas, &intérprete_grade);
+		interpretar(&ficheiroDesbraga_linhas, &intérprete);
 		grade_des_allocar(&ficheiroDesbraga_linhas);
+
+		abort();
 	}
 
 	if(ficheiroLSVE) {
 		Grade* ficheiroLSVE_linhas = ficheiro_lêr(ficheiroLSVE);
-		//interpretar(ficheiroLSVE_linhas, intérprete_grade);
+		//interpretar(ficheiroLSVE_linhas, intérprete);
 		grade_des_allocar(&ficheiroLSVE_linhas);
 	}
 
@@ -85,6 +87,6 @@ int main(int argquan, Linha* argumentos) {
 		}
 	}
 
-	grade_des_allocar(&intérprete_grade.filho);
+	grade_des_allocar(&intérprete.filho);
 	return 0;
 }

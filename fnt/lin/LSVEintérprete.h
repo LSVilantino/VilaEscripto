@@ -109,6 +109,10 @@ struct EF_Interpretar {
 	Dico (*clave_verificar_encerro_forçado)(EF_Interpretar ref tf, Grade ref intérprete);
 	Dico (*clave_verificar_comentário)(EF_Interpretar ref tf, Grade ref intérprete);
 
+	Dico (*clave_verificar_indicador_ficha)(EF_Interpretar* ef, Grade* intérprete);
+	Dico (*clave_verificar_indicador_ficha_abre)(EF_Interpretar* ef, Grade* intérprete);
+	Dico (*procurar_ficha)(EF_Interpretar* ef, Grade* intérprete);
+
 	Dico (*clave_verificar_concessão_directa)(EF_Interpretar ref tf, Grade ref intérprete);
 	Dico (*clave_verificar_concessão_corredora)(EF_Interpretar ref tf, Grade ref intérprete);
 	Dico (*clave_verificar_concessão_objectiva)(EF_Interpretar ref tf, Grade ref intérprete);

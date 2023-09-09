@@ -31,87 +31,79 @@ grade_introduzir(Grade* ref grade, Grade ref modelo) {
 
 Grade*
 grade_procurar(Grade* grade, Linha constatação, Índice índice) {
-#define grade_      grade
-
     se (índice iqual índice__último ou índice iqual índice__primeiro) { 
-        DESBRAGA_MENSAGEM("Não se busca pelo primeiro ou último índice neste método!");
+        DESBRAGA_TÓPICO("Não se busca pelo primeiro ou último índice neste método!");
         abort(); 
     }
 
-    se (grade_ igual nil) { 
-        DESBRAGA_MENSAGEM("A grade é vazía! Problemas podem occorrer se ler isso.");
+    se (grade iqual nil ou grade->índice iqual inválido) { 
+        DESBRAGA_TÓPICO("A grade é vazía! Problemas podem occorrer se ler isso.");
         abort();
     }
 
-    Grade* resultado = &(Grade) { .índice = inválido };
+    Grade* resultado = memória_allocar(sizeof(Grade));
+    resultado[0] = (Grade) { .índice = inválido };
 
     int i = 0;
+    int i_grade = grade[i].índice;
 
     se (índice iqual índice__qualquer) {
-        enquanto (grade_[i].índice iqual i) {
-            DESBRAGA_MENSAGEM("Grade: %d - %s", grade_[i].índice, grade_[i].constatação);
+        DESBRAGA_MENSAGEM("Índice: %d | %d", grade[i].índice, i_grade);
+        
+        enquanto (grade[i].índice iqual i_grade) {
+            DESBRAGA_MENSAGEM("Grade: %d - %s", grade[i].índice, grade[i].constatação);
 
-            se (linha_comparar(constatação, grade_[i].constatação) iqual vero) { 
-                DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade_[i].índice, grade_[i].constatação);
-                resultado = &grade_[i];
+            se (linha_comparar(constatação, grade[i].constatação) iqual vero) { 
+                DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade[i].índice, grade[i].constatação);
+                resultado = &grade[i];
                 goto fim;
             }
 
-            se (grade_[i].filho differente nil) {
-                Grade* filho = grade_procurar(grade_[i].filho, constatação, índice);
+            se (grade[i].filho differente nil) {
+                Grade* filho = grade_procurar(grade[i].filho, constatação, índice);
                 se (filho->índice differente inválido) {
-                    DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade_[i].índice, grade_[i].constatação);
+                    DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade[i].índice, grade[i].constatação);
                     resultado = filho;
                     goto fim;
                 } se_não {
-                    DESBRAGA_MENSAGEM("Grade inválida: %d - %s", grade_[i].índice, grade_[i].constatação);
+                    DESBRAGA_MENSAGEM("Grade inválida: %d - %s", grade[i].índice, grade[i].constatação);
                 }
             }
 
-            i++;
+            i_grade = ++i;
         }
     }
     se_não {
-        se (grade[i].índice differente de i) { 
-            DESBRAGA_MENSAGEM("Grade inválida. Dá-me seus filhos.");
-            abort(); 
-        }
+        DESBRAGA_MENSAGEM("Grade: %d / %d - %s", i, grade[i].índice, grade[i].constatação);
 
-        DESBRAGA_MENSAGEM("Grade: %d / %d - %s", i, grade_[i].índice, grade_[i].constatação);
-
-        enquanto (grade_[i].índice iqual i) {
-            DESBRAGA_MENSAGEM("Grade: %d - %s", grade_[i].índice, grade_[i].constatação);
+        enquanto (grade[i].índice iqual i_grade) {
+            DESBRAGA_MENSAGEM("Grade: %d - %s", grade[i].índice, grade[i].constatação);
 
             se (i iqual índice) {
-                se (linha_comparar(constatação, grade_[i].constatação) iqual vero) { 
-                    DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade_[i].índice, grade_[i].constatação);
-                    resultado = &grade_[i];
+                se (linha_comparar(constatação, grade[i].constatação) iqual vero) { 
+                    DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade[i].índice, grade[i].constatação);
+                    resultado = &grade[i];
                     goto fim;
                 }
 
-                se (grade_[i].filho differente nil) {
-                    Grade* filho = grade_procurar(grade_[i].filho, constatação, índice);
+                se (grade[i].filho differente nil) {
+                    Grade* filho = grade_procurar(grade[i].filho, constatação, índice);
                     se (filho->índice differente inválido) {
-                        DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade_[i].índice, grade_[i].constatação);
+                        DESBRAGA_MENSAGEM("Grade encontrada: %d - %s", grade[i].índice, grade[i].constatação);
                         resultado = filho;
                         goto fim;
                     } se_não {
-                        DESBRAGA_MENSAGEM("Grade inválida: %d - %s", grade_[i].índice, grade_[i].constatação);
+                        DESBRAGA_MENSAGEM("Grade inválida: %d - %s", grade[i].índice, grade[i].constatação);
                     }
                 }
             }
             
-            i++;
+            i_grade = ++i;
         }
     }
 
 fim: 
-
-    if (resultado iqual nil) abort();
-
     return resultado;
-
-#undef grade_
 }
 
 Grade
