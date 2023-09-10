@@ -36,7 +36,7 @@ grade_procurar(Grade* grade, Linha constatação, Índice índice) {
         abort(); 
     }
 
-    se (grade iqual nil ou grade->índice iqual inválido) { 
+    se (grade iqual nil ou grade->índice menor 0) { 
         DESBRAGA_TÓPICO("A grade é vazía! Problemas podem occorrer se ler isso.");
         abort();
     }
@@ -108,8 +108,7 @@ fim:
 
 Grade
 grade_falha(Linha constatação) {
-
-    if (constatação iqual nil) constatação = linha_nil;
+    se (constatação iqual nil) constatação = linha_nil;
 
     Grade gradeFalha = (Grade) {
         .índice = inválido,
@@ -121,7 +120,7 @@ grade_falha(Linha constatação) {
         .filho_precisa_libertar = fal,
     };
 
-    return gradeFalha;
+    devolve gradeFalha;
 }
 
 void

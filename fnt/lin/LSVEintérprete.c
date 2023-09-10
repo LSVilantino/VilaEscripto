@@ -83,55 +83,74 @@ operação_falha() {
 	return grade_falha(linhar_(estructura_instância(Operação)));
 }
 
-Grade
+Grade*
 expressão_têr_por_ficha(Grade* expressões, Linha ficha) {
-#define expressão_ (expressões[expressão_n])
+	Grade grade_falha = expressão_falha();
+	Grade* resultado = &grade_falha;
 
 	int expressão_n = 0;
+	Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n);
 
-	while (expressão_.índice == expressão_n) {
-		if (expressão_operação_têr_por_ficha(expressão_, ficha).índice differente -1) {
-			return expressão_;
+	enquanto (expressão->índice iqual expressão_n) {
+		se (expressão_operação_têr_por_ficha(expressão, ficha).índice differente -1) {
+			resultado = expressão;
+			goto fim;
 		}
 
 		expressão_n++;
+		expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n);
+		
+		DESBRAGA_TÓPICO("%d", expressão_n);
 	}
 
-	return expressão_falha();
-
-#undef expressão_
+fim:
+	return resultado;
 }
 
 Grade
-expressão_operação_têr_por_ficha(Grade expressão, Linha linha) {
+expressão_operação_têr_por_ficha(Grade* expressão, Linha linha) {
 #define operação_linha_       	void_como(operação_linha->elemento, Linha)
-	Grade operação = expressão_operação_têr_por_tipo(expressão, operação__concedido);
-	Grade* operação_linha = grade_procurar(operação.filho, linhar_(estructura_instância(Operação).), índice__qualquer);
 
-	if (linha_comparar(linha, operação_linha_)) return operação;
-	return operação_falha();
+	Grade resultado = operação_falha();
+
+	Grade operação = expressão_operação_têr_por_tipo(expressão, operação__concedido);
+	Grade* operação_linha = grade_procurar(operação.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+
+	se (linha_comparar(linha, operação_linha_)) {
+		resultado = operação;
+		goto fim;
+	}
+
+fim:
+	devolve resultado;
 
 #undef operação_linha_
 }
 
 Grade
-expressão_operação_têr_por_tipo(Grade expressão, Operação_Tipo tipo) {
-#define operação_grade_ 	(expressão.filho[operação_n])
-#define operação_ 			(**(Operação**) &expressão.filho[operação_n].elemento)
+expressão_operação_têr_por_tipo(Grade* expressão, Operação_Tipo tipo) {
+#define operação_				(void_como(operação->elemento, Operação*))
 
 	int operação_n = 0;
 
-  	while (operação_grade_.índice iqual operação_n) {
-		if (operação_.tipo iqual tipo) {
-			return operação_grade_;
+	Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
+	Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), operação_n);
+
+	Grade resultado = operação_falha();
+
+  	enquanto (operação->índice iqual operação_n) {
+		se (operação_->tipo iqual tipo) {
+			resultado = *operação;
+			goto fim;
 		}
 
 		operação_n++;
+		operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), operação_n);
 	}
 
-	return operação_falha();
+fim:
+	devolve resultado;
 
-#undef operação_grade_
 #undef operação_
 }
 
@@ -190,7 +209,7 @@ Dico interpretar_linha__procurar_ficha(EF_Interpretar* ef, Grade* intérprete) {
 #define expressão_n_			(*ef->expressão_n)
 #define operação_				void_como(operação->elemento, Operação*)
 #define operação_linha_       	void_como(operação_linha->elemento, Linha)
-#define ficha_valôr_linha_		void_como(valôrDaFicha_linha_grade->elemento, Linha)
+#define ficha_valôr_linha_		void_como(valôrDaFicha_linha->elemento, Linha)
 
 	Dico resultado = fal;
 
@@ -212,7 +231,7 @@ Dico interpretar_linha__procurar_ficha(EF_Interpretar* ef, Grade* intérprete) {
 			abort();
 		}
 
-		Grade* valôrDaFicha_linha_grade = grade_procurar(valôrDaFicha.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+		Grade* valôrDaFicha_linha = grade_procurar(valôrDaFicha.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 		linha_agregar_linha(ficha_valôr_linha_, &ef->operação_linha_n, &operação_linha_);
 
 		memória_des_allocar(&ef->ficha);
@@ -631,263 +650,178 @@ Dico interpretar_linha__clave_verificar_concessão_selectiva(EF_Interpretar* ef,
 Dico interpretar_linha__expressão_verificar_concessão_corredora(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define ef_						(*ef)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
-#define expressão_n_			(*ef_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[ef_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[ef_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(ef_.recúo - 1)
+#define expressão_n_			(*ef->expressão_n)
+#define operação_linha_       	(void_como(operação_linha->elemento, Linha))
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	// Todos as operações que precisam dos valôres completos são validados após o registro de toda a linha.
-	if (expressão_operação_têr_por_tipo(expressão_grade_, operação__concessão_corredora).índice differente -1) {
-		Grade operação_valôr = expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr);
-		Grade* operação_linha = grade_procurar(operação_valôr.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+	Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+	Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
 
-		system(void_como(operação_linha->elemento, Linha));
+	// Todos as operações que precisam dos valôres completos são validados após o registro de toda a linha.
+	se (expressão_operação_têr_por_tipo(expressão, operação__concessão_corredora).índice differente -1) {
+		Grade operação = expressão_operação_têr_por_tipo(expressão, operação__valôr);
+		Grade* operação_linha = grade_procurar(operação.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+
+		system(operação_linha_);
 
 		expressão_n_++;
 		resultado = vero;
 	}
 
+	return resultado;
+
 #if defined(DES_DEFINIÇÃO)
 
-#undef ef_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
 #undef expressão_n_
-#undef expressões_grade_
-#undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
-#undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
-	return resultado;
 }
 
 Dico interpretar_linha__expressão_verificar_concessão_passiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define ef_						(*ef)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
-#define expressão_n_			(*ef_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[ef_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[ef_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(ef_.recúo - 1)
+#define expressão_n_			(*ef->expressão_n)
+#define operação_linha_       	(void_como(operação_linha->elemento, Linha))
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	if (expressão_operação_têr_por_tipo(expressão_grade_, operação__concessão_passiva).índice differente -1) {
-		// As expressões do agregado devem ser NULL, copia e elimina as expressões, que devem ser vazias.
-		Grade caminho = expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr);
-		Grade intérprete_cópia = intérprete_grade_;
+	Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+	Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
 
-		Grade* intérprete_cópia_expressões = grade_procurar(intérprete_cópia.filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+	se (expressão_operação_têr_por_tipo(expressão, operação__concessão_passiva).índice differente -1) {
+		// As expressões do agregado devem ser NULL, copia e elimina as expressões, que devem ser vazias.
+		Grade caminho = expressão_operação_têr_por_tipo(expressão, operação__valôr);
+		Grade* intérprete_cópia = intérprete;
+
+		Grade* intérprete_cópia_expressões = grade_procurar(intérprete_cópia->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 		intérprete_cópia_expressões = nil;
 
-		Grade intérprete_agregado = intérprete_confeccionar(&ef_, &intérprete_grade_, caminho);
+		Grade intérprete_agregado = intérprete_confeccionar(ef, intérprete, caminho);
 
 		expressão_n_++;
 
-		intérprete_agregar(&ef_, &intérprete_agregado, expressões_grade_, expressão_n_);
+		intérprete_agregar(ef, &intérprete_agregado, expressões, expressão_n_);
 		grade_des_allocar(&intérprete_agregado.filho);
 
 		resultado = vero;
 	}
 
+	return resultado;
+
 #if defined(DES_DEFINIÇÃO)
 
-#undef ef_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
 #undef expressão_n_
-#undef expressões_grade_
-#undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
-#undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
-
-	return resultado;
 }
 
 Dico interpretar_linha__expressão_verificar_concessão_objectiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define ef_						(*ef)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
-#define expressão_n_			(*ef_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[ef_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[ef_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(ef_.recúo - 1)
+#define expressão_n_			(*ef->expressão_n)
+#define operação_linha_       	(void_como(operação_linha->elemento, Linha))
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	Grade operação;
-	if ((operação = expressão_operação_têr_por_tipo(expressão_grade_, operação__concessão_objectiva)).índice differente -1) {
-		Grade* operação_linha = grade_procurar(operação.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
-		Grade* operação_valôr_linha = grade_procurar(operações_grade_[expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr).índice].filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+	Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+	Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
 
-		Grade caminho = expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr);
-		Grade intérprete_agregado = intérprete_confeccionar(&ef_, &intérprete_grade_, caminho);
+	Grade operação = operação_falha();
+	if ((operação = expressão_operação_têr_por_tipo(expressão, operação__concessão_objectiva)).índice differente -1) {
+		Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
+		Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), expressão_operação_têr_por_tipo(expressão, operação__valôr).índice);
+
+		Grade* operação_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+		Grade* operação_valôr_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+
+		Grade caminho = expressão_operação_têr_por_tipo(expressão, operação__valôr);
+		Grade intérprete_agregado = intérprete_confeccionar(ef, intérprete, caminho);
 		Grade* expressões = grade_procurar(intérprete_agregado.filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 
-		Grade expressão_seleccionada = expressão_têr_por_ficha(expressões->filho, void_como(operação_linha->elemento, Linha));
+		Grade* expressão_seleccionada = expressão_têr_por_ficha(expressões->filho, void_como(operação_linha->elemento, Linha));
 		Grade expressão_seleccionada_operação_valôr = expressão_operação_têr_por_tipo(expressão_seleccionada, operação__valôr);
 		Grade* expressão_seleccionada_operação_valôr_linha = grade_procurar(expressão_seleccionada_operação_valôr.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		Grade* operação = grade_procurar(expressão_seleccionada.filho, linhar_(estructura_instância(Operação)), expressão_seleccionada_operação_valôr.índice);
+		//Grade* operação = grade_procurar(expressão_seleccionada->filho, linhar_(estructura_instância(Operação)), expressão_seleccionada_operação_valôr->índice);
 
-		void_como(operação_valôr_linha->elemento, Linha) = void_como(expressão_seleccionada_operação_valôr_linha, Linha);
+		operação_linha_ = void_como(expressão_seleccionada_operação_valôr_linha, Linha);
 		expressão_n_++;
 		grade_des_allocar(&intérprete_agregado.filho);
 
 		resultado = vero;
 	}
 
+	return resultado;
+
 #if defined(DES_DEFINIÇÃO)
 
-#undef ef_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
 #undef expressão_n_
-#undef expressões_grade_
-#undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
-#undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
-
-	return resultado;
 }
 
 Dico interpretar_linha__expressão_verificar_concessão_selectiva(EF_Interpretar* ef, Grade* intérprete) {
 #if defined(DEFINIÇÃO)
 
-#define ef_						(*ef)
-#define intérprete_grade_		(*intérprete)
-#define intérprete_				(*((Intérprete*) intérprete_.elemento))
-#define rastilhos_				(intérprete_grade_.filho[1].filho)
-#define rastilho_				(**(Rastilho**) &rastilhos_[ef_.rastilho_n].elemento)
-#define expressão_n_			(*ef_.expressão_n)
-#define expressões_grade_		(intérprete_grade_.filho[0].filho)
-#define expressão_				(**(Expressão**) &expressões_grade_[expressão_n_].elemento)
-#define expressão_grade_		(expressões_grade_[expressão_n_])
-#define operações_grade_		(expressão_grade_.filho)
-#define operações_				(operações_grade_[ef_.operação_n])
-#define operação_				(**(Operação**) &operações_.elemento)
-#define operação_grade_			(operações_grade_[ef_.operação_n])
-#define operação_linha_       	(*(Linha*) &operação_linha_grade->elemento)
-#define recúo_                	(ef_.recúo - 1)
+#define expressão_n_			(*ef->expressão_n)
+#define operação_linha_       	(void_como(operação_linha->elemento, Linha))
 
 #endif // #if defined(DEFINIÇÃO)
 
 	Dico resultado = fal;
 
-	if (expressão_operação_têr_por_tipo(expressão_grade_, operação__concessão_selectiva).índice differente -1) {
-		Grade intérprete_cópia = intérprete_grade_;
+	Grade* expressões = grade_procurar(intérprete->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+	Grade* expressão = grade_procurar(expressões->filho, linhar_(estructura_instância(Expressão)), expressão_n_);
+
+	se (expressão_operação_têr_por_tipo(expressão, operação__concessão_selectiva).índice differente -1) {
+		Grade* intérprete_cópia = intérprete;
 		// As expressões do agregado devem ser NULL, copia e elimina as expressões.
-		Grade* intérprete_cópia_expressões = grade_procurar(intérprete_cópia.filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
+		Grade* intérprete_cópia_expressões = grade_procurar(intérprete_cópia->filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 		intérprete_cópia_expressões = nil;
 
-		Grade* operação_valôr_linha = grade_procurar(operações_grade_[expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr).índice].filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+		Grade* operações = grade_procurar(expressão, linhar_(estructura_instância(Expressão).operação), índice__qualquer);
+		Grade* operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), expressão_operação_têr_por_tipo(expressão, operação__valôr).índice);
 
-		Grade caminho = expressão_operação_têr_por_tipo(expressão_grade_, operação__valôr);
-		Grade intérprete_agregado = intérprete_confeccionar(&ef_, &intérprete_cópia, caminho);
+		Grade* operação_linha = grade_procurar(operações->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
+
+		Grade caminho = expressão_operação_têr_por_tipo(expressão, operação__valôr);
+		Grade intérprete_agregado = intérprete_confeccionar(ef, intérprete_cópia, caminho);
 		Grade* expressões = grade_procurar(intérprete_agregado.filho, linhar_(estructura_instância(Intérprete).expressão), índice__qualquer);
 
 		Grade operaçãoSeleccionada = lsve_consola_construir_menu(expressões->filho);
 		Grade* operaçãoSeleccionada_linha = grade_procurar(operaçãoSeleccionada.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		Grade expressão_seleccionada = expressão_têr_por_ficha(expressões->filho, void_como(operaçãoSeleccionada_linha->elemento, Linha));
+		Grade* expressão_seleccionada = expressão_têr_por_ficha(expressões->filho, void_como(operaçãoSeleccionada_linha->elemento, Linha));
 		Grade expressão_seleccionada_operação_valôr = expressão_operação_têr_por_tipo(expressão_seleccionada, operação__valôr);
 		Grade* expressão_seleccionada_operação_valôr_linha = grade_procurar(expressão_seleccionada_operação_valôr.filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-		Grade* operação = grade_procurar(expressão_seleccionada.filho, linhar_(estructura_instância(Operação)), expressão_seleccionada_operação_valôr.índice);
+		//Grade* operação = grade_procurar(expressão_seleccionada->filho, linhar_(estructura_instância(Operação)), expressão_seleccionada_operação_valôr->índice);
 
-		void_como(operação_valôr_linha->elemento, Linha) = void_como(expressão_seleccionada_operação_valôr_linha, Linha);
+		operação_linha = void_como(expressão_seleccionada_operação_valôr_linha, Linha);
 		expressão_n_++;
 		grade_des_allocar(&intérprete_agregado.filho);
 
 		resultado = vero;
 	}
 
+	return resultado;
+
 #if defined(DES_DEFINIÇÃO)
 
-#undef ef_
-#undef intérprete_grade_
-#undef intérprete_
-#undef rastilhos_
-#undef rastilho_
 #undef expressão_n_
-#undef expressões_grade_
-#undef expressão_
-#undef expressão_grade_
-#undef operações_grade_
-#undef operações_
-#undef operação_
-#undef operação_grade_
 #undef operação_linha_
-#undef recúo_
 
 #endif // #if defined(DES_DEFINIÇÃO)
-
-	return resultado;
 }
 
 void interpretar_linha__operação_aparar_e_re_definir(EF_Interpretar* ef, Grade* intérprete) {
@@ -1180,6 +1114,8 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 		.operação_aparar_e_re_definir = interpretar_linha__operação_aparar_e_re_definir,
 	};
 
+	linha_introduzir_charactére(linha_nil, ef.ficha_n, &ef.ficha);
+
     ef.recúo = ef.pilha.recúo;
 
 	DESBRAGA_MENSAGEM("LINHA A DESBRAGAR: %s, expressão %d", linha_, expressão_n_);
@@ -1296,8 +1232,6 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 			se (ef.clave_verificar_indicador_ficha_abre(&ef, intérprete)) {
 				continue;
 			}
-
-			abort();
 		}
 
 		// Leitura da ficha
@@ -1423,7 +1357,7 @@ interpretar_linha(Grade* linha, Grade* intérprete, int* expressão_n) {
 				operação = grade_procurar(operações->filho, linhar_(estructura_instância(Operação)), ef.operação_n);
 				operação_linha = grade_procurar(operação->filho, linhar_(estructura_instância(Operação).linha), índice__qualquer);
 
-				continue;
+				continua;
 			}
 
 			operação_->expectação = expectação__concedido;
@@ -1437,7 +1371,7 @@ fim:
 
 	memória_des_allocar(&ef.pilha.conteúdo);
 	memória_des_allocar(&ef.ficha);
-	return;
+	devolve;
 
 #if defined(DES_DEFINIÇÃO)
 
@@ -1471,7 +1405,7 @@ interpretar(Grade* ref linhas, Grade* intérprete) {
 #endif // #if defined(DEFINIÇÃO)
 
     se (intérprete->tipo differente lsve_tipo_intérprete) {
-		DESBRAGA_MENSAGEM("Grade não é do tipo correcto");
+		DESBRAGA_TÓPICO("Grade não é do tipo correcto");
 		abort();
         goto fim;
     }
@@ -1484,7 +1418,7 @@ interpretar(Grade* ref linhas, Grade* intérprete) {
 		DESBRAGA_MENSAGEM("%d", expressão_n);
 		interpretar_linha(&linhas_[expressão_n], intérprete, &expressão_n);
 
-		prosseguir;
+		prossegue;
 
 		goto fim;
     }

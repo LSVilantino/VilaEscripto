@@ -78,9 +78,9 @@ typedef struct {
     Linha linha;
 } Expressão;
 
-Grade expressão_têr_por_ficha(Grade* expressões, Linha ficha);
-Grade expressão_operação_têr_por_ficha(Grade expressão, Linha ficha);
-Grade expressão_operação_têr_por_tipo(Grade expressão, Operação_Tipo tipo);
+Grade* expressão_têr_por_ficha(Grade* expressões, Linha ficha);
+Grade expressão_operação_têr_por_ficha(Grade* expressão, Linha ficha);
+Grade expressão_operação_têr_por_tipo(Grade* expressão, Operação_Tipo tipo);
 Grade expressão_falha();
 
 typedef struct {

@@ -30,15 +30,18 @@
 #define enquanto while
 #define para for
 
-#define seguir continue
-#define prosseguir seguir
-#define continuar seguir
+#define segue continue
+#define prossegue segue
+#define continua segue
 
 #define quebrar break
 #define encerrar quebrar
 
+#define irao goto
+#define ir_ao irao
+
+#define igual =
 #define equal ==
-#define igual equal
 #define iqual equal
 
 #define differente !=
@@ -50,9 +53,9 @@
 #define ou ||
 
 #define maior >
+#define maior_ou_iqual >=
 #define menor <
-#define maior_que maior
-#define menor_que menor
+#define menor_ou_iqual <=
 
 // Auxiliares de linguagem
 #define a
@@ -156,7 +159,7 @@
 
 //#if defined(DESBRAGA) && DESBRAGA > 0
 
-#define LINHA_SALTAR() printf("%c", linha_salta); \
+#define LINHA_SALTAR() printf("%c", linha_salta) \
 
 #define DESBRAGA_MENSAGEM(formato, ...) \
 printf("DESBRAGA ― %s:%d:%s: " formato, \
@@ -164,10 +167,10 @@ __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
 LINHA_SALTAR() \
 
 #define DESBRAGA_TÓPICO(formato, ...) \
-LINHA_SALTAR() \
+LINHA_SALTAR(); \
 printf("DESBRAGA ― %s:%d:%s: " formato, \
 __FILE__, __LINE__, __FUNCTION__, ##__VA_ARGS__); \
-LINHA_SALTAR() \
+LINHA_SALTAR(); \
 LINHA_SALTAR() \
 
 //#else
